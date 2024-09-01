@@ -17,7 +17,7 @@ services:
     entrypoint:
       - POSTGRES_PASSWORD=stat
       - POSTGRES_USER=stat
-      - POSTGRES_DB=ewm-stats
+      - POSTGRES_DB=stats
 
   ewm-service:
     build: main-service
