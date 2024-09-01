@@ -20,6 +20,8 @@ services:
       - POSTGRES_DB=ewm-stats
 
   ewm-service:
+    build: main-service
+    container_name: ewm-service-server
     ports:
       - "8080:8080"
     entrypoint:
