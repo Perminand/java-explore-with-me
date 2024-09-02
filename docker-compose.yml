@@ -4,38 +4,38 @@ services:
     container_name: stat-server
     ports:
       - "9090:9090"
-    entrypoint:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:5432/stats
-      - SPRING_DATASOURCE_USERNAME=stat
-      - SPRING_DATASOURCE_PASSWORD=stat
+    environment:
+      - SPRING_DATASOURCE_URL = jdbc:postgresql://stats-db:6543/stats
+      - SPRING_DATASOURCE_USERNAME = stat
+      - SPRING_DATASOURCE_PASSWORD = stat
 
   stats-db:
     image: postgres:16.1
     container_name: postgres-ewm-stats-db
     ports:
-      - "6542:5432"
-    entrypoint:
-      - POSTGRES_PASSWORD=stat
-      - POSTGRES_USER=stat
-      - POSTGRES_DB=stats
+      - "6543:5432"
+    environment:
+      - POSTGRES_DB = stats
+      - POSTGRES_USER = stat
+      - POSTGRES_PASSWORD = stat
 
   ewm-service:
     build: main-service
     container_name: ewm-service-server
     ports:
-      - "8080:8080"
-    entrypoint:
-      - CLIENT_URL=http://stats-server:9090
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/service
-      - SPRING_DATASOURCE_USERNAME=stat
-      - SPRING_DATASOURCE_PASSWORD=stat
+      - "8081:8080"
+    environment:
+      - CLIENT_URL = http://stats-server:9090
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:6544/service
+      - SPRING_DATASOURCE_USERNAME = service
+      - SPRING_DATASOURCE_PASSWORD = service
 
-  ewm-db:
-    image: postgres:16.1
-    container_name: postgres-ewm-db
+  ewm-db: 
+    image: postgres:16.1 
+    container_name: postgres-ewm-service-db
     ports:
-      - "6543:5432"
-    entrypoint:
-      - POSTGRES_PASSWORD=service
-      - POSTGRES_USER=service
-      - POSTGRES_DB=ewm-service
+      - "6544:5432"
+    environment:
+      - POSTGRES_PASSWORD = service
+      - POSTGRES_USER = service
+      - POSTGRES_DB = service
