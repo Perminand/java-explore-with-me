@@ -17,5 +17,6 @@ public class UserServiceImp implements UserService{
         if (ids==null) {
             return userRepository.findAll().stream().map(UserMapper::toUserDto).toList();
         }
+        return null;
     }
 }
