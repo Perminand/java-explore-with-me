@@ -17,13 +17,13 @@ import org.springframework.web.bind.annotation.*;
 public class StatController {
     private final StatService statService;
 
-    @PostMapping("/hit")
+    @PostMapping("hit")
     @ResponseStatus(HttpStatus.CREATED)
     public EndpointHitDto create (@RequestBody EndpointHitDto endpointHitDto) {
         return statService.create(endpointHitDto);
     }
 
-    @GetMapping("/stats")
+    @GetMapping("stats")
     @ResponseStatus(HttpStatus.OK)
     public ViewStatsDto get(
             @RequestParam(name = "start") String start,

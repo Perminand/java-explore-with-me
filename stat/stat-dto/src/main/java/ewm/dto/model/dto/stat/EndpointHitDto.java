@@ -12,10 +12,4 @@ public class EndpointHitDto {
     private String ip;
     private String timeStamp;
 
-    public EndpointHitDto(String app, String url, String ip, String timeStamp) {
-        this.app = app;
-        this.url = url;
-        this.ip = ip;
-        this.timeStamp = timeStamp;
     }
-}

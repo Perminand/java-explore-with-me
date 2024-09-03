@@ -15,7 +15,7 @@ public class EndpointHit {
     @Column(nullable = false)
     private String app;
     @Column(nullable = false)
-    private String url;
+    private String uri;
     @Column(nullable = false)
     private String ip;
     @Column(nullable = false)
