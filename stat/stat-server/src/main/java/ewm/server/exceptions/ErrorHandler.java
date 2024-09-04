@@ -22,7 +22,10 @@ public class ErrorHandler {
         PrintWriter pw = new PrintWriter(sw);
         e.printStackTrace(pw);
         String stackTrace = sw.toString();
-        return new ApiError(status,  "Ошибка 500 (Internal Server Error) — это внутренняя проблема сервера. " , e.getMessage(),  sw.toString());
-
+        return new ApiError(
+                status,
+                "Ошибка 500 (Internal Server Error) — это внутренняя проблема сервера. ",
+                e.getMessage(),
+                stackTrace);
     }
 }

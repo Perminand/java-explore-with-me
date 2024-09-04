@@ -3,11 +3,15 @@ package ewm.server.model;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @AllArgsConstructor
-@Table(name = "endpoint_hits")
+@NoArgsConstructor
+@Table(name = "endpoint_hits", schema = "public")
 public class EndpointHit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,6 +22,6 @@ public class EndpointHit {
     private String uri;
     @Column(nullable = false)
     private String ip;
-    @Column(nullable = false)
-    private String timeStamp;
+    @Column(name ="time_stamp", nullable = false)
+    private LocalDateTime timeStamp;
 }

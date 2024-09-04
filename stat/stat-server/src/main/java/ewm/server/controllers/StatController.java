@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @Slf4j
 @RestController
 @Validated
@@ -19,7 +21,8 @@ public class StatController {
 
     @PostMapping("hit")
     @ResponseStatus(HttpStatus.CREATED)
-    public EndpointHitDto create (@RequestBody EndpointHitDto endpointHitDto) {
+    @Validated
+    public EndpointHitDto create (@Valid @RequestBody EndpointHitDto endpointHitDto) {
         return statService.create(endpointHitDto);
     }
 

@@ -5,8 +5,11 @@ import ewm.dto.model.dto.stat.ViewStatsDto;
 import ewm.server.mappers.EndpointHitMapper;
 import ewm.server.model.EndpointHit;
 import ewm.server.repository.StatsRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
