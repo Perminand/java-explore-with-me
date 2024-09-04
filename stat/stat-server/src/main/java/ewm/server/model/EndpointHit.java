@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Entity
 @Getter
@@ -22,6 +23,6 @@ public class EndpointHit {
     private String uri;
     @Column(nullable = false)
     private String ip;
-    @Column(name ="time_stamp", nullable = false)
-    private LocalDateTime timeStamp;
+    @Column(name ="time", nullable = false)
+    private LocalDateTime timestamp;
 }

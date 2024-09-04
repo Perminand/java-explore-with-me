@@ -1,6 +1,5 @@
 package ewm.server.model;
 
-import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,4 +11,9 @@ public class ViewStats {
     private String app;
     private String url;
     private int hits;
+
+    public ViewStats(String app, String url) {
+        this.app = app;
+        this.url = url;
+    }
 }

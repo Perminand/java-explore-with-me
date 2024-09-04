@@ -20,6 +20,6 @@ public class EndpointHitDto {
     private String ip;
     @NotNull
     @NotBlank
-    private String timeStamp;
+    private String timestamp;
 
     }

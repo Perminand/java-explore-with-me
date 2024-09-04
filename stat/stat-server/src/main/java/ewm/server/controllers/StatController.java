@@ -10,6 +10,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -28,7 +30,7 @@ public class StatController {
 
     @GetMapping("stats")
     @ResponseStatus(HttpStatus.OK)
-    public ViewStatsDto get(
+    public List<ViewStatsDto> get(
             @RequestParam(name = "start") String start,
             @RequestParam(name = "end") String end,
             @RequestParam(name = "uris", required = false) String[] uris,
