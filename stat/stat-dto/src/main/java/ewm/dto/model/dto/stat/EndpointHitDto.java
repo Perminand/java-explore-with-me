@@ -9,16 +9,12 @@ import lombok.Getter;
 @AllArgsConstructor
 public class EndpointHitDto {
     private long id;
-    @NotNull
     @NotBlank
     private String app;
-    @NotNull
     @NotBlank
     private String uri;
-    @NotNull
     @NotBlank
     private String ip;
-    @NotNull
     @NotBlank
     private String timestamp;
 
