@@ -23,7 +23,7 @@ services:
     build: main-service
     container_name: ewm-service-server
     ports:
-      - "8081:8080"
+      - "8080:8080"
     environment:
       - CLIENT_URL = http://stats-server:9090
       - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:6544/service
