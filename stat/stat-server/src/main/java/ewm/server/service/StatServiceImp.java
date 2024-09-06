@@ -42,7 +42,7 @@ public class StatServiceImp implements StatService {
                 }
             }
         } else {
-            result = statsRepository.findByTimestampAfterAndTimestampBefore(startTime, endTime);
+//            result = statsRepository.findByTimestampAfterAndTimestampBefore(startTime, endTime);
         }
         List<ViewStatsDto> viewStatsDtoList = result.stream()
                 .map(HitViewStatsMapper::toViewStats)

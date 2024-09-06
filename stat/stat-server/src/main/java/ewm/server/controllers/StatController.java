@@ -6,6 +6,7 @@ import ewm.server.service.StatService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,12 +17,12 @@ import java.util.List;
 @Slf4j
 @RestController
 @Validated
-@RequestMapping
+@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class StatController {
     private final StatService statService;
 
-    @PostMapping("hit")
+    @PostMapping("/hit")
     @ResponseStatus(HttpStatus.CREATED)
     @Validated
     public EndpointHitDto create (@Valid @RequestBody EndpointHitDto endpointHitDto) {

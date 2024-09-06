@@ -12,7 +12,7 @@ import java.time.ZonedDateTime;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "endpoint_hits", schema = "public")
+@Table(name = "stats", schema = "public")
 public class EndpointHit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,6 +23,6 @@ public class EndpointHit {
     private String uri;
     @Column(nullable = false)
     private String ip;
-    @Column(name ="time", nullable = false)
+    @Column(name ="created", nullable = false)
     private LocalDateTime timestamp;
 }

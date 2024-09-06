@@ -10,6 +10,6 @@ import java.util.List;
 
 @Repository
 public interface StatsRepository extends JpaRepository<EndpointHit, Long> {
-    @Query("select e from EndpointHit e where e.timestamp > :startTime and e.timestamp < :endTime")
-    List<EndpointHit> findByTimestampAfterAndTimestampBefore(LocalDateTime startTime, LocalDateTime endTime);
+//    @Query("select e from EndpointHit e where e.timestamp > :startTime and e.timestamp < :endTime")
+//    List<EndpointHit> findByTimestampAfterAndTimestampBefore(LocalDateTime startTime, LocalDateTime endTime);
 }
