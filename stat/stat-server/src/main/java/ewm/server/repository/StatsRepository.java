@@ -19,4 +19,14 @@ public interface StatsRepository extends JpaRepository<EndpointHit, Long> {
             "WHERE (timestamp >= :start AND timestamp <= :end AND uri IN :uris) " +
             "GROUP BY app, uri ORDER BY hits DESC")
     List<ViewStatsDto> selectAllWhereCreatedAfterStartAndBeforeEndUris(LocalDateTime start, LocalDateTime end, List<String> uris);
+
+    @Query("SELECT app, uri, COUNT (DISTINCT ip) AS hits FROM EndpointHit " +
+            "WHERE (timestamp >= :start AND timestamp <= :end AND uri IN :uris) " +
+            "GROUP BY app, uri ORDER BY hits DESC")
+    List<ViewStatsDto> selectAllWhereCreatedAfterStartAndBeforeEndUrisUnicum(LocalDateTime start, LocalDateTime end, List<String> uris);
+
+    @Query("SELECT app, uri, COUNT (DISTINCT ip) AS hits FROM EndpointHit " +
+            "WHERE (timestamp >= :start AND timestamp <= :end) " +
+            "GROUP BY app, uri ORDER BY hits DESC")
+    List<ViewStatsDto> selectAllWhereCreatedAfterStartAndBeforeEndUnicum(LocalDateTime start, LocalDateTime end);
 }
