@@ -32,7 +32,7 @@ public class StatController {
     @PostMapping("/hit")
     @ResponseStatus(HttpStatus.CREATED)
     @Validated
-    public void createHit (@RequestBody EndpointHitDto hit) {
+    public void createHit(@RequestBody EndpointHitDto hit) {
         log.info("POST запрос на сохранение информации.");
         statService.create(hit);
     }
@@ -55,7 +55,7 @@ public class StatController {
             @RequestParam(defaultValue = "") List<String> uris,
             @RequestParam(defaultValue = "false") boolean unique) {
         log.info("GET запрос на получение всей статистики.");
-        if(end.isBefore(start)) {
+        if (end.isBefore(start)) {
             log.info("Некорректный формат start {} и end {}", start, end);
             throw new InvalidParameterException("Некорректный формат дат");
         }
