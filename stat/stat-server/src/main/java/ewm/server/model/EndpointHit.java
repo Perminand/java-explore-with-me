@@ -28,6 +28,6 @@ public class EndpointHit {
     private String ip;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    @Column(name ="created", nullable = false)
+    @Column(name = "created", nullable = false)
     private LocalDateTime timestamp;
 }
