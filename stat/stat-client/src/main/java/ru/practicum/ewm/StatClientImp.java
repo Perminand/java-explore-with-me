@@ -23,7 +23,7 @@ public class StatClientImp implements StatClient {
         this.webClient = WebClient.create(statUrl);
     }
 
-    public void createStat(EndpointHitDto hit){
+    public void createStat(EndpointHitDto hit) {
         webClient.post()
                 .uri("/hit")
                 .contentType(MediaType.APPLICATION_JSON)
