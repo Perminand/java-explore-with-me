@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import ru.practicum.ewm.model.dto.stat.ViewStatsDto;
 
 import java.time.LocalDateTime;
 import java.util.List;

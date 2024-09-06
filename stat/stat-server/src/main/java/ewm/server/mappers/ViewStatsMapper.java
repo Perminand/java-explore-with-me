@@ -2,7 +2,7 @@ package ewm.server.mappers;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
-import ru.practicum.ewm.model.dto.stat.ViewStatsDto;
+import ru.practicum.ewm.ViewStatsDto;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

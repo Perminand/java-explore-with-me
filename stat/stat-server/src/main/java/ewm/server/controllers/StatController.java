@@ -9,8 +9,8 @@ import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.EndpointHitDto;
+import ru.practicum.ewm.ViewStatsDto;
 import ru.practicum.ewm.ViewsStatsRequest;
-import ru.practicum.ewm.model.dto.stat.ViewStatsDto;
 
 import java.security.InvalidParameterException;
 import java.time.LocalDateTime;

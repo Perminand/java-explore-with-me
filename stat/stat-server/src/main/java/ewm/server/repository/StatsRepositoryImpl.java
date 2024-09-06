@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ru.practicum.ewm.EndpointHitDto;
+import ru.practicum.ewm.ViewStatsDto;
 import ru.practicum.ewm.ViewsStatsRequest;
-import ru.practicum.ewm.model.dto.stat.ViewStatsDto;
 
 import java.sql.Timestamp;
 import java.util.List;

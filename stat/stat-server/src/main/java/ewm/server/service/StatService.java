@@ -1,8 +1,8 @@
 package ewm.server.service;
 
 import ru.practicum.ewm.EndpointHitDto;
+import ru.practicum.ewm.ViewStatsDto;
 import ru.practicum.ewm.ViewsStatsRequest;
-import ru.practicum.ewm.model.dto.stat.ViewStatsDto;
 
 import java.util.List;
 
