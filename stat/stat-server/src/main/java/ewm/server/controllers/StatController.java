@@ -12,14 +12,12 @@ import ru.practicum.ewm.EndpointHitDto;
 import ru.practicum.ewm.ViewsStatsRequest;
 import ru.practicum.ewm.model.dto.stat.ViewStatsDto;
 
-import javax.validation.Valid;
 import java.security.InvalidParameterException;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
 @RestController
-@Validated
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class StatController {
@@ -34,7 +32,7 @@ public class StatController {
     @PostMapping("/hit")
     @ResponseStatus(HttpStatus.CREATED)
     @Validated
-    public void createHit (@Valid @RequestBody EndpointHitDto hit) {
+    public void createHit (@RequestBody EndpointHitDto hit) {
         log.info("POST запрос на сохранение информации.");
         statService.create(hit);
     }
