@@ -28,7 +28,6 @@ public class StatClientImp implements StatClient {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(hit, EndpointHitDto.class)
                 .retrieve();
-
     }
     public List<ViewStatsDto> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
         return webClient.get()
