@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 public class ViewStats {
     private String app;
     private String url;
-    private int hits;
+    private Long hits;
 }

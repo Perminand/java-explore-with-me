@@ -1,8 +1,0 @@
-import ru.practicum.ewm.StatClient;
-import org.springframework.web.client.RestTemplate;
-
-public class Main {
-    public static void main(String[] args) {
-        StatClient statClient = new StatClient(new RestTemplate(), "Url");
-    }
-}

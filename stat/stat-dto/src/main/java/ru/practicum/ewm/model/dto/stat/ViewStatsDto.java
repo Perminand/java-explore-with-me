@@ -10,5 +10,5 @@ import lombok.ToString;
 public class ViewStatsDto {
     private String app;
     private String url;
-    private int hits;
+    private Long hits;
 }

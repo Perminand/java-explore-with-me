@@ -26,11 +26,15 @@ public class BaseClient {
         return makeAndSendRequest(HttpMethod.GET, path, parameters, null);
     }
 
+    /**
+     * Выполнение POST-запроса.
+     *
+     * @param body тело запроса
+     * @param <T>  тип тела запроса
+     */
     protected <T> void post(T body) {
         makeAndSendRequest(HttpMethod.POST, "/hit", null, body);
     }
-
-
 
     /**
      * Выполнение HTTP-запроса.
@@ -42,6 +46,7 @@ public class BaseClient {
      * @param <T>        тип тела запроса
      * @return объект ResponseEntity<Object> с ответом на запрос
      */
+
     private <T> ResponseEntity<Object> makeAndSendRequest(HttpMethod method, String path,
                                                           @Nullable Map<String, Object> parameters, @Nullable T body) {
         HttpEntity<T> requestEntity = new HttpEntity<>(body, defaultHeaders());

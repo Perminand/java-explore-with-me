@@ -1,16 +1,59 @@
 package ru.practicum.ewm;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.web.util.DefaultUriBuilderFactory;
 
-@Component
-public class StatClient {
-    final RestTemplate restTemplate;
-    final String statUrl;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Map;
 
-    public StatClient(RestTemplate restTemplate, @Value("${client.url}") String statUrl) {
-        this.restTemplate = restTemplate;
-        this.statUrl = statUrl;
+/**
+ * Клиент для взаимодействия с сервисом статистики.
+ */
+@Service
+public class StatClient extends BaseClient {
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+    @Autowired
+    public StatClient(@Value("${stat-server.url}") String serverUrl, RestTemplateBuilder builder) {
+        super(builder.uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl))
+                .requestFactory(HttpComponentsClientHttpRequestFactory::new)
+                .build());
     }
+
+    /**
+     * Отправка информации о попадании на эндпоинт в статистику.
+     *
+     * @param endpointHitDto объект EndpointHitDto, содержащий информацию о попадании на эндпоинт
+     */
+    public void postStats(EndpointHitDto endpointHitDto) {
+        post(endpointHitDto);
+    }
+
+    /**
+     * Получение статистики просмотров за определенный период.
+     *
+     * @param start  начальная дата и время периода статистики
+     * @param end    конечная дата и время периода статистики
+     * @param uris   список URI эндпоинтов, для которых нужно получить статистику
+     * @param unique флаг, указывающий нужно ли получить уникальные просмотры
+     * @return объект ResponseEntity<Object>, содержащий статистику просмотров
+     */
+    public ResponseEntity<Object> getStats(LocalDateTime start, LocalDateTime end, List<String> uris,
+                                           Boolean unique) {
+        Map<String, Object> parameters = Map.of(
+                "start", start.format(formatter),
+                "end", end.format(formatter),
+                "uris", String.join(",", uris),
+                "unique", unique
+        );
+        return get("/stats?start={start}&end={end}&uris={uris}&unique={unique}", parameters);
+    }
+
 }

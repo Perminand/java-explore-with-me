@@ -8,6 +8,5 @@ import java.util.List;
 
 public interface StatService {
     void create(EndpointHitDto hit);
-
     List<ViewStatsDto> getViewStatsList(ViewsStatsRequest build);
 }
