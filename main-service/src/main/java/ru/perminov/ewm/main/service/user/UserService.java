@@ -1,6 +1,6 @@
 package ru.perminov.ewm.main.service.user;
 
-import ewm.dto.model.dto.service.UserDto;
+import ru.practicum.ewm.model.dto.service.UserDto;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package ewm.dto;
+package ru.practicum.ewm;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

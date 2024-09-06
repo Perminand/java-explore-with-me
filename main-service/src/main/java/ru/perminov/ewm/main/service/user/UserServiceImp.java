@@ -1,7 +1,7 @@
 package ru.perminov.ewm.main.service.user;
 
-import ewm.dto.mappers.UserMapper;
-import ewm.dto.model.dto.service.UserDto;
+import ru.practicum.ewm.mappers.UserMapper;
+import ru.practicum.ewm.model.dto.service.UserDto;
 import ru.perminov.ewm.main.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

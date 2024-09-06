@@ -1,6 +1,6 @@
 package ru.perminov.ewm.main.controller.adminApi;
 
-import ewm.dto.model.dto.service.UserDto;
+import ru.practicum.ewm.model.dto.service.UserDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

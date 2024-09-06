@@ -1,4 +1,4 @@
-package ewm.dto.model.dto.service;
+package ru.practicum.ewm.model.dto.service;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;

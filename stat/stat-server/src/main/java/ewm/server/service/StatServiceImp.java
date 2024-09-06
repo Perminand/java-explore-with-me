@@ -1,8 +1,8 @@
 package ewm.server.service;
 
-import ewm.dto.model.dto.stat.EndpointHitDto;
-import ewm.dto.model.dto.stat.ViewStatsDto;
-import ewm.server.mappers.EndpointHitMapper;
+import ewm.server.mappers.EndpointHitDtoMapper;
+import ru.practicum.ewm.EndpointHitDto;
+import ru.practicum.ewm.model.dto.stat.ViewStatsDto;
 import ewm.server.mappers.HitViewStatsMapper;
 import ewm.server.model.EndpointHit;
 import ewm.server.repository.StatsRepository;
@@ -20,12 +20,8 @@ public class StatServiceImp implements StatService {
     private final StatsRepository statsRepository;
 
     @Override
-    public EndpointHitDto create(EndpointHitDto endpointHitDto) {
-        EndpointHit endpointHit = EndpointHitMapper.toEndpointHit(endpointHitDto);
-        endpointHit = statsRepository.save(endpointHit);
-        EndpointHitDto endpointHitDtoOut = EndpointHitMapper.toEndpointHitDto(endpointHit);
-        return endpointHitDtoOut;
-
+    public void create(EndpointHitDto hit) {
+        statsRepository.save(EndpointHitDtoMapper.toModel(hit));
     }
 
     @Override
