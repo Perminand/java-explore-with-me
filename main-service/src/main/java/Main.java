@@ -1,4 +1,4 @@
-import ewm.client.StatClient;
+import ru.practicum.ewm.StatClient;
 import org.springframework.web.client.RestTemplate;
 
 public class Main {
