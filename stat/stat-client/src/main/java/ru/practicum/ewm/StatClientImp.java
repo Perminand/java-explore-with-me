@@ -29,6 +29,7 @@ public class StatClientImp implements StatClient {
                 .body(hit, EndpointHitDto.class)
                 .retrieve();
     }
+
     public List<ViewStatsDto> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder.path("/stats")
