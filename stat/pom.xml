@@ -9,7 +9,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <groupId>ru.perminov</groupId>
+    <groupId>ru.practicum</groupId>
     <artifactId>stat</artifactId>
     <packaging>pom</packaging>
     <modules>
@@ -17,5 +17,12 @@
         <module>stat-server</module>
         <module>stat-dto</module>
     </modules>
-
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>
