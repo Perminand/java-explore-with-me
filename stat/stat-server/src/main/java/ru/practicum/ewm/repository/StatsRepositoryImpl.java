@@ -1,6 +1,6 @@
-package ewm.server.repository;
+package ru.practicum.ewm.repository;
 
-import ewm.server.mappers.ViewStatsMapper;
+import ru.practicum.ewm.mappers.ViewStatsMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;

@@ -1,6 +1,6 @@
-package ewm.server.service;
+package ru.practicum.ewm.service;
 
-import ewm.server.repository.StatsRepository;
+import ru.practicum.ewm.repository.StatsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.EndpointHitDto;

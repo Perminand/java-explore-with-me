@@ -1,6 +1,6 @@
-package ewm.server.controllers;
+package ru.practicum.ewm.controllers;
 
-import ewm.server.service.StatService;
+import ru.practicum.ewm.service.StatService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;

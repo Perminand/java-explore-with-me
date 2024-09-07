@@ -1,4 +1,4 @@
-package ewm.server.mappers;
+package ru.practicum.ewm.mappers;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;

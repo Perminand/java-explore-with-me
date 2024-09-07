@@ -1,4 +1,4 @@
-package ewm.server.service;
+package ru.practicum.ewm.service;
 
 import ru.practicum.ewm.EndpointHitDto;
 import ru.practicum.ewm.ViewStatsDto;

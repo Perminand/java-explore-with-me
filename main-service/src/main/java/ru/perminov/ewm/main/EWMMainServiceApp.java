@@ -6,6 +6,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class EWMMainServiceApp {
     public static void main(String[] arg) {
-        SpringApplication.run(EWMMainServiceApp.class);
+        SpringApplication.run(EWMMainServiceApp.class, arg);
     }
 }

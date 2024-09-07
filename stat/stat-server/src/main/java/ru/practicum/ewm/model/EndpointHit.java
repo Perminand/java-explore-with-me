@@ -1,4 +1,4 @@
-package ewm.server.model;
+package ru.practicum.ewm.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
