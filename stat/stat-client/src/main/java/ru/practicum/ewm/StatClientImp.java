@@ -22,6 +22,7 @@ public class StatClientImp implements StatClient {
         this.webClient = WebClient.create(statUrl);
     }
 
+    @Override
     public void createStat(EndpointHitDto hit) {
         webClient.post()
                 .uri("/hit")
@@ -29,7 +30,7 @@ public class StatClientImp implements StatClient {
                 .body(hit, EndpointHitDto.class)
                 .retrieve();
     }
-
+    @Override
     public List<ViewStatsDto> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder.path("/stats")
