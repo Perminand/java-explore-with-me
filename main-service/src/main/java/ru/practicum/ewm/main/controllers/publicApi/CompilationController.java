@@ -1,0 +1,38 @@
+package ru.practicum.ewm.main.controllers.publicApi;
+
+import jakarta.validation.constraints.Min;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import ru.practicum.ewm.main.model.dto.compilation.CompilationDto;
+import ru.practicum.ewm.main.service.compilations.CompilationService;
+
+@Slf4j
+@RestController
+@RequestMapping(value = "/compilations", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequiredArgsConstructor
+@Validated
+public class CompilationController {
+    private final CompilationService compilationService;
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public CompilationDto getAll(@Min(0)
+                              @PathVariable(required = false)
+                              @RequestParam Boolean pinned,
+                              @Min(0) @RequestParam(defaultValue = "0") Integer from,
+                              @Min(0) @RequestParam(defaultValue = "10") Integer size) {
+        log.info("Get запрос на получение подборок");
+        return compilationService.getAll(pinned, from, size);
+    }
+
+    @GetMapping("/{compId}")
+    @ResponseStatus(HttpStatus.OK)
+    public CompilationDto get(@Min(0) @PathVariable long compId) {
+        log.info("Get запрос на получение подборки");
+        return compilationService.getById(compId);
+    }
+}
