@@ -15,7 +15,7 @@ import ru.practicum.ewm.main.service.compilations.CompilationService;
 @RequestMapping(value = "/compilations", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @Validated
-public class CompilationController {
+public class CompilationPublicController {
     private final CompilationService compilationService;
 
     @GetMapping

@@ -16,7 +16,7 @@ import java.util.List;
 @RequestMapping(value = "/categories", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @Validated
-public class CategoryController {
+public class CategoryPublicController {
     private final CategoryService categoryService;
 
     @GetMapping

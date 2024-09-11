@@ -18,7 +18,7 @@ import java.util.List;
 @RequestMapping(value = "/events", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @Validated
-public class EventController {
+public class EventPublicController {
     private final EventService eventService;
 
     @GetMapping

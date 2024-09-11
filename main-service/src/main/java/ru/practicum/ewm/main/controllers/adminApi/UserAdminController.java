@@ -14,10 +14,10 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/admin", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/admin")
 @RequiredArgsConstructor
 @Validated
-public class UserController {
+public class UserAdminController {
     private final UserService userService;
 
     @PostMapping("/users")

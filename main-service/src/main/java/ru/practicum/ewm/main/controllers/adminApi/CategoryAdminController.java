@@ -17,7 +17,7 @@ import ru.practicum.ewm.main.service.categories.CategoryService;
 @RequestMapping(value = "/admin", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @Validated
-public class CategoryController {
+public class CategoryAdminController {
     private final CategoryService categoryService;
 
     @PostMapping("/categories")

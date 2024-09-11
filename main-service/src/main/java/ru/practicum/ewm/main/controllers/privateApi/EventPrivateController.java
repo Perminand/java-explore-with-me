@@ -23,7 +23,7 @@ import java.util.List;
 @RequestMapping(value = "/users", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @Validated
-public class EventController {
+public class EventPrivateController {
     private final EventService eventService;
 
 

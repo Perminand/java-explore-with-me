@@ -17,7 +17,7 @@ import java.util.List;
 @RequestMapping(value = "/admin", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @Validated
-public class EventController {
+public class EventAdminController {
     private final EventService eventService;
 
 
