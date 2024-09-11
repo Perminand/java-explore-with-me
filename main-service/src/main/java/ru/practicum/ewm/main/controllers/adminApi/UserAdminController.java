@@ -2,6 +2,7 @@ package ru.practicum.ewm.main.controllers.adminApi;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -10,7 +11,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.main.model.dto.users.UserDto;
 import ru.practicum.ewm.main.service.users.UserService;
+
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @RestController
@@ -29,18 +33,18 @@ public class UserAdminController {
 
     @GetMapping("/users")
     @ResponseStatus(HttpStatus.OK)
-    public List<UserDto> getUsers(
-            @RequestParam(name = "ids") List<Long> listIds,
-            @RequestParam(name = "from", defaultValue = "0") @Min(0) Long from,
-            @RequestParam(name = "size", defaultValue = "10") @Min(0) Long size) {
+    public Collection<UserDto> getUsers(
+            @RequestParam(name = "ids", required = false) Set<Long> listIds,
+            @RequestParam(name = "from", defaultValue = "0") @Min(0) Integer from,
+            @RequestParam(name = "size", defaultValue = "10") @Min(0) Integer size) {
         log.info("Get Запрос на получение пользователей");
-        return userService.get(listIds, from , size);
+        return userService.getAll(listIds, from , size);
     }
 
     @DeleteMapping("/users/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUser(@Min(0) Long userId) {
-        log.info("Delete запрос на удаление категории");
+    public void deleteUser(@PathVariable @NotNull @Min(0) Long userId) {
+        log.info("Delete запрос на удаление пользователя");
         userService.delete(userId);
     }
 }
