@@ -71,6 +71,7 @@ public class EventServiceImpl implements EventService {
         Sort sortById = Sort.by(Sort.Direction.ASC, "id");
         int startPage = from > 0 ? (from / size) : 0;
         Pageable pageable = PageRequest.of(startPage, size, sortById);
+
 //        List<Event> eventFullDtoList = eventRepository.getAllForFilter(users, states, categories, rangeStart, rangeEnd, pageable);
     return null;
     }

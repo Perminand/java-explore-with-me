@@ -5,10 +5,14 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import ru.practicum.ewm.main.model.markers.Update;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
+@Setter
 public class CategoryDto {
     @NotNull(groups = Update.class)
     @NotBlank(groups = Update.class)
