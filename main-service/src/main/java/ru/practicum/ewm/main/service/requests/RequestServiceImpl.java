@@ -1,7 +1,7 @@
 package ru.practicum.ewm.main.service.requests;
 
 import org.springframework.stereotype.Service;
-import ru.practicum.ewm.main.model.dto.ParticipationRequestDto;
+import ru.practicum.ewm.main.model.ParticipationRequestDto;
 
 import java.util.List;
 

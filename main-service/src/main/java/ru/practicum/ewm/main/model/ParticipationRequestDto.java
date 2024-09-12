@@ -1,4 +1,4 @@
-package ru.practicum.ewm.main.model.dto;
+package ru.practicum.ewm.main.model;
 
 public class ParticipationRequestDto {
     private String created;

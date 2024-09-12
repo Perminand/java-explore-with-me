@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.main.model.dto.category.CategoryDto;
+import ru.practicum.ewm.main.model.category.dto.CategoryDto;
 import ru.practicum.ewm.main.service.categories.CategoryService;
 import java.util.List;
 
@@ -21,12 +21,11 @@ public class CategoryPublicController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<CategoryDto> getAll(@Min(0)
-                              @RequestParam Boolean pinned,
+    public List<CategoryDto> getAll(
                                     @Min(0) @RequestParam(defaultValue = "0") Integer from,
                                     @Min(0) @RequestParam(defaultValue = "10") Integer size) {
         log.info("Get запрос на получение всех категорий");
-        return categoryService.getAll(pinned, from, size);
+        return categoryService.getAll(from, size);
     }
 
     @GetMapping("/{catId}")

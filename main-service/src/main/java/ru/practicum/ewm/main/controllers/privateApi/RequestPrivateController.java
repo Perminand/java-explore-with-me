@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.main.model.dto.ParticipationRequestDto;
+import ru.practicum.ewm.main.model.ParticipationRequestDto;
 import ru.practicum.ewm.main.service.requests.RequestService;
 
 import java.util.List;

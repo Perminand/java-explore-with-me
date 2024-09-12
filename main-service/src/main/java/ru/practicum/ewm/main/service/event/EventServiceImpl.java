@@ -3,10 +3,10 @@ package ru.practicum.ewm.main.service.event;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.main.model.EventRequestStatusUpdateResult;
 import ru.practicum.ewm.main.model.UpdateEventAdminRequest;
-import ru.practicum.ewm.main.model.dto.ParticipationRequestDto;
-import ru.practicum.ewm.main.model.dto.event.EventDto;
-import ru.practicum.ewm.main.model.dto.event.EventFullDto;
-import ru.practicum.ewm.main.model.dto.event.EventShortDto;
+import ru.practicum.ewm.main.model.ParticipationRequestDto;
+import ru.practicum.ewm.main.model.event.EventDto;
+import ru.practicum.ewm.main.model.event.EventFullDto;
+import ru.practicum.ewm.main.model.event.EventShortDto;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package ru.practicum.ewm.main.service.compilations;
 
 import org.springframework.stereotype.Service;
-import ru.practicum.ewm.main.model.dto.compilation.CompilationDto;
+import ru.practicum.ewm.main.model.compilation.CompilationDto;
 
 @Service
 public class CompilationServiceImpl implements CompilationService{

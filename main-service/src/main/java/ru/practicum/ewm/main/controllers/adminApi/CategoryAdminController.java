@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.main.model.dto.category.CategoryDto;
+import ru.practicum.ewm.main.model.category.dto.CategoryDto;
 import ru.practicum.ewm.main.model.markers.Update;
 import ru.practicum.ewm.main.service.categories.CategoryService;
 

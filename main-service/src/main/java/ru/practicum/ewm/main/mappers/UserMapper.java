@@ -1,7 +1,7 @@
 package ru.practicum.ewm.main.mappers;
 
-import ru.practicum.ewm.main.model.User;
-import ru.practicum.ewm.main.model.dto.users.UserDto;
+import ru.practicum.ewm.main.model.users.User;
+import ru.practicum.ewm.main.model.users.dto.UserDto;
 
 public class UserMapper {
     public static User toUser(UserDto userDto) {

@@ -6,14 +6,12 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.main.model.dto.users.UserDto;
+import ru.practicum.ewm.main.model.users.dto.UserDto;
 import ru.practicum.ewm.main.service.users.UserService;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
 @Slf4j

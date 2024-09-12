@@ -1,10 +1,10 @@
-package ru.practicum.ewm.main.model.dto.event;
+package ru.practicum.ewm.main.model.event;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import ru.practicum.ewm.main.model.dto.category.CategoryDto;
-import ru.practicum.ewm.main.model.dto.users.UserShortDto;
+import ru.practicum.ewm.main.model.category.dto.CategoryDto;
+import ru.practicum.ewm.main.model.users.dto.UserShortDto;
 
 public class EventShortDto {
     @NotNull

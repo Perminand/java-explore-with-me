@@ -1,4 +1,4 @@
-package ru.practicum.ewm.main.model.dto.compilation;
+package ru.practicum.ewm.main.model.compilation;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
