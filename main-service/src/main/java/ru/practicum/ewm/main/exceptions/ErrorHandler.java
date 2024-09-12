@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import ru.practicum.ewm.main.exceptions.errors.ConflictException;
 import ru.practicum.ewm.main.exceptions.errors.ValidationException;
 
 import java.io.PrintWriter;
@@ -26,6 +27,13 @@ public class ErrorHandler {
     public ApiError handleNotFoundError(final EntityNotFoundException e) {
         log.error("404 {}", e.getMessage(), e);
         return setApiError(e, HttpStatus.NOT_FOUND.getReasonPhrase());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ApiError handleConflictError(final ConflictException e) {
+        log.error("409 {}", e.getMessage(), e);
+        return setApiError(e, HttpStatus.CONTINUE.getReasonPhrase());
     }
 
     private ApiError setApiError(Throwable e, String status) {

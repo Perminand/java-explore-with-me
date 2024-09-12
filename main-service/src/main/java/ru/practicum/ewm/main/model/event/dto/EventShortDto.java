@@ -1,4 +1,4 @@
-package ru.practicum.ewm.main.model.event;
+package ru.practicum.ewm.main.model.event.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;

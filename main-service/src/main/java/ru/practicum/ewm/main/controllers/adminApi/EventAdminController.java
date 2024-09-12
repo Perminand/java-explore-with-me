@@ -8,7 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.main.model.UpdateEventAdminRequest;
-import ru.practicum.ewm.main.model.event.EventFullDto;
+import ru.practicum.ewm.main.model.event.dto.EventFullDto;
 import ru.practicum.ewm.main.service.event.EventService;
 import java.util.List;
 
