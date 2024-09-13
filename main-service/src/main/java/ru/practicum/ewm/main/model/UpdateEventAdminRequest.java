@@ -17,7 +17,7 @@ public class UpdateEventAdminRequest {
     private Boolean paid;
     private Integer participantLimit;
     private Boolean requestModeration;
-    private String stateAction;
+    private StateAction stateAction;
     @Size(min = 3, max = 120)
     private String title;
 

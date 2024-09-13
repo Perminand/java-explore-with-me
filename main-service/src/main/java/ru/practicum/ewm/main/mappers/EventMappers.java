@@ -36,7 +36,7 @@ public class EventMappers {
                 .initiator(UserMapper.toUserShortDto(event.getInitiator()))
                 .requestModeration(event.getRequestModeration())
                 .createdOn(event.getCreatedOn())
-                .state(event.getState())
+                .state(event.getState().toString())
                 .build();
     }
 }

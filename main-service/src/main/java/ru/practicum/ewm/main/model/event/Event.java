@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 import ru.practicum.ewm.main.model.Location;
+import ru.practicum.ewm.main.model.State;
 import ru.practicum.ewm.main.model.category.Category;
 import ru.practicum.ewm.main.model.category.dto.CategoryDto;
 import ru.practicum.ewm.main.model.users.User;
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @Builder
@@ -68,7 +70,7 @@ public class Event {
     @NotNull(message = "requestModeration должен быть true или false")
     private Boolean requestModeration;
 
-    private String state;
+    private State state;
 
     @NotBlank(message = "title не может быть пустым")
     @Length(min = 3, max = 120)

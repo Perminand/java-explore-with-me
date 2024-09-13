@@ -34,7 +34,7 @@ public class RequestPrivateController {
     public ParticipationRequestDto createRequestEventIdByUserId(
             @PathVariable @Min(0) Long userId,
             @RequestParam @Min(0) Long eventId) {
-        log.info("Post запрос на сохранение запроса на участие");
+        log.info("Post запрос от текущего на участие в событии ");
         return requestService.createRequestEventIdByUserId(userId, eventId);
     }
 

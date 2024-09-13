@@ -10,10 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.main.exceptions.errors.ConflictException;
 import ru.practicum.ewm.main.exceptions.errors.EntityNotFoundException;
 import ru.practicum.ewm.main.mappers.EventMappers;
-import ru.practicum.ewm.main.model.EventRequestStatusUpdateResult;
-import ru.practicum.ewm.main.model.ParticipationRequestDto;
-import ru.practicum.ewm.main.model.State;
-import ru.practicum.ewm.main.model.UpdateEventAdminRequest;
+import ru.practicum.ewm.main.model.*;
 import ru.practicum.ewm.main.model.category.Category;
 import ru.practicum.ewm.main.model.event.Event;
 import ru.practicum.ewm.main.model.event.dto.EventDto;
@@ -24,6 +21,7 @@ import ru.practicum.ewm.main.repository.CategoryRepository;
 import ru.practicum.ewm.main.repository.EventRepository;
 import ru.practicum.ewm.main.repository.LocationRepository;
 import ru.practicum.ewm.main.repository.UserRepository;
+import ru.practicum.ewm.main.validate.Validate;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -37,12 +35,13 @@ public class EventServiceImpl implements EventService {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final LocationRepository locationRepository;
+    private final Validate validate;
 
     @Override
     @Transactional
     public EventFullDto create(Long userId, EventDto eventDto) {
-        User user = validateUser(userId);
-        Category category = validateCategory(eventDto.getCategory());
+        User user = validate.validateUser(userId);
+        Category category = validate.validateCategory(eventDto.getCategory());
         if (eventDto.getRequestModeration() == null) {
             eventDto.setRequestModeration(true);
         }
@@ -57,6 +56,7 @@ public class EventServiceImpl implements EventService {
         event.setCategory(category);
         event.setCreatedOn(LocalDateTime.now());
         event.setLocation(locationRepository.save(eventDto.getLocation()));
+        event.setState(State.PENDING);
         Event eventFinal = eventRepository.save(event);
         EventFullDto eventFullDto = EventMappers.toEventFullDto(eventFinal);
         return eventFullDto;
@@ -67,10 +67,10 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<EventFullDto> get(List<Long> users, List<String> states, List<Long> categories, String rangeStart, String rangeEnd, Integer from, Integer size) {
         for(Long l : users) {
-            validateUser(l);
+            validate.validateUser(l);
         }
         for(Long l : categories) {
-            validateCategory(l);
+            validate.validateCategory(l);
         }
         Sort sortById = Sort.by(Sort.Direction.ASC, "id");
         int startPage = from > 0 ? (from / size) : 0;
@@ -83,20 +83,20 @@ public class EventServiceImpl implements EventService {
     @Override
     @Transactional
     public EventFullDto update(Long eventId, UpdateEventAdminRequest updateEventAdminRequest) {
-        Event event = validateEvent(eventId);
+        Event event = validate.validateEvent(eventId);
 
         if(event.getEventDate().minusHours(1).isBefore(LocalDateTime.now())) {
             throw new ConflictException("Осталось менее часа до мероприятия");
         }
 
-        if (!(updateEventAdminRequest.getStateAction().equals(State.PUBLISHED)
-                && event.getState().equals(State.PENDING))) {
+        if (updateEventAdminRequest.getStateAction().equals(StateAction.PUBLISH_EVENT)
+                && !(event.getState().equals(State.PENDING))) {
             log.error("Попытка опубликовать событие в статусах отличных от ожидающих");
             throw new ConflictException("Опубликовать можно только ожидающие публикацию событие");
         }
 
-        if (!(updateEventAdminRequest.getStateAction().equals(State.CANCELED)
-                && event.getState().equals(State.PENDING))) {
+        if (updateEventAdminRequest.getStateAction().equals(StateAction.REJECT_EVENT)
+                && !(event.getState().equals(State.PENDING.toString()))) {
             log.error("Попытка отменить событие в статусах отличных от ожидающих");
             throw new ConflictException("Отменить можно только ожидающие публикацию событие");
         }
@@ -114,13 +114,11 @@ public class EventServiceImpl implements EventService {
         }
 
         if (updateEventAdminRequest.getEventDate() != null) {
-            event.setEventDate(LocalDateTime.parse(
-                    updateEventAdminRequest.getEventDate(),
-                    DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss")));
+            event.setEventDate(LocalDateTime.parse(updateEventAdminRequest.getEventDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         }
 
         if (updateEventAdminRequest.getLocation() != null) {
-            event.setLocation(updateEventAdminRequest.getLocation());
+            event.setLocation(locationRepository.save(updateEventAdminRequest.getLocation()));
         }
 
         if (updateEventAdminRequest.getPaid() != null) {
@@ -135,14 +133,17 @@ public class EventServiceImpl implements EventService {
             event.setRequestModeration(updateEventAdminRequest.getRequestModeration());
         }
 
-        if (updateEventAdminRequest.getStateAction() != null) {
-            event.setState(updateEventAdminRequest.getStateAction());
-        }
-
         if (updateEventAdminRequest.getTitle() != null) {
             event.setTitle(updateEventAdminRequest.getTitle());
         }
-        eventRepository.save(event);
+
+        if (updateEventAdminRequest.getStateAction() == StateAction.PUBLISH_EVENT) {
+            event.setState(State.PUBLISHED);
+        } else if (updateEventAdminRequest.getStateAction() == StateAction.REJECT_EVENT) {
+            event.setState(State.CANCELED);
+        }
+
+                eventRepository.save(event);
         return EventMappers.toEventFullDto(event);
     }
 
@@ -183,26 +184,7 @@ public class EventServiceImpl implements EventService {
         return null;
     }
 
-    private User validateUser(Long userId) {
-        return userRepository.findById(userId).orElseThrow(()-> {
-            log.error("Попытка создание события для несуществующего пользователя");
-            return new EntityNotFoundException("Нет пользователя с ид: " + userId);
-        });
-    }
 
-    private Category validateCategory(Long l) {
-        return categoryRepository.findById(l).orElseThrow(()-> {
-            log.error("Попытка создание события для несуществующей category");
-            return new EntityNotFoundException("Нет category с ид: " + l);
-        });
-    }
-
-    private Event validateEvent(Long eventId) {
-        return eventRepository.findById(eventId).orElseThrow(()-> {
-            log.error("Попытка изменения статуса не существующего события");
-            return new EntityNotFoundException("Нет события с ид: " + eventId);
-        });
-    }
 
     private LocalDateTime validationEventDate(LocalDateTime eventDate) {
         if (eventDate.minusHours(2).isBefore(LocalDateTime.now())) {
