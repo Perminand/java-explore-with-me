@@ -6,7 +6,6 @@ import ru.practicum.ewm.main.model.ParticipationRequestDto;
 import ru.practicum.ewm.main.model.event.dto.EventDto;
 import ru.practicum.ewm.main.model.event.dto.EventFullDto;
 import ru.practicum.ewm.main.model.event.dto.EventShortDto;
-import ru.practicum.ewm.main.model.event.dto.NewEventDto;
 
 import java.util.List;
 
@@ -21,7 +20,7 @@ public interface EventService {
             Integer size
     );
 
-    void update(Long eventId, UpdateEventAdminRequest updateEventAdminRequest);
+    EventFullDto update(Long eventId, UpdateEventAdminRequest updateEventAdminRequest);
 
     List<EventShortDto> getEventsByUser(Long userId, Integer from, Integer size);
 

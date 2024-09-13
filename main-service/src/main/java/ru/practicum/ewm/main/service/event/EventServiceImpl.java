@@ -85,9 +85,14 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public void update(Long eventId, UpdateEventAdminRequest updateEventAdminRequest) {
-
+    public EventFullDto update(Long eventId, UpdateEventAdminRequest updateEventAdminRequest) {
+        Event event = validateEvent(eventId);
+        if(event.getEventDate().minusHours(1).isBefore(LocalDateTime.now())) {
+            throw new ConflictException("Осталось менее часа до мероприятия");        }
+        return null;
     }
+
+
 
     @Override
     public List<EventShortDto> getEventsByUser(Long userId, Integer from, Integer size) {
@@ -125,9 +130,16 @@ public class EventServiceImpl implements EventService {
     }
 
     private User validateUser(Long userId) {
-        return Optional.of(userRepository.findById(userId)).get().orElseThrow(()-> {
-            log.error("Попытка создание события для несуществующего user");
-            throw new EntityNotFoundException("Нет user с ид: " + userId);
+        return userRepository.findById(userId).orElseThrow(()-> {
+            log.error("Попытка создание события для несуществующего пользователя");
+            return new EntityNotFoundException("Нет пользователя с ид: " + userId);
+        });
+    }
+
+    private Event validateEvent(Long eventId) {
+        return eventRepository.findById(eventId).orElseThrow(()-> {
+            log.error("Попытка изменения статуса не существующего события");
+            return new EntityNotFoundException("Нет события с ид: " + eventId);
         });
     }
 

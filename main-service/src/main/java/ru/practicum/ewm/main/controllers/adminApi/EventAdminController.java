@@ -35,10 +35,10 @@ public class EventAdminController {
         return eventService.get(users, states, categories, rangeStart, rangeEnd, from, size);
     }
 
-    @PatchMapping("/users/{eventId}")
+    @PatchMapping("/events/{eventId}")
     @ResponseStatus(HttpStatus.OK)
-    public void updateEvent(@Min(0) @PathVariable Long eventId, @RequestBody UpdateEventAdminRequest updateEventAdminRequest) {
+    public EventFullDto updateEvent(@Min(0) @PathVariable Long eventId, @RequestBody UpdateEventAdminRequest updateEventAdminRequest) {
         log.info("Patch запрос на изменение события");
-        eventService.update(eventId, updateEventAdminRequest);
+        return eventService.update(eventId, updateEventAdminRequest);
     }
 }
