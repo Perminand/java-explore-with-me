@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import ru.practicum.ewm.main.model.Location;
 import ru.practicum.ewm.main.model.category.dto.CategoryDto;
 import ru.practicum.ewm.main.model.users.dto.UserShortDto;
@@ -13,6 +15,8 @@ import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @Builder
+@Getter
+@Setter
 public class EventFullDto {
     private Long id;
 

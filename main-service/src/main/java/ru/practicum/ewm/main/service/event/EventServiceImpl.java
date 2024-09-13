@@ -55,7 +55,8 @@ public class EventServiceImpl implements EventService {
         event.setCreatedOn(LocalDateTime.now());
         event.setLocation(locationRepository.save(eventDto.getLocation()));
         Event eventFinal = eventRepository.save(event);
-        return EventMappers.toEventFullDto(eventFinal);
+        EventFullDto eventFullDto = EventMappers.toEventFullDto(eventFinal);
+        return eventFullDto;
     }
 
 
