@@ -11,6 +11,7 @@ import ru.practicum.ewm.main.exceptions.errors.EntityNotFoundException;
 import ru.practicum.ewm.main.mappers.EventMappers;
 import ru.practicum.ewm.main.model.EventRequestStatusUpdateResult;
 import ru.practicum.ewm.main.model.ParticipationRequestDto;
+import ru.practicum.ewm.main.model.State;
 import ru.practicum.ewm.main.model.UpdateEventAdminRequest;
 import ru.practicum.ewm.main.model.category.Category;
 import ru.practicum.ewm.main.model.event.Event;
@@ -77,19 +78,18 @@ public class EventServiceImpl implements EventService {
     return null;
     }
 
-    private Category validateCategory(Long l) {
-        return Optional.of(categoryRepository.findById(l)).get().orElseThrow(()-> {
-            log.error("Попытка создание события для несуществующей category");
-            throw new EntityNotFoundException("Нет category с ид: " + l);
-        });
-    }
-
     @Override
     public EventFullDto update(Long eventId, UpdateEventAdminRequest updateEventAdminRequest) {
         Event event = validateEvent(eventId);
         if(event.getEventDate().minusHours(1).isBefore(LocalDateTime.now())) {
             throw new ConflictException("Осталось менее часа до мероприятия");        }
         return null;
+        if (!(updateEventAdminRequest.getStateAction().equals(State.PUBLISHED)
+                && event.getState().equals(State.PENDING))
+                || !(updateEventAdminRequest.getStateAction().equals(State.CANCELED)
+            && event.getState().equals(State.PENDING))) {
+            throw new ConflictException("")
+        }
     }
 
 
@@ -133,6 +133,13 @@ public class EventServiceImpl implements EventService {
         return userRepository.findById(userId).orElseThrow(()-> {
             log.error("Попытка создание события для несуществующего пользователя");
             return new EntityNotFoundException("Нет пользователя с ид: " + userId);
+        });
+    }
+
+    private Category validateCategory(Long l) {
+        return categoryRepository.findById(l).orElseThrow(()-> {
+            log.error("Попытка создание события для несуществующей category");
+            return new EntityNotFoundException("Нет category с ид: " + l);
         });
     }
 

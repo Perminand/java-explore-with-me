@@ -2,7 +2,9 @@ package ru.practicum.ewm.main.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Size;
+import lombok.Getter;
 
+@Getter
 public class UpdateEventAdminRequest {
     @Size(min = 20, max = 2000)
     private String annotation;
