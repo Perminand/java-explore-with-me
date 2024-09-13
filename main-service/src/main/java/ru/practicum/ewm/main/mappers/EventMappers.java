@@ -1,9 +1,11 @@
 package ru.practicum.ewm.main.mappers;
 
+import lombok.RequiredArgsConstructor;
 import ru.practicum.ewm.main.model.event.Event;
 import ru.practicum.ewm.main.model.event.dto.EventDto;
 import ru.practicum.ewm.main.model.event.dto.EventFullDto;
 
+@RequiredArgsConstructor
 public class EventMappers {
     public static Event toEvent(EventDto eventDto) {
         return Event
@@ -12,7 +14,6 @@ public class EventMappers {
                 .annotation(eventDto.getAnnotation())
                 .description(eventDto.getDescription())
                 .eventDate(eventDto.getEventDate())
-                .location(eventDto.getLocation())
                 .paid(eventDto.getPaid())
                 .participantLimit(eventDto.getParticipantLimit())
                 .requestModeration(eventDto.getRequestModeration())

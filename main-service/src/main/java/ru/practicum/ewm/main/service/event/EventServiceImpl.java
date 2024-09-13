@@ -8,7 +8,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.main.exceptions.errors.ConflictException;
 import ru.practicum.ewm.main.exceptions.errors.EntityNotFoundException;
-import ru.practicum.ewm.main.mappers.CategoryMappers;
 import ru.practicum.ewm.main.mappers.EventMappers;
 import ru.practicum.ewm.main.model.EventRequestStatusUpdateResult;
 import ru.practicum.ewm.main.model.ParticipationRequestDto;
@@ -21,10 +20,10 @@ import ru.practicum.ewm.main.model.event.dto.EventShortDto;
 import ru.practicum.ewm.main.model.users.User;
 import ru.practicum.ewm.main.repository.CategoryRepository;
 import ru.practicum.ewm.main.repository.EventRepository;
+import ru.practicum.ewm.main.repository.LocationRepository;
 import ru.practicum.ewm.main.repository.UserRepository;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,12 +34,12 @@ public class EventServiceImpl implements EventService {
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
+    private final LocationRepository locationRepository;
 
     @Override
     public EventFullDto create(Long userId, EventDto eventDto) {
         User user = validateUser(userId);
         Category category = validateCategory(eventDto.getCategory());
-        LocalDateTime eventTime = validationEventDate(eventDto.getEventDate());
         if (eventDto.getRequestModeration() == null) {
             eventDto.setRequestModeration(true);
         }
@@ -53,9 +52,10 @@ public class EventServiceImpl implements EventService {
         Event event = EventMappers.toEvent(eventDto);
         event.setInitiator(user);
         event.setCategory(category);
-        event.setEventDate(eventTime.toString());
-        eventRepository.save(event);
-        return EventMappers.toEventFullDto(event);
+        event.setCreatedOn(LocalDateTime.now());
+        event.setLocation(locationRepository.save(eventDto.getLocation()));
+        Event eventFinal = eventRepository.save(event);
+        return EventMappers.toEventFullDto(eventFinal);
     }
 
 
@@ -130,13 +130,11 @@ public class EventServiceImpl implements EventService {
         });
     }
 
-    private LocalDateTime validationEventDate(String eventDate) {
-        LocalDateTime eventTime = LocalDateTime.parse(eventDate, DateTimeFormatter.ISO_TIME);
-
-        if (eventTime.minusHours(2).isBefore(LocalDateTime.now())) {
+    private LocalDateTime validationEventDate(LocalDateTime eventDate) {
+        if (eventDate.minusHours(2).isBefore(LocalDateTime.now())) {
             throw new ConflictException("eventDate должна содержать дату и время которое не наступила + 2 часа");
         }
-        return eventTime;
+        return eventDate;
 
     }
 }

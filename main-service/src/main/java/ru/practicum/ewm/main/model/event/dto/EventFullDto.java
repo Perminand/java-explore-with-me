@@ -9,6 +9,8 @@ import ru.practicum.ewm.main.model.Location;
 import ru.practicum.ewm.main.model.category.dto.CategoryDto;
 import ru.practicum.ewm.main.model.users.dto.UserShortDto;
 
+import java.time.LocalDateTime;
+
 @AllArgsConstructor
 @Builder
 public class EventFullDto {
@@ -22,13 +24,13 @@ public class EventFullDto {
 
     private Long confirmedRequests;
 
-    private String createdOn;
+    private LocalDateTime createdOn;
 
     private String description;
 
     @NotBlank
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private String eventDate;
+    private LocalDateTime eventDate;
 
     @NotNull
     private UserShortDto initiator;

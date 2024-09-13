@@ -12,12 +12,14 @@ import ru.practicum.ewm.main.model.category.Category;
 import ru.practicum.ewm.main.model.category.dto.CategoryDto;
 import ru.practicum.ewm.main.model.users.User;
 
+import java.time.LocalDateTime;
+
 @Entity
 @AllArgsConstructor
 @Getter
 @Setter
 @Builder
-@Table(name = "events")
+@Table(name = "events", schema = "public")
 public class Event {
 
     @Id
@@ -33,7 +35,7 @@ public class Event {
     private Category category;
 
     @Column(name = "create_on")
-    private String createdOn;
+    private LocalDateTime createdOn;
 
     @NotNull(message = "Пустое описание")
     @Length(min = 20, max = 7000)
@@ -42,7 +44,7 @@ public class Event {
     @Column(name = "event_date")
     @NotNull(message = "eventDate не может быть пустым")
     @FutureOrPresent(message = "eventDate должно быть в будущем")
-    private String eventDate;
+    private LocalDateTime eventDate;
 
     @ManyToOne
     @JoinColumn(name = "initiator")
