@@ -9,5 +9,5 @@ public interface RequestService {
 
     ParticipationRequestDto createRequestEventIdByUserId(Long userId, Long eventId);
 
-    ParticipationRequestDto updaetRequestEventIdByUserId(Long userId, Long requestsId);
+    ParticipationRequestDto updateRequestEventIdByUserId(Long userId, Long requestsId);
 }

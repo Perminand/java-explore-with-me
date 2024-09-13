@@ -2,6 +2,7 @@ package ru.practicum.ewm.main.validate;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import ru.practicum.ewm.main.exceptions.errors.EntityNotFoundException;
 import ru.practicum.ewm.main.model.category.Category;
 import ru.practicum.ewm.main.model.event.Event;
@@ -11,6 +12,7 @@ import ru.practicum.ewm.main.repository.EventRepository;
 import ru.practicum.ewm.main.repository.UserRepository;
 
 @Slf4j
+@Component
 @RequiredArgsConstructor
 public class Validate {
     private final UserRepository userRepository;

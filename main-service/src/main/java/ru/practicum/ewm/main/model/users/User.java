@@ -2,13 +2,14 @@ package ru.practicum.ewm.main.model.users;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
+@Data
 @Table(name = "users", schema = "public")
 public class User {
     @Id

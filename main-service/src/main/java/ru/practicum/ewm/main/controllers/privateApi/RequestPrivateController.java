@@ -44,6 +44,6 @@ public class RequestPrivateController {
             @PathVariable @Min(0) Long userId,
             @PathVariable @Min(0) Long requestsId) {
         log.info("Patch запрос на отмену участия в событии");
-        return requestService.updaetRequestEventIdByUserId(userId, requestsId);
+        return requestService.updateRequestEventIdByUserId(userId, requestsId);
     }
 }
