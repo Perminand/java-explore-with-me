@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.main.exceptions.errors.ConflictException;
 import ru.practicum.ewm.main.exceptions.errors.EntityNotFoundException;
 import ru.practicum.ewm.main.mappers.EventMappers;
@@ -25,8 +26,8 @@ import ru.practicum.ewm.main.repository.LocationRepository;
 import ru.practicum.ewm.main.repository.UserRepository;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -38,6 +39,7 @@ public class EventServiceImpl implements EventService {
     private final LocationRepository locationRepository;
 
     @Override
+    @Transactional
     public EventFullDto create(Long userId, EventDto eventDto) {
         User user = validateUser(userId);
         Category category = validateCategory(eventDto.getCategory());
@@ -79,17 +81,69 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Transactional
     public EventFullDto update(Long eventId, UpdateEventAdminRequest updateEventAdminRequest) {
         Event event = validateEvent(eventId);
+
         if(event.getEventDate().minusHours(1).isBefore(LocalDateTime.now())) {
-            throw new ConflictException("Осталось менее часа до мероприятия");        }
-        return null;
-        if (!(updateEventAdminRequest.getStateAction().equals(State.PUBLISHED)
-                && event.getState().equals(State.PENDING))
-                || !(updateEventAdminRequest.getStateAction().equals(State.CANCELED)
-            && event.getState().equals(State.PENDING))) {
-            throw new ConflictException("")
+            throw new ConflictException("Осталось менее часа до мероприятия");
         }
+
+        if (!(updateEventAdminRequest.getStateAction().equals(State.PUBLISHED)
+                && event.getState().equals(State.PENDING))) {
+            log.error("Попытка опубликовать событие в статусах отличных от ожидающих");
+            throw new ConflictException("Опубликовать можно только ожидающие публикацию событие");
+        }
+
+        if (!(updateEventAdminRequest.getStateAction().equals(State.CANCELED)
+                && event.getState().equals(State.PENDING))) {
+            log.error("Попытка отменить событие в статусах отличных от ожидающих");
+            throw new ConflictException("Отменить можно только ожидающие публикацию событие");
+        }
+
+        if (updateEventAdminRequest.getAnnotation() != null) {
+            event.setAnnotation(updateEventAdminRequest.getAnnotation());
+        }
+
+        if (updateEventAdminRequest.getCategory() != null) {
+            event.setCategory(categoryRepository.findById(updateEventAdminRequest.getCategory()).get());
+        }
+
+        if (updateEventAdminRequest.getDescription() != null) {
+            event.setDescription(updateEventAdminRequest.getDescription());
+        }
+
+        if (updateEventAdminRequest.getEventDate() != null) {
+            event.setEventDate(LocalDateTime.parse(
+                    updateEventAdminRequest.getEventDate(),
+                    DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss")));
+        }
+
+        if (updateEventAdminRequest.getLocation() != null) {
+            event.setLocation(updateEventAdminRequest.getLocation());
+        }
+
+        if (updateEventAdminRequest.getPaid() != null) {
+            event.setPaid(updateEventAdminRequest.getPaid());
+        }
+
+        if (updateEventAdminRequest.getParticipantLimit() != null) {
+            event.setParticipantLimit(updateEventAdminRequest.getParticipantLimit());
+        }
+
+        if (updateEventAdminRequest.getRequestModeration() != null) {
+            event.setRequestModeration(updateEventAdminRequest.getRequestModeration());
+        }
+
+        if (updateEventAdminRequest.getStateAction() != null) {
+            event.setState(updateEventAdminRequest.getStateAction());
+        }
+
+        if (updateEventAdminRequest.getTitle() != null) {
+            event.setTitle(updateEventAdminRequest.getTitle());
+        }
+        eventRepository.save(event);
+        return EventMappers.toEventFullDto(event);
     }
 
 
