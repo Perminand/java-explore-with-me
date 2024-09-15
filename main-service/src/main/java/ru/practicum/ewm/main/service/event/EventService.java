@@ -10,16 +10,6 @@ import ru.practicum.ewm.main.model.event.dto.EventShortDto;
 import java.util.List;
 
 public interface EventService {
-    List<EventFullDto> get(
-            List<Long> users,
-            List<String> states,
-            List<Long> categories,
-            String rangeStart,
-            String rangeEnd,
-            Integer from,
-            Integer size
-    );
-
     EventFullDto update(Long eventId, UpdateEventAdminRequest updateEventAdminRequest);
 
     List<EventShortDto> getEventsByUser(Long userId, Integer from, Integer size);
@@ -37,4 +27,13 @@ public interface EventService {
     List<EventShortDto> getEventsFilter(String text, List<Long> categories, String rangeStart, String rangeEnd, Boolean onlyAvailable, String sort, Integer from, Integer size);
 
     EventFullDto getEvent(Long id);
+
+    List<EventFullDto> getEvents(
+            List<Long> users,
+            List<String> states,
+            List<Long> categories,
+            String rangeStart,
+            String rangeEnd,
+            Integer from,
+            Integer size);
 }

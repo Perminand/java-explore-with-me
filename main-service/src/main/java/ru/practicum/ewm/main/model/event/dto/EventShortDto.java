@@ -3,9 +3,13 @@ package ru.practicum.ewm.main.model.event.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
 import ru.practicum.ewm.main.model.category.dto.CategoryDto;
 import ru.practicum.ewm.main.model.users.dto.UserShortDto;
 
+@Getter
+@Setter
 public class EventShortDto {
     @NotNull
     private String annotation;

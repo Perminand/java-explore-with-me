@@ -23,7 +23,7 @@ public class EventAdminController {
 
     @GetMapping("/events")
     @ResponseStatus(HttpStatus.OK)
-    public List<EventFullDto> getEvent(
+    public List<EventFullDto> getEvents(
             @RequestParam List<Long> users,
             @RequestParam List<String> states,
             @RequestParam List<Long> categories,
@@ -32,7 +32,7 @@ public class EventAdminController {
             @RequestParam(defaultValue = "0") Integer from,
             @RequestParam(defaultValue = "10") Integer size) {
         log.info("Get запрос на получение списка событий");
-        return eventService.get(users, states, categories, rangeStart, rangeEnd, from, size);
+        return eventService.getEvents(users, states, categories, rangeStart, rangeEnd, from, size);
     }
 
     @PatchMapping("/events/{eventId}")

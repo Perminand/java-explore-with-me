@@ -8,9 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.EndpointHitDto;
-import ru.practicum.ewm.ViewStatsDto;
-import ru.practicum.ewm.ViewsStatsRequest;
+import ru.practicum.dto.StatisticDto;
+import ru.practicum.dto.StatisticResponse;
+import ru.practicum.dto.ViewsStatsRequest;
 
 import java.security.InvalidParameterException;
 import java.time.LocalDateTime;
@@ -32,7 +32,7 @@ public class StatController {
     @PostMapping("/hit")
     @ResponseStatus(HttpStatus.CREATED)
     @Validated
-    public void createHit(@RequestBody EndpointHitDto hit) {
+    public void createHit(@RequestBody StatisticDto hit) {
         log.info("POST запрос на сохранение информации.");
         statService.create(hit);
     }
@@ -49,7 +49,7 @@ public class StatController {
      */
     @GetMapping("/stats")
     @ResponseStatus(HttpStatus.OK)
-    public List<ViewStatsDto> get(
+    public List<StatisticResponse> get(
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime start,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end,
             @RequestParam(defaultValue = "") List<String> uris,

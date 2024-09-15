@@ -24,9 +24,11 @@ public class RequestPrivateController {
     @GetMapping("/{userId}/requests")
     @ResponseStatus(HttpStatus.OK)
     public List<ParticipationRequestDto> getRequestByUserId(
-            @PathVariable @Min(0) Long userId) {
-        log.info("Get запрос на получение запросов на участие в мероприятиях других пользователей");
-        return requestService.getRequestByUserId(userId);
+            @PathVariable @Min(0) Long userId,
+            @RequestParam(defaultValue = "0") Integer from,
+            @RequestParam(defaultValue = "10") Integer size) {
+        log.info("GET Получение событий, добавленных текущим пользователем");
+        return requestService.getRequestByUserId(userId, from, size);
     }
 
     @PostMapping("/{userId}/requests")

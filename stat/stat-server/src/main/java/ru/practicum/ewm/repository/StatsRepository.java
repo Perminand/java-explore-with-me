@@ -1,8 +1,8 @@
 package ru.practicum.ewm.repository;
 
-import ru.practicum.ewm.EndpointHitDto;
-import ru.practicum.ewm.ViewStatsDto;
-import ru.practicum.ewm.ViewsStatsRequest;
+import ru.practicum.dto.StatisticDto;
+import ru.practicum.dto.StatisticResponse;
+import ru.practicum.dto.ViewsStatsRequest;
 
 import java.util.List;
 
@@ -10,9 +10,9 @@ import java.util.List;
  * Интерфейс для работы с репозиторием статистики.
  */
 public interface StatsRepository {
-    void saveHit(EndpointHitDto hit);
+    void saveHit(StatisticDto hit);
 
-    List<ViewStatsDto> getStats(ViewsStatsRequest request);
+    List<StatisticResponse> getStats(ViewsStatsRequest request);
 
-    List<ViewStatsDto> getUniqueStats(ViewsStatsRequest request);
+    List<StatisticResponse> getUniqueStats(ViewsStatsRequest request);
 }

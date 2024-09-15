@@ -2,7 +2,7 @@ package ru.practicum.ewm.mappers;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
-import ru.practicum.ewm.ViewStatsDto;
+import ru.practicum.dto.StatisticResponse;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,7 +11,7 @@ import java.sql.SQLException;
  * Маппер для преобразования результата запроса к таблице статистики в объект ViewStats.
  */
 @Component
-public class ViewStatsMapper implements RowMapper<ViewStatsDto> {
+public class ViewStatsMapper implements RowMapper<StatisticResponse> {
 
     /**
      * Метод для маппинга строки результата запроса в объект ViewStats.
@@ -22,8 +22,8 @@ public class ViewStatsMapper implements RowMapper<ViewStatsDto> {
      * @throws SQLException если произошла ошибка при доступе к данным в ResultSet
      */
     @Override
-    public ViewStatsDto mapRow(ResultSet rs, int rowNum) throws SQLException {
-        return new ViewStatsDto(
+    public StatisticResponse mapRow(ResultSet rs, int rowNum) throws SQLException {
+        return new StatisticResponse(
                 rs.getString("app"),
                 rs.getString("uri"),
                 rs.getLong("hits")

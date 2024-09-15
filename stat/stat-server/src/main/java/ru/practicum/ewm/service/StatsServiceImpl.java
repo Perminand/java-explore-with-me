@@ -3,9 +3,9 @@ package ru.practicum.ewm.service;
 import ru.practicum.ewm.repository.StatsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.practicum.ewm.EndpointHitDto;
-import ru.practicum.ewm.ViewStatsDto;
-import ru.practicum.ewm.ViewsStatsRequest;
+import ru.practicum.dto.StatisticDto;
+import ru.practicum.dto.StatisticResponse;
+import ru.practicum.dto.ViewsStatsRequest;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ public class StatsServiceImpl implements StatService {
      * @param hit объект EndpointHit, содержащий информацию о попадании на эндпоинт
      */
     @Override
-    public void create(EndpointHitDto hit) {
+    public void create(StatisticDto hit) {
         statRepository.saveHit(hit);
     }
 
@@ -34,7 +34,7 @@ public class StatsServiceImpl implements StatService {
      * @return список объектов ViewStats, содержащих статистику просмотров
      */
     @Override
-    public List<ViewStatsDto> getViewStatsList(ViewsStatsRequest request) {
+    public List<StatisticResponse> getViewStatsList(ViewsStatsRequest request) {
         if (request.isUnique()) {
             return statRepository.getUniqueStats(request);
         }

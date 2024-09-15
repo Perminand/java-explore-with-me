@@ -4,38 +4,42 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.ewm.StatClientImp;
+import ru.practicum.ewm.main.common.ConnectToStatServer;
+import ru.practicum.ewm.main.common.GeneralConstants;
+import ru.practicum.ewm.main.common.Utilities;
 import ru.practicum.ewm.main.exceptions.errors.ConflictException;
-import ru.practicum.ewm.main.exceptions.errors.EntityNotFoundException;
 import ru.practicum.ewm.main.mappers.EventMappers;
 import ru.practicum.ewm.main.model.*;
 import ru.practicum.ewm.main.model.category.Category;
 import ru.practicum.ewm.main.model.event.Event;
 import ru.practicum.ewm.main.model.event.dto.EventDto;
 import ru.practicum.ewm.main.model.event.dto.EventFullDto;
+import ru.practicum.ewm.main.model.event.dto.EventIdByRequestsCount;
 import ru.practicum.ewm.main.model.event.dto.EventShortDto;
 import ru.practicum.ewm.main.model.users.User;
-import ru.practicum.ewm.main.repository.CategoryRepository;
-import ru.practicum.ewm.main.repository.EventRepository;
-import ru.practicum.ewm.main.repository.LocationRepository;
-import ru.practicum.ewm.main.repository.UserRepository;
+import ru.practicum.ewm.main.repository.*;
 import ru.practicum.ewm.main.validate.Validate;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
+    private final RequestRepository requestRepository;
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final LocationRepository locationRepository;
     private final Validate validate;
+    private final StatClientImp statClientImp;
 
     @Override
     @Transactional
@@ -58,26 +62,7 @@ public class EventServiceImpl implements EventService {
         event.setLocation(locationRepository.save(eventDto.getLocation()));
         event.setState(State.PENDING);
         Event eventFinal = eventRepository.save(event);
-        EventFullDto eventFullDto = EventMappers.toEventFullDto(eventFinal);
-        return eventFullDto;
-    }
-
-
-
-    @Override
-    public List<EventFullDto> get(List<Long> users, List<String> states, List<Long> categories, String rangeStart, String rangeEnd, Integer from, Integer size) {
-        for(Long l : users) {
-            validate.validateUser(l);
-        }
-        for(Long l : categories) {
-            validate.validateCategory(l);
-        }
-        Sort sortById = Sort.by(Sort.Direction.ASC, "id");
-        int startPage = from > 0 ? (from / size) : 0;
-        Pageable pageable = PageRequest.of(startPage, size, sortById);
-
-//        List<Event> eventFullDtoList = eventRepository.getAllForFilter(users, states, categories, rangeStart, rangeEnd, pageable);
-    return null;
+        return EventMappers.toEventFullDto(eventFinal);
     }
 
     @Override
@@ -184,6 +169,44 @@ public class EventServiceImpl implements EventService {
         return null;
     }
 
+    @Override
+    public List<EventFullDto> getEvents(
+            List<Long> initiator,
+            List<String> state,
+            List<Long> category,
+            String rangeStart,
+            String rangeEnd,
+            Integer from,
+            Integer size) {
+        int startPage = from > 0 ? (from / size) : 0;
+        Pageable pageable = PageRequest.of(startPage, size);
+        LocalDateTime rangeStartL = LocalDateTime.parse(rangeStart, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        LocalDateTime rangeEndL = LocalDateTime.parse(rangeEnd, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        List<Event> event = eventRepository.findAllByInitiatorIdInAndStateInAndCategoryIdInAndDateTimeBetween(
+                initiator,
+                category,
+                state,
+                rangeStartL,
+                rangeEndL,
+                pageable);
+
+        List<EventFullDto> eventFullDtoList = event.stream().map(EventMappers::toEventFullDto).toList();
+        List<Long> eventsIds = eventFullDtoList.stream().map(EventFullDto::getId).toList();
+
+        Map<Long, Long> confirmedRequestsByEvents = requestRepository
+                .countByEventIdInAndStatusGroupByEvent(eventsIds, String.valueOf(RequestStatus.CONFIRMED))
+                .stream()
+                .collect(Collectors.toMap(EventIdByRequestsCount::getEvent, EventIdByRequestsCount::getCount));
+
+        List<Long> views = ConnectToStatServer.getViews(
+                GeneralConstants.defaultStartTime,
+                GeneralConstants.defaultEndTime,
+                ConnectToStatServer.prepareUris(eventsIds), true, statClientImp);
+
+        List<EventFullDto> events =
+                Utilities.addViewsAndConfirmedRequests(eventFullDtoList, confirmedRequestsByEvents, views);
+        return Utilities.checkTypes(events, EventFullDto.class);
+    }
 
 
     private LocalDateTime validationEventDate(LocalDateTime eventDate) {

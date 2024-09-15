@@ -1,9 +1,11 @@
 package ru.practicum.ewm.main.service.requests;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
 import ru.practicum.ewm.main.exceptions.errors.ConflictException;
 import ru.practicum.ewm.main.mappers.RequestMapper;
 import ru.practicum.ewm.main.model.ParticipationRequestDto;
@@ -23,8 +25,12 @@ public class RequestServiceImpl implements RequestService{
     private final Validate validate;
     private final RequestRepository requestRepository;
     @Override
-    public List<ParticipationRequestDto> getRequestByUserId(Long userId) {
-        return null;
+    public List<ParticipationRequestDto> getRequestByUserId(Long userId, Integer from, Integer size) {
+        Sort sortById = Sort.by(Sort.Direction.ASC, "id");
+        int startPage = from > 0 ? (from / size) : 0;
+        Pageable pageable = PageRequest.of(startPage, size, sortById);
+        List<ParticipationRequestDto> participationRequestDtoList = requestRepository.findByRequester_Id(userId, pageable);
+        return participationRequestDtoList;
     }
 
     @Override

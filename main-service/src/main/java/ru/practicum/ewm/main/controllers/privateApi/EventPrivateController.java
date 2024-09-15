@@ -34,11 +34,7 @@ public class EventPrivateController {
             @RequestParam(defaultValue = "0") Integer from,
             @RequestParam(defaultValue = "10") Integer size) {
         log.info(
-                "GET запрос на получение событий добавленных пользователем: userid: ?, from: ?, size: ?",
-                userId,
-                from,
-                size
-        );
+                "GET запрос на получение событий добавленных пользователем");
         return eventService.getEventsByUser(userId, from, size);
     }
 
@@ -47,7 +43,7 @@ public class EventPrivateController {
     public EventFullDto create(
             @PathVariable @Min(0) Long userId,
             @RequestBody @Valid EventDto eventDto) {
-        log.info("POST запрос на сохранение события: {}", eventDto);
+        log.info("POST запрос на сохранение события");
         return eventService.create(userId, eventDto);
     }
 

@@ -70,6 +70,7 @@ public class Event {
     @NotNull(message = "requestModeration должен быть true или false")
     private Boolean requestModeration;
 
+    @Enumerated(EnumType.STRING)
     private State state;
 
     @NotBlank(message = "title не может быть пустым")
