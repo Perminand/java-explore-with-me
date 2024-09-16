@@ -33,8 +33,7 @@ public class EventPrivateController {
             @PathVariable @Min(0) Long userId,
             @RequestParam(defaultValue = "0") Integer from,
             @RequestParam(defaultValue = "10") Integer size) {
-        log.info(
-                "GET запрос на получение событий добавленных пользователем");
+        log.info("GET запрос на получение событий добавленных пользователем");
         return eventService.getEventsByUser(userId, from, size);
     }
 

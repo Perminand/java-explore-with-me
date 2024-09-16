@@ -2,6 +2,7 @@ package ru.practicum.ewm.main.service.event;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,8 @@ import ru.practicum.ewm.main.model.users.User;
 import ru.practicum.ewm.main.repository.*;
 import ru.practicum.ewm.main.validate.Validate;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -31,6 +34,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@Import({StatClientImp.class})
 @RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
     private final RequestRepository requestRepository;
@@ -136,7 +140,24 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<EventShortDto> getEventsByUser(Long userId, Integer from, Integer size) {
-        return null;
+        validate.validateUser(userId);
+        int startPage = from > 0 ? (from/size) : 0;
+        Pageable pageable = PageRequest.of(startPage, size);
+        List<EventShortDto> eventShortDtoList = eventRepository.findAllByInitiatorId(userId, pageable).stream().map(EventMappers::toShortDto).toList();
+        List<Long> longList = eventShortDtoList.stream().map(EventShortDto::getId).toList();
+        Map<Long, Long> confirmedRequestsByEvents = requestRepository
+                .countByEventIdInAndStatusGroupByEvent(longList, String.valueOf(RequestStatus.CONFIRMED))
+                .stream()
+                .collect(Collectors.toMap(EventIdByRequestsCount::getEvent, EventIdByRequestsCount::getCount));
+
+        List<Long> views = ConnectToStatServer.getViews(GeneralConstants.defaultStartTime, GeneralConstants.defaultEndTime,
+                ConnectToStatServer.prepareUris(longList), true, statClientImp);
+
+        List<EventShortDto> eventsForResp =
+                Utilities.addViewsAndConfirmedRequestsShort(eventShortDtoList, confirmedRequestsByEvents, views);
+
+        return Utilities.checkTypes(eventsForResp,
+                EventShortDto.class);
     }
 
     @Override
@@ -160,8 +181,49 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<EventShortDto> getEventsFilter(String text, List<Long> categories, String rangeStart, String rangeEnd, Boolean onlyAvailable, String sort, Integer from, Integer size) {
-        return null;
+    public List<EventShortDto> getEventsFilter(String text, List<Long> categories, Boolean paid, String rangeStart, String rangeEnd, Boolean onlyAvailable, String sort, Integer from, Integer size) {
+        LocalDateTime start = convertToLocalDataTime(decode(rangeStart));
+        LocalDateTime end = convertToLocalDataTime(decode(rangeEnd));
+        validate.validateDates(start, end);
+        int startPage = from > 0 ? (from / size) : 0;
+        Pageable pageable = PageRequest.of(startPage, size);
+
+        if (text == null) {
+            text = "";
+        }
+        if (categories == null) {
+            categories = List.of();
+        }
+        if (start == null) {
+            start = LocalDateTime.now();
+        }
+        if (end == null) {
+            end = GeneralConstants.defaultEndTime;
+        }
+
+        List<EventShortDto> events = eventRepository
+                .searchEvents(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, pageable)
+                .stream()
+                .map(EventMappers::toShortDto)
+                .toList();
+
+        List<Long> eventsIds = events.stream()
+                .map(EventShortDto::getId)
+                .toList();
+
+        Map<Long, Long> confirmedRequestsByEvents = requestRepository
+                .countByEventIdInAndStatusGroupByEvent(eventsIds, String.valueOf(RequestStatus.CONFIRMED))
+                .stream()
+                .collect(Collectors.toMap(EventIdByRequestsCount::getEvent, EventIdByRequestsCount::getCount));
+
+        List<Long> views = ConnectToStatServer.getViews(GeneralConstants.defaultStartTime,
+                GeneralConstants.defaultEndTime, ConnectToStatServer.prepareUris(eventsIds),
+                true, statClientImp);
+
+        List<? extends EventShortDto> eventsForResp =
+                Utilities.addViewsAndConfirmedRequestsShort(events, confirmedRequestsByEvents, views);
+
+        return Utilities.checkTypes(eventsForResp, EventShortDto.class);
     }
 
     @Override
@@ -204,7 +266,7 @@ public class EventServiceImpl implements EventService {
                 ConnectToStatServer.prepareUris(eventsIds), true, statClientImp);
 
         List<EventFullDto> events =
-                Utilities.addViewsAndConfirmedRequests(eventFullDtoList, confirmedRequestsByEvents, views);
+                Utilities.addViewsAndConfirmedRequestsFull(eventFullDtoList, confirmedRequestsByEvents, views);
         return Utilities.checkTypes(events, EventFullDto.class);
     }
 
@@ -215,5 +277,19 @@ public class EventServiceImpl implements EventService {
         }
         return eventDate;
 
+    }
+
+    private LocalDateTime convertToLocalDataTime(String date) {
+        if (date == null) {
+            return null;
+        }
+        return LocalDateTime.parse(date, ru.practicum.GeneralConstants.DATE_FORMATTER);
+    }
+
+    private String decode(String parameter) {
+        if (parameter == null) {
+            return null;
+        }
+        return URLDecoder.decode(parameter, StandardCharsets.UTF_8);
     }
 }

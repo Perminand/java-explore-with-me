@@ -24,11 +24,13 @@ public class Request {
     private LocalDateTime created;
 
     @ManyToOne
-    @JoinColumn(name = "events")
+    @JoinColumn(name = "event")
     private Event event;
 
     @ManyToOne
     @JoinColumn(name = "users")
     private User requester;
+
+    @Enumerated(EnumType.STRING)
     private State status;
 }

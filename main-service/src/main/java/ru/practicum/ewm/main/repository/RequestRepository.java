@@ -25,4 +25,5 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
             "AND status LIKE ?2 " +
             "group by event ", nativeQuery = true)
     List<EventIdByRequestsCount> countByEventIdInAndStatusGroupByEvent(List<Long> eventsIds, String s);
+
 }

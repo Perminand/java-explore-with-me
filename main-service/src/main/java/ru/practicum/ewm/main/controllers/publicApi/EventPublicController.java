@@ -1,16 +1,23 @@
 package ru.practicum.ewm.main.controllers.publicApi;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
+import ru.practicum.dto.StatisticDto;
+import ru.practicum.ewm.StatClientImp;
 import ru.practicum.ewm.main.model.event.dto.EventFullDto;
 import ru.practicum.ewm.main.model.event.dto.EventShortDto;
 import ru.practicum.ewm.main.service.event.EventService;
+import ru.practicum.ewm.main.validate.Validate;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -20,20 +27,42 @@ import java.util.List;
 @Validated
 public class EventPublicController {
     private final EventService eventService;
+    private final StatClientImp statisticClient;
+    private final Validate validate;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<EventShortDto> getEventsFilter(
-            @RequestParam String text,
-            @RequestParam List<Long> categories,
-            @RequestParam String rangeStart,
-            @RequestParam String rangeEnd,
-            @RequestParam(defaultValue = "false") Boolean onlyAvailable,
-            @RequestParam String sort,
-            @RequestParam(defaultValue = "0") Integer from,
-            @RequestParam(defaultValue = "10") Integer size) {
-        log.info("Get запрос на получение событий с возможностью фильтрации");
-        return eventService.getEventsFilter(text, categories, rangeStart, rangeEnd, onlyAvailable, sort, from, size);
+            @RequestParam(required = false) String text,
+            @RequestParam(required = false) List<Long> categories,
+            @RequestParam(required = false) Boolean paid,
+            @RequestParam(required = false) String rangeStart,
+            @RequestParam(required = false) String rangeEnd,
+            @RequestParam(defaultValue = "false", required = false) Boolean onlyAvailable,
+            @RequestParam(required = false) String sort,
+            @Min(0) @RequestParam(defaultValue = "0") Integer from,
+            @Min(0) @RequestParam(defaultValue = "10") Integer size,
+            HttpServletRequest httpServletRequest) {
+        log.info("");
+
+        String ip = httpServletRequest.getRemoteAddr();
+        String path = httpServletRequest.getRequestURI();
+
+        log.info("Get запрос на получение событий с возможностью фильтрации. Поисковые параметры: text: {}, categories: {}, paid: {}," +
+                        "rangeStart: {}, rangeEnd: {}, onlyAvailable: {}, sort: {}, from: {}, size: {}", text, categories,
+                paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size);
+        log.info("Requester IP: {}, path: {}", ip, path);
+
+        StatisticDto statisticDto = prepareStatisticDto("ewm-main-service", path, ip);
+        Mono<ResponseEntity<StatisticDto>> response = statisticClient.createStat(statisticDto);
+        ResponseEntity<StatisticDto> responseEntity = response.block();
+        validate.validateResponses(responseEntity);
+
+        log.info("EventPublicController, getEventsFilter. Запрос был отправлен на сервер статистики. Подробнее: {}",
+                statisticDto);
+
+        return eventService.getEventsFilter(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from,
+                size);
     }
 
     @GetMapping("/{id}")
@@ -43,5 +72,14 @@ public class EventPublicController {
         return eventService.getEvent(id);
     }
 
+    private StatisticDto prepareStatisticDto(String app, String uri, String ip) {
+        return StatisticDto
+                .builder()
+                .app(app)
+                .uri(uri)
+                .ip(ip)
+                .timestamp(LocalDateTime.now())
+                .build();
+    }
 
 }

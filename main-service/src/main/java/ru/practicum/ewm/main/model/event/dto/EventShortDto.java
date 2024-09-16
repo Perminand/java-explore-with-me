@@ -3,6 +3,7 @@ package ru.practicum.ewm.main.model.event.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import ru.practicum.ewm.main.model.category.dto.CategoryDto;
@@ -10,7 +11,9 @@ import ru.practicum.ewm.main.model.users.dto.UserShortDto;
 
 @Getter
 @Setter
+@AllArgsConstructor
 public class EventShortDto {
+    private Long id;
     @NotNull
     private String annotation;
     @NotNull
@@ -19,7 +22,6 @@ public class EventShortDto {
     @NotBlank
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private String eventDate;
-    private Long id;
     @NotNull
     private UserShortDto initiator;
     @NotNull

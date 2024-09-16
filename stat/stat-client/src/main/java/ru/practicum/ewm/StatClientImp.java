@@ -7,14 +7,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-import reactor.util.retry.Retry;
 import ru.practicum.dto.StatisticDto;
 import ru.practicum.dto.StatisticResponse;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -30,12 +29,13 @@ public class StatClientImp implements StatClient {
     }
 
     @Override
-    public void createStat(StatisticDto hit) {
-        webClient.post()
+    public Mono<ResponseEntity<StatisticDto>> createStat(StatisticDto hit) {
+        return webClient.post()
                 .uri("/hit")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(hit, StatisticDto.class)
-                .retrieve();
+                .retrieve()
+                .toEntity(StatisticDto.class);
     }
     @Override
     public Mono<List<StatisticResponse>> getStats(LocalDateTime start, LocalDateTime end, String uris, Boolean unique) {
@@ -47,6 +47,7 @@ public class StatClientImp implements StatClient {
                         .queryParam("unique", unique)
                         .build()
                 )
+                .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError, error -> Mono.error(new RuntimeException("Апи не найдено")))
                 .onStatus(HttpStatusCode::is5xxServerError, error -> Mono.error(new RuntimeException("Сервер не может обработать запрос")))

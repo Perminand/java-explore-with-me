@@ -1,9 +1,11 @@
 package ru.practicum.ewm.main.mappers;
 
 import lombok.RequiredArgsConstructor;
+import ru.practicum.GeneralConstants;
 import ru.practicum.ewm.main.model.event.Event;
 import ru.practicum.ewm.main.model.event.dto.EventDto;
 import ru.practicum.ewm.main.model.event.dto.EventFullDto;
+import ru.practicum.ewm.main.model.event.dto.EventShortDto;
 
 @RequiredArgsConstructor
 public class EventMappers {
@@ -38,6 +40,18 @@ public class EventMappers {
                 .createdOn(event.getCreatedOn())
                 .state(event.getState().toString())
                 .build();
+    }
+    public static EventShortDto toShortDto(Event event) {
+        return new EventShortDto(
+                event.getId(),
+                event.getAnnotation(),
+                CategoryMappers.toCategoryDto(event.getCategory()),
+                null,
+                event.getEventDate().format(GeneralConstants.DATE_FORMATTER),
+                UserMapper.toUserShortDto(event.getInitiator()),
+                event.getPaid(),
+                event.getTitle(),
+                event.getViews());
     }
 }
 
