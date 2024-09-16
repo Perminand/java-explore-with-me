@@ -13,7 +13,6 @@ import java.util.Map;
 public class Utilities {
 
 
-    //Method allows to handle EventRespShort or EventRespFull
     public static List<EventFullDto> addViewsAndConfirmedRequestsFull(List<EventFullDto> eventFullDtoList,
                                                                       Map<Long, Long> confirmedRequests,
                                                                       List<Long> views) {
@@ -30,7 +29,6 @@ public class Utilities {
         return eventFullDtoList;
     }
 
-    //Method checks type after generics to return particular type to avoid unchecked cast
     public static <T> List<T> checkTypes(List<?> list, Class<T> clazz) {
         List<T> result = new ArrayList<>();
         for (Object item : list) {
@@ -46,9 +44,9 @@ public class Utilities {
     public static List<EventShortDto> addViewsAndConfirmedRequestsShort(List<EventShortDto> eventShortDtoList, Map<Long, Long> confirmedRequestsByEvents, List<Long> views) {
         for (int i = 0; i < eventShortDtoList.size(); i++) {
             if ((!views.isEmpty()) && (views.get(i) != 0)) {
-                eventShortDtoList.get(i).setView(views.get(i));
+                eventShortDtoList.get(i).setViews(views.get(i));
             } else {
-                eventShortDtoList.get(i).setView(0L);
+                eventShortDtoList.get(i).setViews(0L);
             }
             eventShortDtoList.get(i)
                     .setConfirmedRequests(confirmedRequestsByEvents

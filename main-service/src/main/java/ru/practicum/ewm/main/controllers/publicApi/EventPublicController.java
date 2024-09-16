@@ -54,10 +54,7 @@ public class EventPublicController {
         log.info("Requester IP: {}, path: {}", ip, path);
 
         StatisticDto statisticDto = prepareStatisticDto("ewm-main-service", path, ip);
-        Mono<ResponseEntity<StatisticDto>> response = statisticClient.createStat(statisticDto);
-        ResponseEntity<StatisticDto> responseEntity = response.block();
-        validate.validateResponses(responseEntity);
-
+        statisticClient.createStat(statisticDto);
         log.info("EventPublicController, getEventsFilter. Запрос был отправлен на сервер статистики. Подробнее: {}",
                 statisticDto);
 

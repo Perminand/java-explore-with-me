@@ -202,7 +202,7 @@ public class EventServiceImpl implements EventService {
         }
 
         List<EventShortDto> events = eventRepository
-                .searchEvents(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, pageable)
+                .searchEvents(text, categories, paid, start, end, onlyAvailable, pageable)
                 .stream()
                 .map(EventMappers::toShortDto)
                 .toList();
@@ -220,7 +220,7 @@ public class EventServiceImpl implements EventService {
                 GeneralConstants.defaultEndTime, ConnectToStatServer.prepareUris(eventsIds),
                 true, statClientImp);
 
-        List<? extends EventShortDto> eventsForResp =
+        List<EventShortDto> eventsForResp =
                 Utilities.addViewsAndConfirmedRequestsShort(events, confirmedRequestsByEvents, views);
 
         return Utilities.checkTypes(eventsForResp, EventShortDto.class);

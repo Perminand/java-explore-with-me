@@ -18,10 +18,9 @@ public class ConnectToStatServer {
 
     public static List<Long> getViews(LocalDateTime start, LocalDateTime end, String uris, boolean unique,
                                       StatClientImp statisticClient) {
-        Mono<List<StatisticResponse>> response = statisticClient.getStats(start, end, uris, unique);
-        List<StatisticResponse> statisticResponseList = response.block();
+        List<StatisticResponse> response = statisticClient.getStats(start, end, uris, unique);
 
-        return statisticResponseList
+        return response
                 .stream()
                 .map(StatisticResponse::getHits)
                 .collect(Collectors.toList());
