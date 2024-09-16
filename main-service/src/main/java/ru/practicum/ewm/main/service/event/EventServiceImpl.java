@@ -12,6 +12,7 @@ import ru.practicum.ewm.main.common.ConnectToStatServer;
 import ru.practicum.ewm.main.common.GeneralConstants;
 import ru.practicum.ewm.main.common.Utilities;
 import ru.practicum.ewm.main.exceptions.errors.ConflictException;
+import ru.practicum.ewm.main.exceptions.errors.EntityNotFoundException;
 import ru.practicum.ewm.main.mappers.EventMappers;
 import ru.practicum.ewm.main.model.*;
 import ru.practicum.ewm.main.model.category.Category;
@@ -228,7 +229,14 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventFullDto getEvent(Long id) {
-        return null;
+        Event event = validate.validateEvent(id);
+        if (event.getState().equals(State.PUBLISHED)) {
+            return EventMappers.toEventFullDto(event);
+        } else {
+            String error = "Нет события с заданным ид: " + id;
+            log.error(error);
+            throw new EntityNotFoundException(error);
+        }
     }
 
     @Override

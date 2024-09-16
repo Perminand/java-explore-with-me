@@ -6,10 +6,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Mono;
 import ru.practicum.dto.StatisticDto;
 import ru.practicum.ewm.StatClientImp;
 import ru.practicum.ewm.main.model.event.dto.EventFullDto;
@@ -64,8 +62,18 @@ public class EventPublicController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public EventFullDto getEvent(@PathVariable @Min(0) Long id) {
+    public EventFullDto getEvent(@PathVariable @Min(0) Long id, HttpServletRequest httpServletRequest) {
         log.info("Get запрос на получение события по его индентификатору");
+        String ip = httpServletRequest.getRemoteAddr();
+        String path = httpServletRequest.getRequestURI();
+
+        log.info("Requester IP: {}, path: {}", ip, path);
+
+        StatisticDto statisticDto = prepareStatisticDto("ewm-main-service", path, ip);
+        statisticClient.createStat(statisticDto);
+        log.info("EventPublicController, getEventsFilter. Запрос был отправлен на сервер статистики. Подробнее: {}",
+                statisticDto);
+
         return eventService.getEvent(id);
     }
 

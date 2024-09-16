@@ -3,6 +3,7 @@ package ru.practicum.ewm.main.repository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import ru.practicum.ewm.main.model.State;
 import ru.practicum.ewm.main.model.event.Event;
 
 import java.time.LocalDateTime;
@@ -48,4 +49,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "AND (state = 'PUBLISHED')", nativeQuery = true)
     List<Event> searchEvents(String text, List<Long> categories, Boolean paid, LocalDateTime rangeStart, LocalDateTime rangeEnd, Boolean onlyAvailable, Pageable pageable
     );
+
+    Event findByIdAndState(Long id, State state);
 }
