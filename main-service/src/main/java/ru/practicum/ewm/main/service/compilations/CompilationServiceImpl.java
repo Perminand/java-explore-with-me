@@ -6,7 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.ewm.main.exceptions.errors.ValidationException;
+import ru.practicum.ewm.main.exceptions.BadRequestException;
 import ru.practicum.ewm.main.mappers.CompilationMappers;
 import ru.practicum.ewm.main.mappers.EventMappers;
 import ru.practicum.ewm.main.model.compilation.Compilation;
@@ -92,6 +92,7 @@ public class CompilationServiceImpl implements CompilationService{
     @Override
     public void deleteCompilation(Long compId) {
         Compilation compilation = validate.getCompilationsById(compId);
+        List<CompilationEvent> compilationEvens = compilationsEventRepository.getAllByCompilationId(compId);
         compilationRepository.delete(compilation);
         compilationsEventRepository.deleteAllByCompilationId(compId);
         log.info("Подборка удалена ид: {}", compId);
@@ -105,10 +106,10 @@ public class CompilationServiceImpl implements CompilationService{
     @Override
     public List<CompilationDto> getAll(Boolean pinned, Integer from, Integer size) {
         if (from == null || from < 0) {
-            throw new ValidationException("Pagination parameter 'from' must be non-negative");
+            throw new BadRequestException("Pagination parameter 'from' must be non-negative");
         }
         if (size == null || size <= 0) {
-            throw new ValidationException("Pagination parameter 'size' must be greater than 0");
+            throw new BadRequestException("Pagination parameter 'size' must be greater than 0");
         }
         Pageable pageable = PageRequest.of(from / size, size);
         List<Compilation> compilations = pinned == null ?

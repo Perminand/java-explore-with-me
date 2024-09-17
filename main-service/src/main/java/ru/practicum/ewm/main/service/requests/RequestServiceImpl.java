@@ -1,10 +1,10 @@
 package ru.practicum.ewm.main.service.requests;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.ewm.main.exceptions.errors.ConflictException;
-import ru.practicum.ewm.main.exceptions.errors.EntityNotFoundException;
+import ru.practicum.ewm.main.exceptions.NotFoundException;
 import ru.practicum.ewm.main.mappers.RequestMappers;
 import ru.practicum.ewm.main.model.ParticipationRequestDto;
 import ru.practicum.ewm.main.model.Request;
@@ -33,21 +33,21 @@ public class RequestServiceImpl implements RequestService{
     public ParticipationRequestDto createRequestEventIdByUserId(Long userId, Long eventId) {
         List<Request> re = requestRepository.findAllByRequesterIdAndEventId(userId, eventId);
         if (!re.isEmpty()) {
-            throw new ConflictException("Есть уже запрос на участие");
+            throw new DataIntegrityViolationException("Есть уже запрос на участие");
         }
         User user = validate.getUserById(userId);
         Event event = validate.getEventById(eventId);
 
         if (event.getInitiator() == user) {
-            throw new ConflictException("Инициатор не может подать запрос на участие");
+            throw new DataIntegrityViolationException("Инициатор не может подать запрос на участие");
         }
 
         if (!event.getState().equals(State.PUBLISHED)) {
-            throw new ConflictException("Событие не опубликовано");
+            throw new DataIntegrityViolationException("Событие не опубликовано");
         }
 
         if (requestRepository.findAllByEventIdAndStatus(eventId, State.PUBLISHED).size() >= event.getParticipantLimit()) {
-            throw new ConflictException("Лимит регистрации закончился");
+            throw new DataIntegrityViolationException("Лимит регистрации закончился");
         }
         Request request;
         if (!event.getRequestModeration()) {
@@ -65,7 +65,7 @@ public class RequestServiceImpl implements RequestService{
         validate.getUserById(userId);
         Request request = validate.getRequestById(requestsId);
         if (!request.getRequester().getId().equals(userId)) {
-            throw new EntityNotFoundException("Запрос не найден");
+            throw new NotFoundException("Запрос не найден");
         }
         request.setStatus(State.CANCELED);
         requestRepository.save(request);

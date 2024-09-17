@@ -3,8 +3,8 @@ package ru.practicum.ewm.main.validate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import ru.practicum.ewm.main.exceptions.errors.EntityNotFoundException;
-import ru.practicum.ewm.main.exceptions.errors.ValidationException;
+import ru.practicum.ewm.main.exceptions.BadRequestException;
+import ru.practicum.ewm.main.exceptions.NotFoundException;
 import ru.practicum.ewm.main.model.Request;
 import ru.practicum.ewm.main.model.category.Category;
 import ru.practicum.ewm.main.model.compilation.Compilation;
@@ -27,35 +27,35 @@ public class Validate {
     public User getUserById(Long userId) {
         return userRepository.findById(userId).orElseThrow(()-> {
             log.error("Попытка создание события для несуществующего пользователя");
-            return new EntityNotFoundException("Нет пользователя с ид: " + userId);
+            return new NotFoundException("Нет пользователя с ид: " + userId);
         });
     }
 
     public Category getCategoryById(Long l) {
         return categoryRepository.findById(l).orElseThrow(()-> {
-            log.error("Попытка создание события для несуществующей category");
-            return new EntityNotFoundException("Нет category с ид: " + l);
+            log.error("Попытка создание события для несуществующей категории");
+            return new NotFoundException("Нет категории с ид: " + l);
         });
     }
 
     public Event getEventById(Long eventId) {
         return eventRepository.findById(eventId).orElseThrow(()-> {
             log.error("Попытка изменения статуса не существующего события");
-            return new EntityNotFoundException("Нет события с ид: " + eventId);
+            return new NotFoundException("Нет события с ид: " + eventId);
         });
     }
 
     public Request getRequestById(Long requestId) {
         return requestRepository.findById(requestId).orElseThrow(()-> {
-            log.error("Попытка изменения статуса не существующего события");
-            return new EntityNotFoundException("Нет события с ид: " + requestId);
+            log.error("Попытка изменения статуса не существующего запроса");
+            return new NotFoundException("Нет запроса с ид: " + requestId);
         });
     }
 
     public Compilation getCompilationsById(Long compilationsId) {
         return compilationRepository.findById(compilationsId).orElseThrow(() -> {
             log.error("Попытка изменения статуса не существующего события");
-            return new EntityNotFoundException("Нет события с ид: " + compilationsId);
+            return new NotFoundException("Нет события с ид: " + compilationsId);
         });
     }
 
@@ -65,7 +65,7 @@ public class Validate {
         }
         if (start.isAfter(end)) {
             log.warn("Prohibited. Start is after end. Start: {}, end: {}", start, end);
-            throw new ValidationException("Event must be published");
+            throw new BadRequestException("Event must be published");
         }
     }
 }

@@ -30,14 +30,14 @@ public class CompilationAdminController {
 
     @PatchMapping("/compilations/{compId}")
     @ResponseStatus(HttpStatus.OK)
-    public CompilationDto updateCompilation(@Min(0) Long compId, @Valid @PathVariable UpdateCompilationRequestDto compilationDto) {
+    public CompilationDto updateCompilation(@PathVariable @Min(0) Long compId, @Valid @RequestBody UpdateCompilationRequestDto compilationDto) {
         log.info("Patch запрос на обновление подборки");
         return compilationService.update(compId, compilationDto);
     }
 
     @DeleteMapping("/compilations/{compId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteCompilation(@Min(0) Long compId) {
+    public void deleteCompilation(@PathVariable @Min(0) Long compId) {
         log.info("Delete запрос на удаление подборки");
         compilationService.deleteCompilation(compId);
     }

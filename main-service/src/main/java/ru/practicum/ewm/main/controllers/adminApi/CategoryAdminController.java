@@ -12,6 +12,8 @@ import ru.practicum.ewm.main.model.category.dto.CategoryDto;
 import ru.practicum.ewm.main.model.markers.Update;
 import ru.practicum.ewm.main.service.categories.CategoryService;
 
+import java.util.Optional;
+
 @Slf4j
 @RestController
 @RequestMapping(value = "/admin", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -19,6 +21,7 @@ import ru.practicum.ewm.main.service.categories.CategoryService;
 @Validated
 public class CategoryAdminController {
     private final CategoryService categoryService;
+
 
     @PostMapping("/categories")
     @ResponseStatus(HttpStatus.CREATED)

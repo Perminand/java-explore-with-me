@@ -8,6 +8,7 @@ import ru.practicum.ewm.main.model.event.Event;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface EventRepository extends JpaRepository<Event, Long> {
 
@@ -40,4 +41,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     Event findByIdAndState(Long id, State state);
 
     Event findByIdAndInitiatorId(Long eventId, Long userId);
+
+    Optional<Event> findByCategoryId(Long catId);
 }

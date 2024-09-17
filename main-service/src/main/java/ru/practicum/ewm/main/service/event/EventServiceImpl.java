@@ -40,6 +40,7 @@ import java.util.stream.Collectors;
 @Service
 @Import({StatClientImp.class})
 @RequiredArgsConstructor
+@Transactional
 public class EventServiceImpl implements EventService {
     private final RequestRepository requestRepository;
     private final EventRepository eventRepository;
@@ -142,6 +143,7 @@ public class EventServiceImpl implements EventService {
 
 
     @Override
+    @Transactional(readOnly = true)
     public List<EventShortDto> getEventsByUser(Long userId, Integer from, Integer size) {
         validate.getUserById(userId);
         int startPage = from > 0 ? (from/size) : 0;
@@ -164,6 +166,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public EventFullDto getEventByUserId(Long userId, Long eventId) {
         validate.getUserById(userId);
         validate.getEventById(eventId);
@@ -176,6 +179,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ParticipationRequestDto> requestEventByUserId(Long userId, Long eventId) {
         return requestRepository.findAllByEventIdAndInitiatorId(eventId, userId)
                 .stream()
@@ -193,6 +197,17 @@ public class EventServiceImpl implements EventService {
         }
         if (event.getState() == State.PUBLISHED) {
             throw new ConflictException("Событие уже опубликовано");
+        } else if(event.getState() == State.CANCELED) {
+            throw new ConflictException("Событие уже отменено");
+        } else {
+            if(request.getStateAction().equals(StateAction.REJECT_EVENT)) {
+                event.setState(State.REJECTED);
+            } else if (request.getStateAction().equals(StateAction.PUBLISH_EVENT)) {
+                event.setState(State.PUBLISHED);
+                event.setPublishedOn(LocalDateTime.now().format(GeneralConstants.DATE_FORMATTER));
+            } else if (request.getStateAction().equals(StateAction.CANCEL_REVIEW)) {
+                event.setState(State.CANCELED);
+            }
         }
         if (request.getEventDate() != null) {
             LocalDateTime localDateTime = LocalDateTime.parse(request.getEventDate(), GeneralConstants.DATE_FORMATTER);
@@ -267,6 +282,7 @@ public class EventServiceImpl implements EventService {
 
 
     @Override
+    @Transactional(readOnly = true)
     public List<EventShortDto> getEventsFilter(String text, List<Long> categories, Boolean paid, String rangeStart, String rangeEnd, Boolean onlyAvailable, String sort, Integer from, Integer size) {
         LocalDateTime start = convertToLocalDataTime(decode(rangeStart));
         LocalDateTime end = convertToLocalDataTime(decode(rangeEnd));
@@ -313,6 +329,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public EventFullDto getEvent(Long id) {
         Event event = validate.getEventById(id);
         if (event.getState().equals(State.PUBLISHED)) {
@@ -325,6 +342,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<EventFullDto> getEvents(
             List<Long> initiator,
             List<String> state,

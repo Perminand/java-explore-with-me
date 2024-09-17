@@ -1,46 +1,40 @@
 package ru.practicum.ewm.main.exceptions;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.practicum.ewm.main.exceptions.errors.ConflictException;
-import ru.practicum.ewm.main.exceptions.errors.ValidationException;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.util.Map;
 
-@Slf4j
 @RestControllerAdvice
+@Slf4j
 public class ErrorHandler {
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ApiError handleInternalError(final Throwable e) {
-        log.error("500 {}", e.getMessage(), e);
-        return setApiError(e, HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
+
+    @ExceptionHandler(BadRequestException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> handleBadRequestException(BadRequestException e) {
+        return Map.of("error", e.getMessage());
     }
 
-    @ExceptionHandler
+    @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ApiError handleNotFoundError(final EntityNotFoundException e) {
-        log.error("404 {}", e.getMessage(), e);
-        return setApiError(e, HttpStatus.NOT_FOUND.getReasonPhrase());
+    public Map<String, String> handleNotFoundException(NotFoundException e) {
+        return Map.of("error", e.getMessage());
     }
 
-    @ExceptionHandler
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> handleValidationException(MethodArgumentNotValidException e) {
+        return Map.of("error", e.getMessage());
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ApiError handleConflictError(final ConflictException e) {
-        log.error("409 {}", e.getMessage(), e);
-        return setApiError(e, HttpStatus.CONTINUE.getReasonPhrase());
-    }
-
-    private ApiError setApiError(Throwable e, String status) {
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-        e.printStackTrace(pw);
-        String stackTrace = sw.toString();
-        return new ApiError(stackTrace, status, e.toString(), e.getMessage());
+    public Map<String, String> handleDataIntegrityViolationException(DataIntegrityViolationException e) {
+        return Map.of("error", e.getMessage());
     }
 }

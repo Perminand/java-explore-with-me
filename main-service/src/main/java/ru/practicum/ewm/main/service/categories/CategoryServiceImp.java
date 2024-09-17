@@ -2,16 +2,19 @@ package ru.practicum.ewm.main.service.categories;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.ewm.main.exceptions.errors.EntityNotFoundException;
+import ru.practicum.ewm.main.exceptions.NotFoundException;
 import ru.practicum.ewm.main.mappers.CategoryMappers;
 import ru.practicum.ewm.main.model.category.Category;
 import ru.practicum.ewm.main.model.category.dto.CategoryDto;
+import ru.practicum.ewm.main.model.event.Event;
 import ru.practicum.ewm.main.repository.CategoryRepository;
+import ru.practicum.ewm.main.repository.EventRepository;
+import ru.practicum.ewm.main.validate.Validate;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,31 +22,34 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class CategoryServiceImp implements CategoryService {
-    private final CategoryRepository repository;
+    private final CategoryRepository categoryRepository;
+    private final EventRepository eventRepository;
+    private final Validate validate;
 
     @Override
-    @Transactional
     public CategoryDto create(CategoryDto categoryDto) {
-        Category category = repository.save(CategoryMappers.toCategory(categoryDto));
+        Category category = categoryRepository.save(CategoryMappers.toCategory(categoryDto));
         return CategoryMappers.toCategoryDto(category);
     }
 
     @Override
-    @Transactional
     public CategoryDto update(Long l, CategoryDto categoryDto) {
         Category category = validateCategory(l);
         category.setName(categoryDto.getName());
-        repository.save(category);
+        categoryRepository.save(category);
         return CategoryMappers.toCategoryDto(category);
 
     }
 
     @Override
     public void delete(Long catId) {
-        validateCategory(catId);
-        repository.deleteById(catId);
+        Category category = validateCategory(catId);
+        Optional<Event> eventOptional = eventRepository.findByCategoryId(catId);
+        if (eventOptional.isPresent()) {
+            throw new DataIntegrityViolationException("С категорией связано событие");
+        }
+        categoryRepository.delete(category);
     }
 
 
@@ -52,21 +58,22 @@ public class CategoryServiceImp implements CategoryService {
         Sort sortById = Sort.by(Sort.Direction.ASC, "id");
         int startPage = from > 0 ? from/size : 0;
         Pageable pageable = PageRequest.of(startPage, size, sortById);
-        return repository.findAll(pageable).stream()
+        return categoryRepository.findAll(pageable).stream()
                 .map(CategoryMappers::toCategoryDto).toList();
 
     }
 
     @Override
     public CategoryDto getById(Long catId) {
-        return CategoryMappers.toCategoryDto(repository.findById(catId).get());
+        Category category = validate.getCategoryById(catId);
+        return CategoryMappers.toCategoryDto(category);
     }
 
     private Category validateCategory(Long l) {
-        return Optional.of(repository.findById(l))
+        return Optional.of(categoryRepository.findById(l))
                 .orElseThrow(() -> {
                     log.error("Попытка операции над не существующей категории");
-                    throw new EntityNotFoundException("Нет категории с ид: " + l);
+                    throw new NotFoundException("Нет категории с ид: " + l);
                 }).get();
     }
 }
