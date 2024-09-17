@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.main.exceptions.errors.ConflictException;
+import ru.practicum.ewm.main.exceptions.errors.EntityNotFoundException;
 import ru.practicum.ewm.main.mappers.RequestMapper;
 import ru.practicum.ewm.main.model.ParticipationRequestDto;
 import ru.practicum.ewm.main.model.Request;
@@ -60,7 +61,14 @@ public class RequestServiceImpl implements RequestService{
     }
 
     @Override
-    public ParticipationRequestDto updateRequestEventIdByUserId(Long userId, Long requestsId) {
-        return null;
+    public ParticipationRequestDto CancelRequestEventIdByUserId(Long userId, Long requestsId) {
+        validate.validateUser(userId);
+        Request request = validate.validateRequest(requestsId);
+        if (!request.getRequester().getId().equals(userId)) {
+            throw new EntityNotFoundException("Запрос не найден");
+        }
+        request.setStatus(State.CANCELED);
+        requestRepository.save(request);
+        return RequestMapper.toDto(request);
     }
 }

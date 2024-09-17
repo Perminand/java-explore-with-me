@@ -8,11 +8,13 @@ import ru.practicum.dto.StatisticDto;
 import ru.practicum.ewm.main.exceptions.errors.ClientException;
 import ru.practicum.ewm.main.exceptions.errors.EntityNotFoundException;
 import ru.practicum.ewm.main.exceptions.errors.ValidationException;
+import ru.practicum.ewm.main.model.Request;
 import ru.practicum.ewm.main.model.category.Category;
 import ru.practicum.ewm.main.model.event.Event;
 import ru.practicum.ewm.main.model.users.User;
 import ru.practicum.ewm.main.repository.CategoryRepository;
 import ru.practicum.ewm.main.repository.EventRepository;
+import ru.practicum.ewm.main.repository.RequestRepository;
 import ru.practicum.ewm.main.repository.UserRepository;
 
 import java.time.LocalDateTime;
@@ -24,6 +26,7 @@ public class Validate {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final EventRepository eventRepository;
+    private final RequestRepository requestRepository;
 
     public User validateUser(Long userId) {
         return userRepository.findById(userId).orElseThrow(()-> {
@@ -43,6 +46,13 @@ public class Validate {
         return eventRepository.findById(eventId).orElseThrow(()-> {
             log.error("Попытка изменения статуса не существующего события");
             return new EntityNotFoundException("Нет события с ид: " + eventId);
+        });
+    }
+
+    public Request validateRequest(Long requestId) {
+        return requestRepository.findById(requestId).orElseThrow(()-> {
+            log.error("Попытка изменения статуса не существующего события");
+            return new EntityNotFoundException("Нет события с ид: " + requestId);
         });
     }
 
