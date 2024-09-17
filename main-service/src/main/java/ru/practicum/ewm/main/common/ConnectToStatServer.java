@@ -1,12 +1,9 @@
 package ru.practicum.ewm.main.common;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import reactor.core.publisher.Mono;
 import ru.practicum.ewm.StatClientImp;
 import ru.practicum.dto.StatisticResponse;
-import ru.practicum.ewm.main.exceptions.errors.ClientException;
 
 import java.time.LocalDateTime;
 import java.util.List;

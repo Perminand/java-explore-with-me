@@ -3,6 +3,7 @@ package ru.practicum.ewm.main.service.event;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Import;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -11,7 +12,6 @@ import ru.practicum.ewm.StatClientImp;
 import ru.practicum.ewm.main.common.ConnectToStatServer;
 import ru.practicum.ewm.main.common.GeneralConstants;
 import ru.practicum.ewm.main.common.Utilities;
-import ru.practicum.ewm.main.exceptions.errors.ConflictException;
 import ru.practicum.ewm.main.exceptions.errors.EntityNotFoundException;
 import ru.practicum.ewm.main.mappers.EventMappers;
 import ru.practicum.ewm.main.mappers.RequestMappers;
@@ -79,19 +79,19 @@ public class EventServiceImpl implements EventService {
         Event event = validate.getEventById(eventId);
 
         if(event.getEventDate().minusHours(1).isBefore(LocalDateTime.now())) {
-            throw new ConflictException("Осталось менее часа до мероприятия");
+            throw new DataIntegrityViolationException("Осталось менее часа до мероприятия");
         }
 
         if (updateEventAdminRequest.getStateAction().equals(StateAction.PUBLISH_EVENT)
                 && !(event.getState().equals(State.PENDING))) {
             log.error("Попытка опубликовать событие в статусах отличных от ожидающих");
-            throw new ConflictException("Опубликовать можно только ожидающие публикацию событие");
+            throw new DataIntegrityViolationException("Опубликовать можно только ожидающие публикацию событие");
         }
 
         if (updateEventAdminRequest.getStateAction().equals(StateAction.REJECT_EVENT)
                 && !(event.getState().equals(State.PENDING.toString()))) {
             log.error("Попытка отменить событие в статусах отличных от ожидающих");
-            throw new ConflictException("Отменить можно только ожидающие публикацию событие");
+            throw new DataIntegrityViolationException("Отменить можно только ожидающие публикацию событие");
         }
 
         if (updateEventAdminRequest.getAnnotation() != null) {
@@ -196,9 +196,9 @@ public class EventServiceImpl implements EventService {
             event.setCategory(category);
         }
         if (event.getState() == State.PUBLISHED) {
-            throw new ConflictException("Событие уже опубликовано");
+            throw new DataIntegrityViolationException("Событие уже опубликовано");
         } else if(event.getState() == State.CANCELED) {
-            throw new ConflictException("Событие уже отменено");
+            throw new DataIntegrityViolationException("Событие уже отменено");
         } else {
             if(request.getStateAction().equals(StateAction.REJECT_EVENT)) {
                 event.setState(State.REJECTED);
@@ -212,7 +212,7 @@ public class EventServiceImpl implements EventService {
         if (request.getEventDate() != null) {
             LocalDateTime localDateTime = LocalDateTime.parse(request.getEventDate(), GeneralConstants.DATE_FORMATTER);
             if (localDateTime.isBefore(LocalDateTime.now().plusHours(2))) {
-                throw new ConflictException("Время события не может быть раньше чем за 2 часа");
+                throw new DataIntegrityViolationException("Время события не может быть раньше чем за 2 часа");
             }
             event.setEventDate(localDateTime);
         }
@@ -253,7 +253,7 @@ public class EventServiceImpl implements EventService {
         if (event.getParticipantLimit() != 0 || event.getRequestModeration()) {
             int countRequest = requestRepository.countByEventIdAndStatus(eventId, State.REJECTED);
             if (event.getParticipantLimit() == countRequest) {
-                throw new ConflictException("нельзя подтвердить заявку, если уже достигнут лимит по заявкам на данное событие");
+                throw new DataIntegrityViolationException("нельзя подтвердить заявку, если уже достигнут лимит по заявкам на данное событие");
             }
 
             for (int i = 0; i < requestList.size(); i++) {

@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.ewm.main.exceptions.NotFoundException;
+import ru.practicum.ewm.main.exceptions.errors.EntityNotFoundException;
 import ru.practicum.ewm.main.mappers.RequestMappers;
 import ru.practicum.ewm.main.model.ParticipationRequestDto;
 import ru.practicum.ewm.main.model.Request;
@@ -65,7 +65,7 @@ public class RequestServiceImpl implements RequestService{
         validate.getUserById(userId);
         Request request = validate.getRequestById(requestsId);
         if (!request.getRequester().getId().equals(userId)) {
-            throw new NotFoundException("Запрос не найден");
+            throw new EntityNotFoundException("Запрос не найден");
         }
         request.setStatus(State.CANCELED);
         requestRepository.save(request);

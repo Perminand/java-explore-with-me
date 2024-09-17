@@ -7,7 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import ru.practicum.ewm.main.exceptions.NotFoundException;
+import ru.practicum.ewm.main.exceptions.errors.EntityNotFoundException;
 import ru.practicum.ewm.main.mappers.CategoryMappers;
 import ru.practicum.ewm.main.model.category.Category;
 import ru.practicum.ewm.main.model.category.dto.CategoryDto;
@@ -35,7 +35,7 @@ public class CategoryServiceImp implements CategoryService {
 
     @Override
     public CategoryDto update(Long l, CategoryDto categoryDto) {
-        Category category = validateCategory(l);
+        Category category = validate.getCategoryById(l);
         category.setName(categoryDto.getName());
         categoryRepository.save(category);
         return CategoryMappers.toCategoryDto(category);
@@ -44,7 +44,7 @@ public class CategoryServiceImp implements CategoryService {
 
     @Override
     public void delete(Long catId) {
-        Category category = validateCategory(catId);
+        Category category = validate.getCategoryById(catId);
         Optional<Event> eventOptional = eventRepository.findByCategoryId(catId);
         if (eventOptional.isPresent()) {
             throw new DataIntegrityViolationException("С категорией связано событие");
@@ -69,11 +69,4 @@ public class CategoryServiceImp implements CategoryService {
         return CategoryMappers.toCategoryDto(category);
     }
 
-    private Category validateCategory(Long l) {
-        return Optional.of(categoryRepository.findById(l))
-                .orElseThrow(() -> {
-                    log.error("Попытка операции над не существующей категории");
-                    throw new NotFoundException("Нет категории с ид: " + l);
-                }).get();
-    }
 }
