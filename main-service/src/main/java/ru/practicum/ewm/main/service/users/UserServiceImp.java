@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.main.exceptions.errors.EntityNotFoundException;
-import ru.practicum.ewm.main.mappers.UserMapper;
+import ru.practicum.ewm.main.mappers.UserMappers;
 import ru.practicum.ewm.main.model.users.User;
 import ru.practicum.ewm.main.model.users.dto.UserDto;
 import ru.practicum.ewm.main.repository.UserRepository;
@@ -25,8 +25,8 @@ public class UserServiceImp implements UserService {
 
     @Override
     public UserDto create(UserDto userDto) {
-        User user = repository.save(UserMapper.toUser(userDto));
-        return UserMapper.toUserDto(user);
+        User user = repository.save(UserMappers.toUser(userDto));
+        return UserMappers.toUserDto(user);
     }
 
     @Override
@@ -35,7 +35,7 @@ public class UserServiceImp implements UserService {
         int startPage = from > 0 ? (from / size) : 0;
         Pageable pageable = PageRequest.of(startPage, size, sortById);
         if (listIds == null || listIds.isEmpty()) {
-            return repository.findAll().stream().map(UserMapper::toUserDto).toList();
+            return repository.findAll().stream().map(UserMappers::toUserDto).toList();
         }
         return repository.findByIdIn(listIds, pageable);
     }

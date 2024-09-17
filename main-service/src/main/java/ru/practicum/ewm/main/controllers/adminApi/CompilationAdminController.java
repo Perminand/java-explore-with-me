@@ -9,6 +9,8 @@ import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.main.model.compilation.dto.CompilationDto;
+import ru.practicum.ewm.main.model.compilation.dto.NewCompilationDto;
+import ru.practicum.ewm.main.model.compilation.dto.UpdateCompilationRequestDto;
 import ru.practicum.ewm.main.service.compilations.CompilationService;
 
 @Slf4j
@@ -21,14 +23,14 @@ public class CompilationAdminController {
 
     @PostMapping("/compilations")
     @ResponseStatus(HttpStatus.CREATED)
-    public CompilationDto createCompilation(@Valid @RequestBody CompilationDto compilationDto) {
+    public CompilationDto createCompilation(@Valid @RequestBody NewCompilationDto compilationDto) {
         log.info("POST запрос на сохранение подборки");
         return compilationService.create(compilationDto);
     }
 
     @PatchMapping("/compilations/{compId}")
     @ResponseStatus(HttpStatus.OK)
-    public CompilationDto updateCompilation(@Min(0) Long compId, @Valid @PathVariable CompilationDto compilationDto) {
+    public CompilationDto updateCompilation(@Min(0) Long compId, @Valid @PathVariable UpdateCompilationRequestDto compilationDto) {
         log.info("Patch запрос на обновление подборки");
         return compilationService.update(compId, compilationDto);
     }

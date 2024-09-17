@@ -35,7 +35,7 @@ public class EventMappers {
                 .paid(event.getPaid())
                 .participantLimit(event.getParticipantLimit())
                 .title(event.getTitle())
-                .initiator(UserMapper.toUserShortDto(event.getInitiator()))
+                .initiator(UserMappers.toUserShortDto(event.getInitiator()))
                 .requestModeration(event.getRequestModeration())
                 .createdOn(event.getCreatedOn())
                 .state(event.getState().toString())
@@ -48,7 +48,7 @@ public class EventMappers {
                 CategoryMappers.toCategoryDto(event.getCategory()),
                 null,
                 event.getEventDate().format(GeneralConstants.DATE_FORMATTER),
-                UserMapper.toUserShortDto(event.getInitiator()),
+                UserMappers.toUserShortDto(event.getInitiator()),
                 event.getPaid(),
                 event.getTitle(),
                 event.getViews());

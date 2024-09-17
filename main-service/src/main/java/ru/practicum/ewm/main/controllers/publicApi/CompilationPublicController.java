@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.main.model.compilation.dto.CompilationDto;
 import ru.practicum.ewm.main.service.compilations.CompilationService;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping(value = "/compilations", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -20,11 +22,11 @@ public class CompilationPublicController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public CompilationDto getAll(@Min(0)
+    public List<CompilationDto> getAll(@Min(0)
                               @PathVariable(required = false)
                               @RequestParam Boolean pinned,
-                              @Min(0) @RequestParam(defaultValue = "0") Integer from,
-                              @Min(0) @RequestParam(defaultValue = "10") Integer size) {
+                                       @Min(0) @RequestParam(defaultValue = "0") Integer from,
+                                       @Min(0) @RequestParam(defaultValue = "10") Integer size) {
         log.info("Get запрос на получение подборок");
         return compilationService.getAll(pinned, from, size);
     }

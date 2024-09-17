@@ -8,7 +8,7 @@ import ru.practicum.ewm.main.model.users.User;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class RequestMapper {
+public class RequestMappers {
     public static Request toRequest(ParticipationRequestDto requestDto, Event event, User user) {
         return new Request(
                 requestDto.getId(),

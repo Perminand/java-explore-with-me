@@ -4,7 +4,7 @@ import ru.practicum.ewm.main.model.users.User;
 import ru.practicum.ewm.main.model.users.dto.UserDto;
 import ru.practicum.ewm.main.model.users.dto.UserShortDto;
 
-public class UserMapper {
+public class UserMappers {
     public static User toUser(UserDto userDto) {
         return new User(userDto.getId(), userDto.getEmail(), userDto.getName());
     }

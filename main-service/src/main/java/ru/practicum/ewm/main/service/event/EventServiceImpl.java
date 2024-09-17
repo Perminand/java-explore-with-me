@@ -14,7 +14,7 @@ import ru.practicum.ewm.main.common.Utilities;
 import ru.practicum.ewm.main.exceptions.errors.ConflictException;
 import ru.practicum.ewm.main.exceptions.errors.EntityNotFoundException;
 import ru.practicum.ewm.main.mappers.EventMappers;
-import ru.practicum.ewm.main.mappers.RequestMapper;
+import ru.practicum.ewm.main.mappers.RequestMappers;
 import ru.practicum.ewm.main.model.*;
 import ru.practicum.ewm.main.model.category.Category;
 import ru.practicum.ewm.main.model.event.Event;
@@ -52,8 +52,8 @@ public class EventServiceImpl implements EventService {
     @Override
     @Transactional
     public EventFullDto create(Long userId, EventDto eventDto) {
-        User user = validate.validateUser(userId);
-        Category category = validate.validateCategory(eventDto.getCategory());
+        User user = validate.getUserById(userId);
+        Category category = validate.getCategoryById(eventDto.getCategory());
         if (eventDto.getRequestModeration() == null) {
             eventDto.setRequestModeration(true);
         }
@@ -76,7 +76,7 @@ public class EventServiceImpl implements EventService {
     @Override
     @Transactional
     public EventFullDto update(Long eventId, UpdateEventAdminRequest updateEventAdminRequest) {
-        Event event = validate.validateEvent(eventId);
+        Event event = validate.getEventById(eventId);
 
         if(event.getEventDate().minusHours(1).isBefore(LocalDateTime.now())) {
             throw new ConflictException("Осталось менее часа до мероприятия");
@@ -144,7 +144,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<EventShortDto> getEventsByUser(Long userId, Integer from, Integer size) {
-        validate.validateUser(userId);
+        validate.getUserById(userId);
         int startPage = from > 0 ? (from/size) : 0;
         Pageable pageable = PageRequest.of(startPage, size);
         List<EventShortDto> eventShortDtoList = eventRepository.findAllByInitiatorId(userId, pageable).stream().map(EventMappers::toShortDto).toList();
@@ -166,8 +166,8 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventFullDto getEventByUserId(Long userId, Long eventId) {
-        validate.validateUser(userId);
-        validate.validateEvent(eventId);
+        validate.getUserById(userId);
+        validate.getEventById(eventId);
         return EventMappers.toEventFullDto(Optional.of(eventRepository.findByIdAndInitiatorId(eventId, userId)).orElseThrow(() -> {
             String error = "Нет события с ид: " + eventId + " созданным пользователем: " + userId;
             log.error(error);
@@ -180,16 +180,16 @@ public class EventServiceImpl implements EventService {
     public List<ParticipationRequestDto> requestEventByUserId(Long userId, Long eventId) {
         return requestRepository.findAllByEventIdAndInitiatorId(eventId, userId)
                 .stream()
-                .map(RequestMapper::toDto)
+                .map(RequestMappers::toDto)
                 .toList();
     }
 
     @Override
     public EventFullDto updateEventByUserId(Long userId, Long eventId, UpdateEventAdminRequest request) {
-        validate.validateUser(userId);
-        Event event = validate.validateEvent(eventId);
+        validate.getUserById(userId);
+        Event event = validate.getEventById(eventId);
         if (request.getCategory() != null) {
-            Category category = validate.validateCategory(request.getCategory());
+            Category category = validate.getCategoryById(request.getCategory());
             event.setCategory(category);
         }
         if (event.getState() == State.PUBLISHED) {
@@ -225,8 +225,8 @@ public class EventServiceImpl implements EventService {
     public EventRequestStatusUpdateResult updateStatusRequestEventByUser(Long userId,
                                                                          Long eventId,
                                                                          EventRequestStatusUpdateRequest request) {
-        validate.validateUser(userId);
-        Event event = validate.validateEvent(eventId);
+        validate.getUserById(userId);
+        Event event = validate.getEventById(eventId);
         if (!event.getInitiator().getId().equals(userId)) {
             throw new EntityNotFoundException("Нет данного события у пользователя");
         }
@@ -246,20 +246,20 @@ public class EventServiceImpl implements EventService {
                 if (request.getStatus().equals(State.CONFIRMED)) {
                     if (event.getParticipantLimit() - countRequest > i) {
                         requestList.get(i).setStatus(request.getStatus());
-                        confirmedReqs.add(RequestMapper.toDto(requestList.get(i)));
+                        confirmedReqs.add(RequestMappers.toDto(requestList.get(i)));
                     } else {
                         requestList.get(i).setStatus(State.REJECTED);
-                        canceledReqs.add(RequestMapper.toDto(requestList.get(i)));
+                        canceledReqs.add(RequestMappers.toDto(requestList.get(i)));
                     }
                 } else {
                     requestList.get(i).setStatus(State.REJECTED);
-                    canceledReqs.add(RequestMapper.toDto(requestList.get(i)));
+                    canceledReqs.add(RequestMappers.toDto(requestList.get(i)));
                 }
             }
         } else {
             for(Request r : requestList) {
                 r.setStatus(request.getStatus());
-                confirmedReqs.add(RequestMapper.toDto(r));
+                confirmedReqs.add(RequestMappers.toDto(r));
             }
         }
         return new EventRequestStatusUpdateResult(confirmedReqs, canceledReqs);
@@ -315,7 +315,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventFullDto getEvent(Long id) {
-        Event event = validate.validateEvent(id);
+        Event event = validate.getEventById(id);
         if (event.getState().equals(State.PUBLISHED)) {
             return EventMappers.toEventFullDto(event);
         } else {

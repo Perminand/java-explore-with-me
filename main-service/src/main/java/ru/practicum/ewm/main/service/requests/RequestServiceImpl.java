@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.main.exceptions.errors.ConflictException;
 import ru.practicum.ewm.main.exceptions.errors.EntityNotFoundException;
-import ru.practicum.ewm.main.mappers.RequestMapper;
+import ru.practicum.ewm.main.mappers.RequestMappers;
 import ru.practicum.ewm.main.model.ParticipationRequestDto;
 import ru.practicum.ewm.main.model.Request;
 import ru.practicum.ewm.main.model.State;
@@ -25,7 +25,7 @@ public class RequestServiceImpl implements RequestService{
     @Override
     public List<ParticipationRequestDto> getRequestByUserId(Long userId) {
         List<Request> requests = requestRepository.findByRequesterIdAndNotInitiatorId(userId);
-        return requests.stream().map(RequestMapper::toDto).toList();
+        return requests.stream().map(RequestMappers::toDto).toList();
     }
 
     @Override
@@ -35,8 +35,8 @@ public class RequestServiceImpl implements RequestService{
         if (!re.isEmpty()) {
             throw new ConflictException("Есть уже запрос на участие");
         }
-        User user = validate.validateUser(userId);
-        Event event = validate.validateEvent(eventId);
+        User user = validate.getUserById(userId);
+        Event event = validate.getEventById(eventId);
 
         if (event.getInitiator() == user) {
             throw new ConflictException("Инициатор не может подать запрос на участие");
@@ -57,18 +57,18 @@ public class RequestServiceImpl implements RequestService{
             request = new Request(null, LocalDateTime.now(), event, user, State.PENDING);
         }
         requestRepository.save(request);
-        return RequestMapper.toDto(request);
+        return RequestMappers.toDto(request);
     }
 
     @Override
     public ParticipationRequestDto CancelRequestEventIdByUserId(Long userId, Long requestsId) {
-        validate.validateUser(userId);
-        Request request = validate.validateRequest(requestsId);
+        validate.getUserById(userId);
+        Request request = validate.getRequestById(requestsId);
         if (!request.getRequester().getId().equals(userId)) {
             throw new EntityNotFoundException("Запрос не найден");
         }
         request.setStatus(State.CANCELED);
         requestRepository.save(request);
-        return RequestMapper.toDto(request);
+        return RequestMappers.toDto(request);
     }
 }
