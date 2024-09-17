@@ -49,7 +49,7 @@ public class EventPublicController {
         log.info("Get запрос на получение событий с возможностью фильтрации. Поисковые параметры: text: {}, categories: {}, paid: {}," +
                         "rangeStart: {}, rangeEnd: {}, onlyAvailable: {}, sort: {}, from: {}, size: {}", text, categories,
                 paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size);
-        log.info("Requester IP: {}, path: {}", ip, path);
+        log.info("Регистрация IP: {}, path: {}", ip, path);
 
         StatisticDto statisticDto = prepareStatisticDto("ewm-main-service", path, ip);
         statisticClient.createStat(statisticDto);
@@ -63,11 +63,11 @@ public class EventPublicController {
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public EventFullDto getEvent(@PathVariable @Min(0) Long id, HttpServletRequest httpServletRequest) {
-        log.info("Get запрос на получение события по его индентификатору");
+        log.info("Get запрос на получение события по его идентификатору");
         String ip = httpServletRequest.getRemoteAddr();
         String path = httpServletRequest.getRequestURI();
 
-        log.info("Requester IP: {}, path: {}", ip, path);
+        log.info("Регистрация IP: {}, path: {}", ip, path);
 
         StatisticDto statisticDto = prepareStatisticDto("ewm-main-service", path, ip);
         statisticClient.createStat(statisticDto);

@@ -31,6 +31,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -163,7 +164,14 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventFullDto getEventByUserId(Long userId, Long eventId) {
-        return null;
+        validate.validateUser(userId);
+        validate.validateEvent(eventId);
+        return EventMappers.toEventFullDto(Optional.of(eventRepository.findByIdAndInitiatorId(eventId, userId)).orElseThrow(() -> {
+            String error = "Нет события с ид: " + eventId + " созданным пользователем: " + userId;
+            log.error(error);
+            return new EntityNotFoundException(error);
+        }));
+
     }
 
     @Override
