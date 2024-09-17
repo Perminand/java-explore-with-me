@@ -185,7 +185,39 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventFullDto updateEventByUserId(Long userId, Long eventId, UpdateEventAdminRequest request) {
-        return null;
+        validate.validateUser(userId);
+        Event event = validate.validateEvent(eventId);
+        if (request.getCategory() != null) {
+            Category category = validate.validateCategory(request.getCategory());
+            event.setCategory(category);
+        }
+        if (event.getState() == State.PUBLISHED) {
+            throw new ConflictException("Событие уже опубликовано");
+        }
+        if (request.getEventDate() != null) {
+            LocalDateTime localDateTime = LocalDateTime.parse(request.getEventDate(), GeneralConstants.DATE_FORMATTER);
+            if (localDateTime.isBefore(LocalDateTime.now().plusHours(2))) {
+                throw new ConflictException("Время события не может быть раньше чем за 2 часа");
+            }
+            event.setEventDate(localDateTime);
+        }
+        if (request.getAnnotation() != null) {
+            event.setAnnotation(request.getAnnotation());
+        }
+        if (request.getDescription() != null) {
+            event.setDescription(request.getDescription());
+        }
+        if (request.getPaid() != null) {
+            event.setPaid(request.getPaid());
+        }
+        if (request.getParticipantLimit() != null) {
+            event.setParticipantLimit(request.getParticipantLimit());
+        }
+        if (request.getTitle() != null) {
+            event.setTitle(request.getTitle());
+        }
+        eventRepository.save(event);
+        return EventMappers.toEventFullDto(event);
     }
 
     @Override
