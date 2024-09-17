@@ -14,6 +14,7 @@ import ru.practicum.ewm.main.common.Utilities;
 import ru.practicum.ewm.main.exceptions.errors.ConflictException;
 import ru.practicum.ewm.main.exceptions.errors.EntityNotFoundException;
 import ru.practicum.ewm.main.mappers.EventMappers;
+import ru.practicum.ewm.main.mappers.RequestMapper;
 import ru.practicum.ewm.main.model.*;
 import ru.practicum.ewm.main.model.category.Category;
 import ru.practicum.ewm.main.model.event.Event;
@@ -175,8 +176,11 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public ParticipationRequestDto requestEventByUserId(Long userId, Long eventId) {
-        return null;
+    public List<ParticipationRequestDto> requestEventByUserId(Long userId, Long eventId) {
+        return requestRepository.findAllByEventIdAndInitiatorId(eventId, userId)
+                .stream()
+                .map(RequestMapper::toDto)
+                .toList();
     }
 
     @Override

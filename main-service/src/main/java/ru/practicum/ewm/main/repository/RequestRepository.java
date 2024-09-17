@@ -5,15 +5,17 @@ import org.springframework.data.jpa.repository.Query;
 import ru.practicum.ewm.main.model.ParticipationRequestDto;
 import ru.practicum.ewm.main.model.Request;
 import ru.practicum.ewm.main.model.State;
+import ru.practicum.ewm.main.model.event.Event;
 import ru.practicum.ewm.main.model.event.dto.EventIdByRequestsCount;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 public interface RequestRepository extends JpaRepository<Request, Long> {
-    List<Request> findAllByRequester_IdAndEvent_Id(Long userId, Long eventId);
+    List<Request> findAllByRequesterIdAndEventId(Long userId, Long eventId);
 
-    Collection<Object> findAllByEvent_IdAndStatus(Long eventId, State state);
+    Collection<Object> findAllByEventIdAndStatus(Long eventId, State state);
 
     @Query(value = "select count(id), event " +
             "from requests " +
@@ -24,4 +26,8 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
 
     @Query(value = "Select * from requests r join events e On r.event=e.event_id where r.users=?1 and e.initiator<>?1", nativeQuery = true)
     List<Request> findByRequesterIdAndNotInitiatorId(Long userId);
+
+
+    @Query(value = "SELECT * FROM requests r join events e ON r.event=e.event_id where r.event=?1 AND e.initiator=?2", nativeQuery = true)
+    List<Request> findAllByEventIdAndInitiatorId(Long eventId, Long userId);
 }

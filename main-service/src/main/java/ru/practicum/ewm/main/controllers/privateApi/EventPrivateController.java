@@ -57,7 +57,7 @@ public class EventPrivateController {
 
     @GetMapping("{userId}/events/{eventId}/requests")
     @ResponseStatus(HttpStatus.OK)
-    public ParticipationRequestDto requestEventByUserId(
+    public List<ParticipationRequestDto> requestEventByUserId(
             @PathVariable @Min(0) Long userId,
             @PathVariable @Min(0) Long eventId) {
         log.info("Get запрос на получение информации о запросах на участие в событии текущего пользователя");

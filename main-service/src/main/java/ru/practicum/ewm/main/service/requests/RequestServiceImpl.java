@@ -1,9 +1,6 @@
 package ru.practicum.ewm.main.service.requests;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.main.exceptions.errors.ConflictException;
@@ -33,7 +30,7 @@ public class RequestServiceImpl implements RequestService{
     @Override
     @Transactional
     public ParticipationRequestDto createRequestEventIdByUserId(Long userId, Long eventId) {
-        List<Request> re = requestRepository.findAllByRequester_IdAndEvent_Id(userId, eventId);
+        List<Request> re = requestRepository.findAllByRequesterIdAndEventId(userId, eventId);
         if (!re.isEmpty()) {
             throw new ConflictException("Есть уже запрос на участие");
         }
@@ -48,7 +45,7 @@ public class RequestServiceImpl implements RequestService{
             throw new ConflictException("Событие не опубликовано");
         }
 
-        if (requestRepository.findAllByEvent_IdAndStatus(eventId, State.PUBLISHED).size() >= event.getParticipantLimit()) {
+        if (requestRepository.findAllByEventIdAndStatus(eventId, State.PUBLISHED).size() >= event.getParticipantLimit()) {
             throw new ConflictException("Лимит регистрации закончился");
         }
         Request request;
