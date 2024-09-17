@@ -25,12 +25,9 @@ public class RequestServiceImpl implements RequestService{
     private final Validate validate;
     private final RequestRepository requestRepository;
     @Override
-    public List<ParticipationRequestDto> getRequestByUserId(Long userId, Integer from, Integer size) {
-        Sort sortById = Sort.by(Sort.Direction.ASC, "id");
-        int startPage = from > 0 ? (from / size) : 0;
-        Pageable pageable = PageRequest.of(startPage, size, sortById);
-        List<ParticipationRequestDto> participationRequestDtoList = requestRepository.findByRequester_Id(userId, pageable);
-        return participationRequestDtoList;
+    public List<ParticipationRequestDto> getRequestByUserId(Long userId) {
+        List<Request> requests = requestRepository.findByRequesterIdAndNotInitiatorId(userId);
+        return requests.stream().map(RequestMapper::toDto).toList();
     }
 
     @Override
