@@ -30,6 +30,7 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -221,9 +222,50 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventRequestStatusUpdateResult updateStatusRequestEventByUser(Long userId, Long eventId, EventRequestStatusUpdateResult result) {
-        return null;
+    public EventRequestStatusUpdateResult updateStatusRequestEventByUser(Long userId,
+                                                                         Long eventId,
+                                                                         EventRequestStatusUpdateRequest request) {
+        validate.validateUser(userId);
+        Event event = validate.validateEvent(eventId);
+        if (!event.getInitiator().getId().equals(userId)) {
+            throw new EntityNotFoundException("Нет данного события у пользователя");
+        }
+
+        List<ParticipationRequestDto> confirmedReqs = new ArrayList<>();
+        List<ParticipationRequestDto> canceledReqs = new ArrayList<>();
+
+        List<Request> requestList = requestRepository.findAllByIdInAndStatus(request.getRequestIds(), State.PENDING);
+
+        if (event.getParticipantLimit() != 0 || event.getRequestModeration()) {
+            int countRequest = requestRepository.countByEventIdAndStatus(eventId, State.REJECTED);
+            if (event.getParticipantLimit() == countRequest) {
+                throw new ConflictException("нельзя подтвердить заявку, если уже достигнут лимит по заявкам на данное событие");
+            }
+
+            for (int i = 0; i < requestList.size(); i++) {
+                if (request.getStatus().equals(State.CONFIRMED)) {
+                    if (event.getParticipantLimit() - countRequest > i) {
+                        requestList.get(i).setStatus(request.getStatus());
+                        confirmedReqs.add(RequestMapper.toDto(requestList.get(i)));
+                    } else {
+                        requestList.get(i).setStatus(State.REJECTED);
+                        canceledReqs.add(RequestMapper.toDto(requestList.get(i)));
+                    }
+                } else {
+                    requestList.get(i).setStatus(State.REJECTED);
+                    canceledReqs.add(RequestMapper.toDto(requestList.get(i)));
+                }
+            }
+        } else {
+            for(Request r : requestList) {
+                r.setStatus(request.getStatus());
+                confirmedReqs.add(RequestMapper.toDto(r));
+            }
+        }
+        return new EventRequestStatusUpdateResult(confirmedReqs, canceledReqs);
     }
+        
+
 
     @Override
     public List<EventShortDto> getEventsFilter(String text, List<Long> categories, Boolean paid, String rangeStart, String rangeEnd, Boolean onlyAvailable, String sort, Integer from, Integer size) {

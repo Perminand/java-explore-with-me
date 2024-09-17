@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.ewm.main.model.EventRequestStatusUpdateRequest;
 import ru.practicum.ewm.main.model.EventRequestStatusUpdateResult;
 import ru.practicum.ewm.main.model.UpdateEventAdminRequest;
 import ru.practicum.ewm.main.model.ParticipationRequestDto;
@@ -79,7 +80,7 @@ public class EventPrivateController {
     public EventRequestStatusUpdateResult updateStatusRequestEventByUser(
             @PathVariable @Min(0) Long userId,
             @PathVariable @Min(0) Long eventId,
-            @RequestBody @Valid EventRequestStatusUpdateResult result) {
+            @RequestBody @Valid EventRequestStatusUpdateRequest result) {
         log.info("Patch запрос на изменение статуса заявок на участие в событии текущего пользователя");
         return eventService.updateStatusRequestEventByUser(userId, eventId, result);
     }

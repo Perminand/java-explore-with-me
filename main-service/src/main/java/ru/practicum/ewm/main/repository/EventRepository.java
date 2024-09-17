@@ -32,7 +32,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "AND (e.category IN (?2) OR ?2 IS NULL) " +
             "AND (e.paid = CAST(?3 AS boolean) OR ?3 IS NULL) " +
             "AND (e.event_date BETWEEN ?4 AND ?5) " +
-            "AND (CAST(?6 AS BOOLEAN) is TRUE OR(select count(id) from requests AS r WHERE r.event = e.id) < participants_limit) " +
+            "AND (CAST(?6 AS BOOLEAN) is TRUE OR(select count(id) from requests AS r WHERE r.event = e.event_id) < participants_limit) " +
             "AND (state = 'PUBLISHED')", nativeQuery = true)
     List<Event> searchEvents(String text, List<Long> categories, Boolean paid, LocalDateTime rangeStart, LocalDateTime rangeEnd, Boolean onlyAvailable, Pageable pageable
     );

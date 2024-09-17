@@ -1,12 +1,13 @@
 package ru.practicum.ewm.main.service.compilations;
 
 import org.springframework.stereotype.Service;
-import ru.practicum.ewm.main.model.compilation.CompilationDto;
+import ru.practicum.ewm.main.model.compilation.dto.CompilationDto;
 
 @Service
 public class CompilationServiceImpl implements CompilationService{
     @Override
     public CompilationDto create(CompilationDto compilationDto) {
+        Compilation
         return null;
     }
 

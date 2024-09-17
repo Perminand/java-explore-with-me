@@ -1,5 +1,6 @@
 package ru.practicum.ewm.main.service.event;
 
+import ru.practicum.ewm.main.model.EventRequestStatusUpdateRequest;
 import ru.practicum.ewm.main.model.EventRequestStatusUpdateResult;
 import ru.practicum.ewm.main.model.UpdateEventAdminRequest;
 import ru.practicum.ewm.main.model.ParticipationRequestDto;
@@ -22,7 +23,7 @@ public interface EventService {
 
     EventFullDto updateEventByUserId(Long userId, Long eventId, UpdateEventAdminRequest request);
 
-    EventRequestStatusUpdateResult updateStatusRequestEventByUser(Long userId, Long eventId, EventRequestStatusUpdateResult result);
+    EventRequestStatusUpdateResult updateStatusRequestEventByUser(Long userId, Long eventId, EventRequestStatusUpdateRequest result);
 
     List<EventShortDto> getEventsFilter(String text, List<Long> categories, Boolean paid, String rangeStart, String rangeEnd, Boolean onlyAvailable, String sort, Integer from, Integer size);
 

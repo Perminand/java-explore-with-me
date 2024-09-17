@@ -1,6 +1,6 @@
 package ru.practicum.ewm.main.service.compilations;
 
-import ru.practicum.ewm.main.model.compilation.CompilationDto;
+import ru.practicum.ewm.main.model.compilation.dto.CompilationDto;
 
 public interface CompilationService {
 

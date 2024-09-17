@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.main.model.compilation.CompilationDto;
+import ru.practicum.ewm.main.model.compilation.dto.CompilationDto;
 import ru.practicum.ewm.main.service.compilations.CompilationService;
 
 @Slf4j
