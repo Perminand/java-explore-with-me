@@ -43,7 +43,6 @@ import java.util.stream.Collectors;
 public class EventServiceImpl implements EventService {
     private final RequestRepository requestRepository;
     private final EventRepository eventRepository;
-    private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final LocationRepository locationRepository;
     private final Validate validate;
@@ -364,14 +363,6 @@ public class EventServiceImpl implements EventService {
         return Utilities.checkTypes(events, EventFullDto.class);
     }
 
-
-    private LocalDateTime validationEventDate(LocalDateTime eventDate) {
-        if (eventDate.minusHours(2).isBefore(LocalDateTime.now())) {
-            throw new ConflictException("eventDate должна содержать дату и время которое не наступила + 2 часа");
-        }
-        return eventDate;
-
-    }
 
     private LocalDateTime convertToLocalDataTime(String date) {
         if (date == null) {

@@ -20,8 +20,4 @@ public class NewCompilationDto {
     @NotBlank
     @Length(min = 1, max = 50)
     private String title;
-
-    public NewCompilationDto(String title) {
-        this.title = title;
-    }
 }

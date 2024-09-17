@@ -46,7 +46,7 @@ public class UserServiceImp implements UserService {
         Optional.of(repository.findById(l))
                 .orElseThrow(() -> {
                     log.error("Попытка удаления не существующей категории");
-                    throw new EntityNotFoundException("Пользователь не найден или недоступен");
+                    return new EntityNotFoundException("Пользователь не найден или недоступен");
                 });
         repository.deleteById(l);
     }

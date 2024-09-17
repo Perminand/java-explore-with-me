@@ -39,7 +39,7 @@ public class CompilationAdminController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCompilation(@Min(0) Long compId) {
         log.info("Delete запрос на удаление подборки");
-        compilationService.delete(compId);
+        compilationService.deleteCompilation(compId);
     }
 
 
