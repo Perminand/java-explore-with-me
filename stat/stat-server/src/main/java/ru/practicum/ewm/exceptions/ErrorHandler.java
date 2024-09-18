@@ -23,8 +23,8 @@ public class ErrorHandler {
         e.printStackTrace(pw);
         String stackTrace = sw.toString();
         return new ApiError(stackTrace, status, e.getMessage(), e.toString());
-
     }
+
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ApiError handleNotFoundError(final EntityNotFoundException e, HttpStatus status) {
