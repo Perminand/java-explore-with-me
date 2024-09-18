@@ -62,7 +62,7 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public ParticipationRequestDto CancelRequestEventIdByUserId(Long userId, Long requestsId) {
+    public ParticipationRequestDto cancelRequestEventIdByUserId(Long userId, Long requestsId) {
         validate.getUserById(userId);
         Request request = validate.getRequestById(requestsId);
         if (!request.getRequester().getId().equals(userId)) {
