@@ -91,7 +91,6 @@ public class CompilationServiceImpl implements CompilationService {
     @Override
     public void deleteCompilation(Long compId) {
         Compilation compilation = validate.getCompilationsById(compId);
-        List<CompilationEvent> compilationEvens = compilationsEventRepository.getAllByCompilationId(compId);
         compilationRepository.delete(compilation);
         compilationsEventRepository.deleteAllByCompilationId(compId);
         log.info("Подборка удалена ид: {}", compId);
@@ -99,7 +98,17 @@ public class CompilationServiceImpl implements CompilationService {
 
     @Override
     public CompilationDto getById(long compId) {
-        return CompilationMappers.toDto(validate.getCompilationsById(compId));
+        Compilation compilation = validate.getCompilationsById(compId);
+        List<CompilationEvent> compilationEvents = compilationsEventRepository.findAllByCompilationId(compId);
+        CompilationDto compilationDto = CompilationMappers.toDto(compilation);
+        List<EventShortDto> events = new ArrayList<>();
+        if (!compilationEvents.isEmpty()) {
+            for (CompilationEvent e : compilationEvents) {
+                events.add(EventMappers.toShortDto(e.getEvent()));
+            }
+        }
+        compilationDto.setEvents(events);
+        return compilationDto;
     }
 
     @Override

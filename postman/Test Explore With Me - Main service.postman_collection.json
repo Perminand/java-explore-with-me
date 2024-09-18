@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "91d38595-aa65-4587-adf5-3e02c81237e6",
+		"_postman_id": "ed2a0805-20b6-48c6-9dac-47884ff32b8d",
 		"name": "Test Explore With Me - Main service",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "253693"
@@ -1208,7 +1208,7 @@
 													"        const category = await api.addCategory(rnd.getCategory());\r",
 													"        event = await api.addEvent(user.id, rnd.getEvent(category.id));\r",
 													"        await pm.sendRequest({\r",
-													"            url : \"http://localhost:8080/admin/events/\" + event.id,\r",
+													"            url : \"http://62.109.21.174:8080/admin/events/\" + event.id,\r",
 													"            method : \"PATCH\",\r",
 													"            header: { \"Content-Type\": \"application/json\" },\r",
 													"            body: JSON.stringify({\r",
@@ -1457,7 +1457,7 @@
 													"        pm.request.addQueryParams([`users=` + user.id, 'categories=' + category.id]);\r",
 													"        pm.collectionVariables.set('response', event);\r",
 													"        await pm.sendRequest({\r",
-													"            url : \"http://localhost:8080/admin/events?users=\" + user.id +\"&states=PUBLISHED&categories=\" + category.id + \"&rangeStart=2022-01-06%2013%3A30%3A38&rangeEnd=2097-09-06%2013%3A30%3A38&from=0&size=1000\",\r",
+													"            url : \"http://62.109.21.174:8080/admin/events?users=\" + user.id +\"&states=PUBLISHED&categories=\" + category.id + \"&rangeStart=2022-01-06%2013%3A30%3A38&rangeEnd=2097-09-06%2013%3A30%3A38&from=0&size=1000\",\r",
 													"            method : \"GET\",\r",
 													"            header: { \"Content-Type\": \"application/json\" }\r",
 													"        }, (error, response) => {\r",
@@ -1872,8 +1872,7 @@
 													"    100 \r",
 													");"
 												],
-												"type": "text/javascript",
-												"packages": {}
+												"type": "text/javascript"
 											}
 										},
 										{
@@ -1898,13 +1897,15 @@
 													"pm.expect(target).to.have.property('created');\r",
 													"});\r",
 													"\r",
+													"pm.test(\"При создании у запроса на участие должен быть статус CONFIRMED\", function () {\r",
+													"    pm.expect(target.status).equal(\"CONFIRMED\");\r",
+													"});\r",
 													"\r",
 													"pm.test(\"Id ивента в запросе и в ответе должны совпадать\", function () {\r",
 													"    pm.expect(target.event.toString()).equal(query['eventId'].toString());\r",
 													"});"
 												],
-												"type": "text/javascript",
-												"packages": {}
+												"type": "text/javascript"
 											}
 										}
 									],
@@ -4933,7 +4934,7 @@
 													"            await api.addEvent(user.id, eventArr[i]);\r",
 													"        }\r",
 													"        await pm.sendRequest({\r",
-													"            url : \"http://localhost:8080/admin/events?from=0\",\r",
+													"            url : \"http://62.109.21.174:8080/admin/events?from=0\",\r",
 													"            method : \"GET\",\r",
 													"            header: { \"Content-Type\": \"application/json\" }\r",
 													"        }, (error, response) => {pm.collectionVariables.set('source', response.json())});\r",
@@ -5075,7 +5076,7 @@
 													"        pm.collectionVariables.set('responseArr', eventResponseArr)\r",
 													"        pm.collectionVariables.set(\"uid\", user.id)\r",
 													"        await pm.sendRequest({\r",
-													"            url : \"http://localhost:8080/users/\" + user.id + \"/events?from=0\",\r",
+													"            url : \"http://62.109.21.174:8080/users/\" + user.id + \"/events?from=0\",\r",
 													"            method : \"GET\",\r",
 													"            header: { \"Content-Type\": \"application/json\" }\r",
 													"        }, (error, response) => {pm.collectionVariables.set('source', response.json())});\r",
@@ -7367,7 +7368,7 @@
 													"            await api.addUser(rnd.getUser());\r",
 													"        }\r",
 													"        await pm.sendRequest({\r",
-													"            url : \"http://localhost:8080/admin/users?from=0\",\r",
+													"            url : \"http://62.109.21.174:8080/admin/users?from=0\",\r",
 													"            method : \"GET\",\r",
 													"            header: { \"Content-Type\": \"application/json\" }\r",
 													"        }, (error, response) => {pm.collectionVariables.set('source', response.json())});\r",
@@ -8266,7 +8267,7 @@
 													"            await api.addCategory(rnd.getCategory());\r",
 													"        }\r",
 													"        await pm.sendRequest({\r",
-													"            url : \"http://localhost:8080/categories?from=0\",\r",
+													"            url : \"http://62.109.21.174:8080/categories?from=0\",\r",
 													"            method : \"GET\",\r",
 													"            header: { \"Content-Type\": \"application/json\" }\r",
 													"        }, (error, response) => {pm.collectionVariables.set('source', response.json())});\r",
@@ -8893,7 +8894,7 @@
 													"        compilation = rnd.getCompilation(event.id, event2.id);\r",
 													"        compilation2 = rnd.getCompilation(event.id, event2.id);\r",
 													"        await pm.sendRequest({\r",
-													"            url : \"http://localhost:8080/admin/compilations/\",\r",
+													"            url : \"http://62.109.21.174:8080/admin/compilations/\",\r",
 													"            method : \"POST\",\r",
 													"            header: { \"Content-Type\": \"application/json\" },\r",
 													"            body: JSON.stringify({\r",
@@ -9602,7 +9603,7 @@
 													"            await api.addCompilation(rnd.getCompilation());\r",
 													"        }\r",
 													"        await pm.sendRequest({\r",
-													"            url : \"http://localhost:8080/compilations?from=0\",\r",
+													"            url : \"http://62.109.21.174:8080/compilations?from=0\",\r",
 													"            method : \"GET\",\r",
 													"            header: { \"Content-Type\": \"application/json\" }\r",
 													"        }, (error, response) => {pm.collectionVariables.set('source', response.json())});\r",
@@ -11921,7 +11922,7 @@
 									"});\r",
 									"let body\r",
 									"const req = {\r",
-									"                url: \"http://localhost:8080/admin/users?ids=\" + pm.collectionVariables.get(\"uid\"),\r",
+									"                url: \"http://62.109.21.174:8080/admin/users?ids=\" + pm.collectionVariables.get(\"uid\"),\r",
 									"                method: \"GET\",\r",
 									"                body: body == null ? \"\" : JSON.stringify(body),\r",
 									"                header: { \"Content-Type\": \"application/json\" },\r",
@@ -12931,8 +12932,7 @@
 									"    100 \r",
 									");"
 								],
-								"type": "text/javascript",
-								"packages": {}
+								"type": "text/javascript"
 							}
 						},
 						{
@@ -12956,10 +12956,14 @@
 									"pm.expect(target).to.have.property('created');\r",
 									"});\r",
 									"\r",
-									""
+									"pm.test(\"Данные в ответе должны соответствовать данным в запросе\", function () {\r",
+									"    pm.expect(source.id).equal(target.id, 'Идентификатор запроса на участие в событии должен соответствовать идентификатору запроса, созданного ранее');\r",
+									"    pm.expect(source.requester).equal(target.requester, 'Пользователя, запрашивающий доступ на участие в событии, должен соответствовать указанному пользователю');\r",
+									"    pm.expect(source.event).equal(target.event, 'Событие, доступ к которому запрашивает пользователь, должно соответствовать событию, доступ к которому пользователь запрашивал доступ ранее');\r",
+									"    pm.expect(source.created).equal(target.created, 'Время создания запроса на участие в событии должно соответствовать времени создания запроса, созданного ранее указанным пользователем');\r",
+									"});"
 								],
-								"type": "text/javascript",
-								"packages": {}
+								"type": "text/javascript"
 							}
 						}
 					],
@@ -13037,8 +13041,7 @@
 									"    100 \r",
 									");"
 								],
-								"type": "text/javascript",
-								"packages": {}
+								"type": "text/javascript"
 							}
 						},
 						{
@@ -13062,10 +13065,14 @@
 									"pm.expect(target).to.have.property('created');\r",
 									"});\r",
 									"\r",
-									""
+									"pm.test(\"Данные в ответе должны соответствовать данным в запросе\", function () {\r",
+									"    pm.expect(source.id).equal(target.id, 'Идентификатор запроса на участие в событии должен соответствовать идентификатору запроса на участие в событии указанного пользователя');\r",
+									"    pm.expect(source.requester).equal(target.requester, 'Автор запроса на участие в событии должен соответствовать указанному пользователю');\r",
+									"    pm.expect(source.event).equal(target.event, 'Событие в ответе должно соответствовать событию с запросом на участие от указанного пользователя');\r",
+									"    pm.expect(source.created).equal(target.created, 'Время создания запроса на участие в событии должно соответствовать времени создания запроса на участие в событии указанного пользователя');\r",
+									"});"
 								],
-								"type": "text/javascript",
-								"packages": {}
+								"type": "text/javascript"
 							}
 						}
 					],
@@ -13422,8 +13429,7 @@
 									"    100 \r",
 									");"
 								],
-								"type": "text/javascript",
-								"packages": {}
+								"type": "text/javascript"
 							}
 						},
 						{
@@ -13452,10 +13458,14 @@
 									"    pm.expect(target.status).equal(\"CANCELED\");\r",
 									"});\r",
 									"\r",
-									""
+									"pm.test(\"Данные в ответе должны соответствовать данным в запросе\", function () {\r",
+									"    pm.expect(source.id).equal(target.id, 'Идентификатор отменённого запроса на участие в событии должен соответствовать идентификатору запроса до отмены');\r",
+									"    pm.expect(source.requester).equal(target.requester, 'Пользователь, отменяющий запрос на участие в событии, должен соответствовать текущему пользователю');\r",
+									"    pm.expect(source.event).equal(target.event, 'Событие отменённого запроса на участие должно соответствовать запросу на участие в событии до отмены');\r",
+									"    pm.expect(source.created).equal(target.created, 'Дата создания отменённого запроса на участие в событии должна соответствовать дате создания запроса до отмены');\r",
+									"});"
 								],
-								"type": "text/javascript",
-								"packages": {}
+								"type": "text/javascript"
 							}
 						}
 					],
@@ -13545,8 +13555,7 @@
 									"    100 \r",
 									");"
 								],
-								"type": "text/javascript",
-								"packages": {}
+								"type": "text/javascript"
 							}
 						},
 						{
@@ -13570,14 +13579,19 @@
 									"pm.expect(target).to.have.property('created');\r",
 									"});\r",
 									"\r",
+									"pm.test(\"Данные в ответе должны соответствовать данным в запросе\", function () {\r",
+									"    pm.expect(source.id).equal(target.id, 'Идентификатор запроса на участие в событии должен соответствовать идентификатору запроса на участие в событии указанного пользователя');\r",
+									"    pm.expect(source.requester).equal(target.requester, 'Пользователь, запрашивающий доступ на участие в событии должен пользователю, отправившему запрос на участие в событии указанного пользователя ранее');\r",
+									"    pm.expect(source.event).equal(target.event, 'Событие, запрос на участие в котором надо подтвердить, должно соответствовать событию указанного пользователя');\r",
+									"    pm.expect(source.created).equal(target.created, 'Время создания запроса на участие в событии после подтверждения должно соответствовать времени создания запроса на участие в событии указанного пользователя до подтверждения');\r",
+									"});\r",
 									"\r",
 									"pm.test(\"Запрос на участие должен иметь статус PENDING при создании и статус REJECTED после выполнения запроса\", function () {\r",
 									"    pm.expect(source.status).equal(\"PENDING\");\r",
 									"    pm.expect(target.status).equal(\"REJECTED\");\r",
 									"});"
 								],
-								"type": "text/javascript",
-								"packages": {}
+								"type": "text/javascript"
 							}
 						}
 					],
@@ -13681,8 +13695,7 @@
 									"    100 \r",
 									");"
 								],
-								"type": "text/javascript",
-								"packages": {}
+								"type": "text/javascript"
 							}
 						},
 						{
@@ -13706,14 +13719,19 @@
 									"pm.expect(target).to.have.property('created');\r",
 									"});\r",
 									"\r",
+									"pm.test(\"Данные в ответе должны соответствовать данным в запросе\", function () {\r",
+									"    pm.expect(source.id).equal(target.id, 'Идентификатор запроса на участие в событии должен соответствовать идентификатору запроса на участие в событии указанного пользователя');\r",
+									"    pm.expect(source.requester).equal(target.requester, 'Пользователь, запрашивающий доступ на участие в событии должен пользователю, отправившему запрос на участие в событии указанного пользователя ранее');\r",
+									"    pm.expect(source.event).equal(target.event, 'Событие, запрос на участие в котором надо подтвердить, должно соответствовать событию указанного пользователя');\r",
+									"    pm.expect(source.created).equal(target.created, 'Время создания запроса на участие в событии после подтверждения должно соответствовать времени создания запроса на участие в событии указанного пользователя до подтверждения');\r",
+									"});\r",
 									"\r",
 									"pm.test(\"Запрос на участие должен иметь статус PENDING при создании и статус CONFIRMED после выполнения запроса\", function () {\r",
 									"    pm.expect(source.status).equal(\"PENDING\");\r",
 									"    pm.expect(target.status).equal(\"CONFIRMED\");\r",
 									"});"
 								],
-								"type": "text/javascript",
-								"packages": {}
+								"type": "text/javascript"
 							}
 						}
 					],
@@ -13923,8 +13941,7 @@
 									"    100 \r",
 									");"
 								],
-								"type": "text/javascript",
-								"packages": {}
+								"type": "text/javascript"
 							}
 						},
 						{
@@ -13947,10 +13964,14 @@
 									"pm.expect(target).to.have.property('events');\r",
 									"});\r",
 									"\r",
-									""
+									"pm.test(\"Данные в ответе должны соответствовать данным в запросе\", function () {\r",
+									"    pm.expect(source.id).equal(target.id, 'Идентификатор подборки должен соответствовать идентификатору подборки добавленной ранее');\r",
+									"    pm.expect(source.title).equal(target.title, 'Название подборки должно соответствовать названию подборки добавленной ранее');\r",
+									"    pm.expect(source.pinned).equal(target.pinned, 'Закреплённость подборки должна соответствовать закреплённости подборки добавленной ранее');\r",
+									"    pm.expect(source.events.join()).equal(target.events.join(), 'События подборки должны соответствовать событиям подборки добавленной ранее');\r",
+									"});"
 								],
-								"type": "text/javascript",
-								"packages": {}
+								"type": "text/javascript"
 							}
 						}
 					],
@@ -14111,10 +14132,25 @@
 									"    pm.expect(source).not.to.be.null;\r",
 									"});\r",
 									"\r",
+									"let body\r",
+									"const req = {\r",
+									"                url: \"http://62.109.21.174:8080/compilations?from=0&size=1000\" + pm.collectionVariables.get(\"uid\"),\r",
+									"                method: \"GET\",\r",
+									"                body: body == null ? \"\" : JSON.stringify(body),\r",
+									"                header: { \"Content-Type\": \"application/json\" },\r",
+									"            };\r",
+									"pm.sendRequest(req, (error, response) => {\r",
+									"    pm.test(\"Подборка должна быть удалена после выполнения запроса\", function(){\r",
+									"        response.json().forEach(element => {\r",
+									"            if(element.id == pm.collectionVariables.get('compid')){\r",
+									"                throw new Error(\"Подборка все еще находится в списке существующих\");\r",
+									"            }\r",
+									"        })\r",
+									"    });\r",
+									"})\r",
 									""
 								],
-								"type": "text/javascript",
-								"packages": {}
+								"type": "text/javascript"
 							}
 						},
 						{
@@ -14153,8 +14189,7 @@
 									"    100 \r",
 									");"
 								],
-								"type": "text/javascript",
-								"packages": {}
+								"type": "text/javascript"
 							}
 						}
 					],
@@ -14238,43 +14273,36 @@
 									"    100 \r",
 									");"
 								],
-								"type": "text/javascript",
-								"packages": {}
+								"type": "text/javascript"
 							}
 						},
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Response status code is 200\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
+									"pm.test(\"Ответ должен содержать код статуса 200\", function () {\r",
+									"    pm.response.to.be.ok;    \r",
 									"});\r",
 									"\r",
-									"pm.test(\"Events array exists in the response\", function () {\r",
-									"    const responseData = pm.response.json();\r",
-									"    \r",
-									"    pm.expect(responseData).to.be.an('object');\r",
-									"    pm.expect(responseData.events).to.exist.and.to.be.an('array');\r",
+									"source = pm.collectionVariables.get('response');\r",
+									"compId = pm.collectionVariables.get('compid');\r",
+									"eventId = pm.collectionVariables.get('eid');\r",
+									"\r",
+									"pm.test(\"Событие не должно быть найдено в подборке до добавления\", function () {\r",
+									"    pm.expect(source.events.length).equal(0);\r",
 									"});\r",
 									"\r",
-									"\r",
-									"pm.test(\"Id and pinned fields exist in the response\", function () {\r",
-									"    const responseData = pm.response.json();\r",
-									"\r",
-									"    pm.expect(responseData).to.have.property('id');\r",
-									"    pm.expect(responseData).to.have.property('pinned');\r",
-									"});\r",
-									"\r",
-									"\r",
-									"pm.test(\"Title field in the response should exist\", function () {\r",
-									"    const responseData = pm.response.json();\r",
-									"    \r",
-									"    pm.expect(responseData.title).to.exist;\r",
-									"});\r",
-									""
+									"pm.sendRequest({\r",
+									"            url: pm.collectionVariables.get(\"baseUrl\") + \"/compilations/\" + compId,\r",
+									"            method: 'GET',\r",
+									"        }, (error, response) => {\r",
+									"            \r",
+									"            pm.test(\"Событие должно быть найдено в подборке после добавления\", function () {\r",
+									"                pm.expect(response.json().events[0].id).equal(eventId);\r",
+									"            });\r",
+									"        });"
 								],
-								"type": "text/javascript",
-								"packages": {}
+								"type": "text/javascript"
 							}
 						}
 					],
@@ -14315,7 +14343,7 @@
 				"type": "text/javascript",
 				"exec": [
 					"API = class {",
-					"    constructor(postman, verbose = false, baseUrl = \"http://localhost:8080\") {",
+					"    constructor(postman, verbose = false, baseUrl = \"http://62.109.21.174:8080\") {",
 					"        this.baseUrl = baseUrl;",
 					"        this.pm = postman;",
 					"        this._verbose = verbose;",
@@ -14504,7 +14532,7 @@
 	"variable": [
 		{
 			"key": "baseUrl",
-			"value": "http://localhost:8080",
+			"value": "http://62.109.21.174:8080",
 			"type": "string"
 		},
 		{

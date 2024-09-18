@@ -22,27 +22,27 @@ public class RequestPrivateController {
 
     @GetMapping("/{userId}/requests")
     @ResponseStatus(HttpStatus.OK)
-    public List<ParticipationRequestDto> getRequestByUserId(
+    public List<ParticipationRequestDto> getRequest(
             @PathVariable @Min(0) Long userId) {
         log.info("GET запрос на получение информации о заявках текущего пользователя на участие в чужих событиях");
-        return requestService.getRequestByUserId(userId);
+        return requestService.getRequest(userId);
     }
 
     @PostMapping("/{userId}/requests")
     @ResponseStatus(HttpStatus.CREATED)
-    public ParticipationRequestDto createRequestEventIdByUserId(
+    public ParticipationRequestDto createRequest(
             @PathVariable @Min(0) Long userId,
             @RequestParam @Min(0) Long eventId) {
         log.info("Post запрос от текущего пользователя ид: {} на участие в событии ид: {}", userId, eventId);
-        return requestService.createRequestEventIdByUserId(userId, eventId);
+        return requestService.createRequest(userId, eventId);
     }
 
     @PatchMapping("/{userId}/requests/{requestsId}/cancel")
     @ResponseStatus(HttpStatus.OK)
-    public ParticipationRequestDto updateRequestEventIdByUserId(
+    public ParticipationRequestDto updateRequest(
             @PathVariable @Min(0) Long userId,
             @PathVariable @Min(0) Long requestsId) {
         log.info("Patch запрос на отмену участия в событии");
-        return requestService.cancelRequestEventIdByUserId(userId, requestsId);
+        return requestService.cancelRequest(userId, requestsId);
     }
 }

@@ -23,13 +23,12 @@ public class RequestServiceImpl implements RequestService {
     private final RequestRepository requestRepository;
 
     @Override
-    public List<ParticipationRequestDto> getRequestByUserId(Long userId) {
+    public List<ParticipationRequestDto> getRequest(Long userId) {
         List<Request> requests = requestRepository.findByRequesterIdAndNotInitiatorId(userId);
         return requests.stream().map(RequestMappers::toDto).toList();
     }
 
-    @Override
-    public ParticipationRequestDto createRequestEventIdByUserId(Long userId, Long eventId) {
+    public ParticipationRequestDto createRequest(Long userId, Long eventId) {
         List<Request> re = requestRepository.findAllByRequesterIdAndEventId(userId, eventId);
         if (!re.isEmpty()) {
             throw new ConflictException("Запрос на участие уже создан");
@@ -55,14 +54,18 @@ public class RequestServiceImpl implements RequestService {
             }
             request = new Request(null, LocalDateTime.now(), event, user, State.CONFIRMED);
         } else {
-            request = new Request(null, LocalDateTime.now(), event, user, State.PENDING);
+            if (event.getParticipantLimit() != 0) {
+                request = new Request(null, LocalDateTime.now(), event, user, State.PENDING);
+            } else {
+                request = new Request(null, LocalDateTime.now(), event, user, State.CONFIRMED);
+            }
         }
         requestRepository.save(request);
         return RequestMappers.toDto(request);
     }
 
     @Override
-    public ParticipationRequestDto cancelRequestEventIdByUserId(Long userId, Long requestsId) {
+    public ParticipationRequestDto cancelRequest(Long userId, Long requestsId) {
         validate.getUserById(userId);
         Request request = validate.getRequestById(requestsId);
         if (!request.getRequester().getId().equals(userId)) {
