@@ -1,6 +1,5 @@
 package ru.practicum.ewm;
 
-import reactor.core.publisher.Mono;
 import ru.practicum.dto.StatisticDto;
 import ru.practicum.dto.StatisticResponse;
 

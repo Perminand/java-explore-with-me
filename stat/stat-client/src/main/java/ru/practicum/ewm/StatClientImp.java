@@ -15,7 +15,6 @@ import ru.practicum.dto.StatisticDto;
 import ru.practicum.dto.StatisticResponse;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Component
@@ -46,6 +45,7 @@ public class StatClientImp implements StatClient {
                 })
                 .block();
     }
+
     @Override
     public List<StatisticResponse> getStats(LocalDateTime startLocalDateTime, LocalDateTime endLocalDateTime, String uris, Boolean unique) {
         String start = startLocalDateTime.format(GeneralConstants.DATE_FORMATTER);
