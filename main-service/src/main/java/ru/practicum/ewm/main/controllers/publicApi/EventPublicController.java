@@ -10,6 +10,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.dto.StatisticDto;
 import ru.practicum.ewm.StatClientImp;
+import ru.practicum.ewm.main.common.GeneralConstants;
 import ru.practicum.ewm.main.model.event.dto.EventFullDto;
 import ru.practicum.ewm.main.model.event.dto.EventShortDto;
 import ru.practicum.ewm.main.service.event.EventService;
@@ -41,7 +42,6 @@ public class EventPublicController {
             @Min(0) @RequestParam(defaultValue = "0") Integer from,
             @Min(0) @RequestParam(defaultValue = "10") Integer size,
             HttpServletRequest httpServletRequest) {
-        log.info("");
 
         String ip = httpServletRequest.getRemoteAddr();
         String path = httpServletRequest.getRequestURI();
@@ -73,8 +73,12 @@ public class EventPublicController {
         statisticClient.createStat(statisticDto);
         log.info("EventPublicController, getEventsFilter. Запрос был отправлен на сервер статистики. Подробнее: {}",
                 statisticDto);
-
-        return eventService.getEvent(id);
+        EventFullDto eventFullDto = eventService.getEvent(id);
+        eventFullDto.setViews((long) statisticClient.getStats(
+                GeneralConstants.defaultStartTime,
+                GeneralConstants.defaultEndTime,
+                path, true).size());
+        return eventFullDto;
     }
 
     private StatisticDto prepareStatisticDto(String app, String uri, String ip) {

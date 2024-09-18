@@ -13,7 +13,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
-    show-sql: true
+    show-sql: false
   datasource:
     driverClassName: org.postgresql.Driver
     url: jdbc:postgresql://62.109.21.174:5433/service

@@ -3,8 +3,8 @@ package ru.practicum.ewm.main.repository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import ru.practicum.ewm.main.model.State;
 import ru.practicum.ewm.main.model.event.Event;
+import ru.practicum.ewm.main.model.status.State;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,7 +18,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "AND (e.category IN (?2) OR ?2 IS NULL) " +
             "AND (e.state IN (?3) OR ?3 IS NULL) " +
             "AND (e.event_date BETWEEN ?4 AND ?5)) ", nativeQuery = true)
-    List<Event> findAllByInitiatorIdInAndStateInAndCategoryIdInAndDateTimeBetween(
+    List<Event> findAllByInitiatorIdInAndCategoryIdInAndStateInAndDateTimeBetween(
             List<Long> initiator,
             List<Long> category,
             List<String> state,

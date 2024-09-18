@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.main.model.ParticipationRequestDto;
+import ru.practicum.ewm.main.model.request.dto.ParticipationRequestDto;
 import ru.practicum.ewm.main.service.requests.RequestService;
 
 import java.util.List;
@@ -19,7 +19,6 @@ import java.util.List;
 @Validated
 public class RequestPrivateController {
     private final RequestService requestService;
-
 
     @GetMapping("/{userId}/requests")
     @ResponseStatus(HttpStatus.OK)
@@ -34,7 +33,7 @@ public class RequestPrivateController {
     public ParticipationRequestDto createRequestEventIdByUserId(
             @PathVariable @Min(0) Long userId,
             @RequestParam @Min(0) Long eventId) {
-        log.info("Post запрос от текущего на участие в событии ");
+        log.info("Post запрос от текущего пользователя ид: {} на участие в событии ид: {}", userId, eventId);
         return requestService.createRequestEventIdByUserId(userId, eventId);
     }
 

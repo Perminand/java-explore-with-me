@@ -1,16 +1,14 @@
 package ru.practicum.ewm.main.model.event;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
-import ru.practicum.ewm.main.model.Location;
-import ru.practicum.ewm.main.model.State;
 import ru.practicum.ewm.main.model.category.Category;
-import ru.practicum.ewm.main.model.category.dto.CategoryDto;
+import ru.practicum.ewm.main.model.locations.Location;
+import ru.practicum.ewm.main.model.status.State;
 import ru.practicum.ewm.main.model.users.User;
 
 import java.time.LocalDateTime;
@@ -46,7 +44,6 @@ public class Event {
 
     @Column(name = "event_date")
     @NotNull(message = "eventDate не может быть пустым")
-    @FutureOrPresent(message = "eventDate должно быть в будущем")
     private LocalDateTime eventDate;
 
     @ManyToOne

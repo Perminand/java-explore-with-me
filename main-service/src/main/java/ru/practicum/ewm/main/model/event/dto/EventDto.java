@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import ru.practicum.ewm.main.model.Location;
+import ru.practicum.ewm.main.model.locations.Location;
 
 import java.time.LocalDateTime;
 
@@ -39,6 +39,7 @@ public class EventDto {
     private Boolean paid;
 
     @Setter
+    @Min(0)
     private Integer participantLimit;
 
     @Setter

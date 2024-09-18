@@ -1,13 +1,13 @@
 package ru.practicum.ewm.main.exceptions;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.client.HttpServerErrorException;
 import ru.practicum.ewm.main.exceptions.errors.ConflictException;
+import ru.practicum.ewm.main.exceptions.errors.EntityNotFoundException;
 import ru.practicum.ewm.main.exceptions.errors.ValidationException;
 
 import java.io.PrintWriter;
@@ -30,11 +30,18 @@ public class ErrorHandler {
         return setApiError(e, HttpStatus.CONFLICT.getReasonPhrase());
     }
 
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ApiError handleConflictError(final DataIntegrityViolationException e) {
+        log.error("409 {}", e.getMessage(), e);
+        return setApiError(e, HttpStatus.CONFLICT.getReasonPhrase());
+    }
+
     @ExceptionHandler(ValidationException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ApiError handleInternetServerError(final ValidationException e) {
-        log.error("500 {}", e.getMessage(), e);
-        return setApiError(e, HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiError handleBadRequestError(final ValidationException e) {
+        log.error("400 {}", e.getMessage(), e);
+        return setApiError(e, HttpStatus.BAD_REQUEST.getReasonPhrase());
     }
 
     private ApiError setApiError(Throwable e, String status) {

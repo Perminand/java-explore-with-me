@@ -2,15 +2,12 @@ package ru.practicum.ewm.main.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import ru.practicum.ewm.main.model.ParticipationRequestDto;
-import ru.practicum.ewm.main.model.Request;
-import ru.practicum.ewm.main.model.State;
-import ru.practicum.ewm.main.model.event.Event;
 import ru.practicum.ewm.main.model.event.dto.EventIdByRequestsCount;
+import ru.practicum.ewm.main.model.request.Request;
+import ru.practicum.ewm.main.model.status.State;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 public interface RequestRepository extends JpaRepository<Request, Long> {
     List<Request> findAllByRequesterIdAndEventId(Long userId, Long eventId);

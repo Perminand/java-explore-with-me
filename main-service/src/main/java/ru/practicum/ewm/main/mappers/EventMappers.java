@@ -41,6 +41,7 @@ public class EventMappers {
                 .state(event.getState().toString())
                 .build();
     }
+
     public static EventShortDto toShortDto(Event event) {
         return new EventShortDto(
                 event.getId(),

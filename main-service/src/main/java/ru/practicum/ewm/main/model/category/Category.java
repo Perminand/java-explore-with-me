@@ -18,6 +18,7 @@ public class Category {
     @Setter
     @NotBlank(message = "Имя категории не может быть пустым")
     @Length(min = 1, max = 50, message = "Длина строки должна быть от 1 до 50 символов")
+    @Column(unique = true)
     private String name;
 
 }

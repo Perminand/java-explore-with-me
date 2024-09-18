@@ -12,7 +12,6 @@ import java.util.Map;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Utilities {
 
-
     public static List<EventFullDto> addViewsAndConfirmedRequestsFull(List<EventFullDto> eventFullDtoList,
                                                                       Map<Long, Long> confirmedRequests,
                                                                       List<Long> views) {

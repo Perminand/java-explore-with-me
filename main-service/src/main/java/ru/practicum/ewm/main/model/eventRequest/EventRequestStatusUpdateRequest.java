@@ -1,6 +1,7 @@
-package ru.practicum.ewm.main.model;
+package ru.practicum.ewm.main.model.eventRequest;
 
 import lombok.Getter;
+import ru.practicum.ewm.main.model.status.State;
 
 import java.util.List;
 

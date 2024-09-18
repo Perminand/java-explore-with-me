@@ -24,9 +24,9 @@ public class CompilationPublicController {
     @ResponseStatus(HttpStatus.OK)
     public List<CompilationDto> getAll(
                               @PathVariable(required = false)
-                              @RequestParam Boolean pinned,
-                                       @Min(0) @RequestParam(defaultValue = "0") Integer from,
-                                       @Min(0) @RequestParam(defaultValue = "10") Integer size) {
+                              @RequestParam(required = false) Boolean pinned,
+                              @Min(0) @RequestParam(required = false, defaultValue = "0") Integer from,
+                              @Min(0) @RequestParam(required = false, defaultValue = "10") Integer size) {
         log.info("Get запрос на получение подборок");
         return compilationService.getAll(pinned, from, size);
     }

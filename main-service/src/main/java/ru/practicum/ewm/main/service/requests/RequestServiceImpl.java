@@ -1,15 +1,14 @@
 package ru.practicum.ewm.main.service.requests;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.ewm.main.exceptions.errors.ConflictException;
 import ru.practicum.ewm.main.exceptions.errors.EntityNotFoundException;
 import ru.practicum.ewm.main.mappers.RequestMappers;
-import ru.practicum.ewm.main.model.ParticipationRequestDto;
-import ru.practicum.ewm.main.model.Request;
-import ru.practicum.ewm.main.model.State;
 import ru.practicum.ewm.main.model.event.Event;
+import ru.practicum.ewm.main.model.request.Request;
+import ru.practicum.ewm.main.model.request.dto.ParticipationRequestDto;
+import ru.practicum.ewm.main.model.status.State;
 import ru.practicum.ewm.main.model.users.User;
 import ru.practicum.ewm.main.repository.RequestRepository;
 import ru.practicum.ewm.main.validate.Validate;
@@ -29,30 +28,31 @@ public class RequestServiceImpl implements RequestService{
     }
 
     @Override
-    @Transactional
     public ParticipationRequestDto createRequestEventIdByUserId(Long userId, Long eventId) {
         List<Request> re = requestRepository.findAllByRequesterIdAndEventId(userId, eventId);
         if (!re.isEmpty()) {
-            throw new DataIntegrityViolationException("Есть уже запрос на участие");
+            throw new ConflictException("Запрос на участие уже создан");
         }
         User user = validate.getUserById(userId);
         Event event = validate.getEventById(eventId);
 
         if (event.getInitiator() == user) {
-            throw new DataIntegrityViolationException("Инициатор не может подать запрос на участие");
+            throw new ConflictException("Инициатор не может подать запрос на участие");
         }
 
         if (!event.getState().equals(State.PUBLISHED)) {
-            throw new DataIntegrityViolationException("Событие не опубликовано");
-        }
-
-        if (requestRepository.findAllByEventIdAndStatus(eventId, State.PUBLISHED).size() >= event.getParticipantLimit()) {
-            throw new DataIntegrityViolationException("Лимит регистрации закончился");
+            throw new ConflictException("Событие не опубликовано");
         }
         Request request;
-        if (!event.getRequestModeration()) {
-            request = new Request(null, LocalDateTime.now(), event, user, State.PUBLISHED);
 
+        if (!event.getRequestModeration()) {
+            if (event.getParticipantLimit() != 0) {
+                int countRequest = requestRepository.findAllByEventIdAndStatus(eventId, State.CONFIRMED).size();
+                if (countRequest >= event.getParticipantLimit()) {
+                    throw new ConflictException("у события достигнут лимит запросов на участие");
+                }
+            }
+            request = new Request(null, LocalDateTime.now(), event, user, State.CONFIRMED);
         } else {
             request = new Request(null, LocalDateTime.now(), event, user, State.PENDING);
         }

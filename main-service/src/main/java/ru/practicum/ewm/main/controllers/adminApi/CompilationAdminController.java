@@ -41,6 +41,4 @@ public class CompilationAdminController {
         log.info("Delete запрос на удаление подборки");
         compilationService.deleteCompilation(compId);
     }
-
-
 }

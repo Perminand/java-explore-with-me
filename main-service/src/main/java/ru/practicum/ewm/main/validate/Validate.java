@@ -5,10 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.practicum.ewm.main.exceptions.errors.EntityNotFoundException;
 import ru.practicum.ewm.main.exceptions.errors.ValidationException;
-import ru.practicum.ewm.main.model.Request;
 import ru.practicum.ewm.main.model.category.Category;
 import ru.practicum.ewm.main.model.compilation.Compilation;
 import ru.practicum.ewm.main.model.event.Event;
+import ru.practicum.ewm.main.model.request.Request;
 import ru.practicum.ewm.main.model.users.User;
 import ru.practicum.ewm.main.repository.*;
 

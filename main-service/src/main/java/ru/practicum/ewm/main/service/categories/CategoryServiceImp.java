@@ -2,12 +2,11 @@ package ru.practicum.ewm.main.service.categories;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import ru.practicum.ewm.main.exceptions.errors.EntityNotFoundException;
+import ru.practicum.ewm.main.exceptions.errors.ConflictException;
 import ru.practicum.ewm.main.mappers.CategoryMappers;
 import ru.practicum.ewm.main.model.category.Category;
 import ru.practicum.ewm.main.model.category.dto.CategoryDto;
@@ -47,7 +46,7 @@ public class CategoryServiceImp implements CategoryService {
         Category category = validate.getCategoryById(catId);
         Optional<Event> eventOptional = eventRepository.findByCategoryId(catId);
         if (eventOptional.isPresent()) {
-            throw new DataIntegrityViolationException("С категорией связано событие");
+            throw new ConflictException("С категорией связано событие");
         }
         categoryRepository.delete(category);
     }
