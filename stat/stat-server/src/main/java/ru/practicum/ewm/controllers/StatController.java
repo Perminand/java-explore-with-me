@@ -1,6 +1,5 @@
 package ru.practicum.ewm.controllers;
 
-import ru.practicum.ewm.service.StatService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -11,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.dto.StatisticDto;
 import ru.practicum.dto.StatisticResponse;
 import ru.practicum.dto.ViewsStatsRequest;
+import ru.practicum.ewm.service.StatService;
 
 import java.security.InvalidParameterException;
 import java.time.LocalDateTime;

@@ -26,6 +26,7 @@ import java.util.List;
 @Validated
 public class EventPrivateController {
     private final EventService eventService;
+
     @GetMapping("{userId}/events")
     @ResponseStatus(HttpStatus.OK)
     public List<EventShortDto> getEventsByUser(

@@ -12,7 +12,7 @@ public class ApiError {
     private final String status;
     private final String reason;
     private final String message;
-    private final LocalDateTime timestamp =  LocalDateTime.now();
+    private final LocalDateTime timestamp = LocalDateTime.now();
 
 }
 

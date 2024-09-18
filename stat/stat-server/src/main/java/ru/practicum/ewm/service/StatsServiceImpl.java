@@ -1,11 +1,11 @@
 package ru.practicum.ewm.service;
 
-import ru.practicum.ewm.repository.StatsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.dto.StatisticDto;
 import ru.practicum.dto.StatisticResponse;
 import ru.practicum.dto.ViewsStatsRequest;
+import ru.practicum.ewm.repository.StatsRepository;
 
 import java.util.List;
 

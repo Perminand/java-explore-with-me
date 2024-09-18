@@ -162,17 +162,16 @@ public class EventServiceImpl implements EventService {
             event.setState(State.CANCELED);
         }
 
-                eventRepository.save(event);
+        eventRepository.save(event);
         return EventMappers.toEventFullDto(event);
     }
-
 
 
     @Override
     @Transactional(readOnly = true)
     public List<EventShortDto> getEventsByUser(Long userId, Integer from, Integer size) {
         validate.getUserById(userId);
-        int startPage = from > 0 ? (from/size) : 0;
+        int startPage = from > 0 ? (from / size) : 0;
         Pageable pageable = PageRequest.of(startPage, size);
         List<EventShortDto> eventShortDtoList = eventRepository.findAllByInitiatorId(userId, pageable).stream().map(EventMappers::toShortDto).toList();
         List<Long> longList = eventShortDtoList.stream().map(EventShortDto::getId).toList();
@@ -217,7 +216,7 @@ public class EventServiceImpl implements EventService {
     public EventFullDto updateEventByUserId(Long userId, Long eventId, UpdateEventAdminRequest request) {
         validate.getUserById(userId);
         Event event = validate.getEventById(eventId);
-        if(request.getStateAction() == StateAction.SEND_TO_REVIEW) {
+        if (request.getStateAction() == StateAction.SEND_TO_REVIEW) {
             event.setState(State.PENDING);
         }
         if (request.getCategory() != null) {
@@ -226,7 +225,7 @@ public class EventServiceImpl implements EventService {
         }
         if (event.getState() == State.PUBLISHED) {
             throw new ConflictException("Событие уже опубликовано");
-        } else if(event.getState() == State.CANCELED) {
+        } else if (event.getState() == State.CANCELED) {
             throw new ConflictException("Событие уже отменено");
         } else {
             if (request.getStateAction() != null) {
@@ -305,14 +304,13 @@ public class EventServiceImpl implements EventService {
                 }
             }
         } else {
-            for(Request r : requestList) {
+            for (Request r : requestList) {
                 r.setStatus(request.getStatus());
                 confirmedReqs.add(RequestMappers.toDto(r));
             }
         }
         return new EventRequestStatusUpdateResult(confirmedReqs, canceledReqs);
     }
-        
 
 
     @Override

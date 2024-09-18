@@ -16,7 +16,7 @@ public class ViewStatsMapper implements RowMapper<StatisticResponse> {
     /**
      * Метод для маппинга строки результата запроса в объект ViewStats.
      *
-     * @param rs объект ResultSet с результатами запроса
+     * @param rs     объект ResultSet с результатами запроса
      * @param rowNum номер строки результата запроса
      * @return объект ViewStatsDto
      * @throws SQLException если произошла ошибка при доступе к данным в ResultSet

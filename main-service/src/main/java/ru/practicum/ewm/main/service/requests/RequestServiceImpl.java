@@ -18,9 +18,10 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class RequestServiceImpl implements RequestService{
+public class RequestServiceImpl implements RequestService {
     private final Validate validate;
     private final RequestRepository requestRepository;
+
     @Override
     public List<ParticipationRequestDto> getRequestByUserId(Long userId) {
         List<Request> requests = requestRepository.findByRequesterIdAndNotInitiatorId(userId);

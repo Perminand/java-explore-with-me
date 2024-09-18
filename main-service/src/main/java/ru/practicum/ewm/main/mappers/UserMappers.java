@@ -12,6 +12,7 @@ public class UserMappers {
     public static UserDto toUserDto(User user) {
         return new UserDto(user.getId(), user.getEmail(), user.getName());
     }
+
     public static UserShortDto toUserShortDto(User user) {
         return new UserShortDto(user.getId(), user.getName());
     }

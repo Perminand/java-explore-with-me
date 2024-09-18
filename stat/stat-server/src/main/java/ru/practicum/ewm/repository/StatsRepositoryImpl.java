@@ -1,12 +1,12 @@
 package ru.practicum.ewm.repository;
 
-import ru.practicum.ewm.mappers.ViewStatsMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ru.practicum.dto.StatisticDto;
 import ru.practicum.dto.StatisticResponse;
 import ru.practicum.dto.ViewsStatsRequest;
+import ru.practicum.ewm.mappers.ViewStatsMapper;
 
 import java.sql.Timestamp;
 import java.util.List;

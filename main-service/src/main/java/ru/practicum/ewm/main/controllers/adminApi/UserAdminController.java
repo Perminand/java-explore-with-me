@@ -21,6 +21,7 @@ import java.util.Set;
 @Validated
 public class UserAdminController {
     private final UserService userService;
+
     @PostMapping("/users")
     @ResponseStatus(HttpStatus.CREATED)
     public UserDto createUser(@Valid @RequestBody UserDto userDto) {
@@ -35,7 +36,7 @@ public class UserAdminController {
             @RequestParam(name = "from", required = false, defaultValue = "0") @Min(0) Integer from,
             @RequestParam(name = "size", required = false, defaultValue = "10") @Min(0) Integer size) {
         log.info("Get Запрос на получение пользователей");
-        return userService.getAll(listIds, from , size);
+        return userService.getAll(listIds, from, size);
     }
 
     @DeleteMapping("/users/{userId}")

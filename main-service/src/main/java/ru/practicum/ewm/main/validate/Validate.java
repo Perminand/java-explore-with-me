@@ -25,7 +25,7 @@ public class Validate {
     private final CompilationRepository compilationRepository;
 
     public User getUserById(Long userId) {
-        return userRepository.findById(userId).orElseThrow(()-> {
+        return userRepository.findById(userId).orElseThrow(() -> {
             log.error("Попытка создание события для несуществующего пользователя");
             throw new EntityNotFoundException("Нет пользователя с ид: " + userId);
         });
@@ -40,14 +40,14 @@ public class Validate {
     }
 
     public Event getEventById(Long eventId) {
-        return eventRepository.findById(eventId).orElseThrow(()-> {
+        return eventRepository.findById(eventId).orElseThrow(() -> {
             log.error("Попытка изменения статуса не существующего события");
             throw new EntityNotFoundException("Нет события с ид: " + eventId);
         });
     }
 
     public Request getRequestById(Long requestId) {
-        return requestRepository.findById(requestId).orElseThrow(()-> {
+        return requestRepository.findById(requestId).orElseThrow(() -> {
             log.error("Попытка изменения статуса не существующего запроса");
             throw new EntityNotFoundException("Нет запроса с ид: " + requestId);
         });
