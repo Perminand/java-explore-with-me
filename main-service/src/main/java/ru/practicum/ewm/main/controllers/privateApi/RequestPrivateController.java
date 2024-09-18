@@ -43,6 +43,6 @@ public class RequestPrivateController {
             @PathVariable @Min(0) Long userId,
             @PathVariable @Min(0) Long requestsId) {
         log.info("Patch запрос на отмену участия в событии");
-        return requestService.cancelRequestEventIdByUserId(userId, requestsId);
+        return requestService.CancelRequestEventIdByUserId(userId, requestsId);
     }
 }

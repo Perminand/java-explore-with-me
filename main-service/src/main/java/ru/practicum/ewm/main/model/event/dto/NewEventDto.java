@@ -22,17 +22,11 @@ public class NewEventDto {
     private String eventDate;
     @NotNull
     private Location location;
-    private Boolean paid = false;
+    private final Boolean paid = false;
 
-    private Integer participantLimit = 0;
+    private final Integer participantLimit = 0;
     @NotBlank
     @Size(min = 3, max = 120)
     private String title;
-    private Boolean requestModeration = true;
-
-    public NewEventDto() {
-        Boolean paid = false;
-        Integer participantLimit = 0;
-        Boolean requestModeration = true;
-    }
+    private final Boolean requestModeration = true;
 }
