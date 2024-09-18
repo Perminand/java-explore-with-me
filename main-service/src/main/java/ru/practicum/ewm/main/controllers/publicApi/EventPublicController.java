@@ -77,7 +77,7 @@ public class EventPublicController {
         eventFullDto.setViews((long) statisticClient.getStats(
                 GeneralConstants.defaultStartTime,
                 GeneralConstants.defaultEndTime,
-                path, true).size());
+                path, false).size());
         return eventFullDto;
     }
 

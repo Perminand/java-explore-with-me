@@ -15,7 +15,7 @@ public class ConnectToStatServer {
     public static List<Long> getViews(LocalDateTime start, LocalDateTime end, String uris, boolean unique,
                                       StatClientImp statisticClient) {
         List<StatisticResponse> response = statisticClient.getStats(start, end, uris, unique);
-
+        log.info(response.toString());
         return response
                 .stream()
                 .map(StatisticResponse::getHits)
