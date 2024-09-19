@@ -9,9 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.dto.StatisticDto;
+import ru.practicum.dto.StatsDto;
 import ru.practicum.ewm.exceptions.errors.ValidationException;
-import ru.practicum.ewm.model.EndpointHit;
-import ru.practicum.ewm.model.ViewStats;
+import ru.practicum.ewm.model.Hit;
 import ru.practicum.ewm.service.StatsServiceImpl;
 
 import java.time.LocalDateTime;
@@ -27,14 +27,14 @@ public class StatController {
     @PostMapping("/hit")
     @ResponseStatus(HttpStatus.CREATED)
     @Validated
-    public EndpointHit createHit(@RequestBody StatisticDto hit) {
+    public Hit createHit(@RequestBody StatisticDto hit) {
         log.info("POST запрос на сохранение информации.");
         return statService.create(hit);
     }
 
     @GetMapping("/stats")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<ViewStats>> get(
+    public ResponseEntity<List<StatsDto>> get(
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime start,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end,
             @RequestParam(defaultValue = "") List<String> uris,

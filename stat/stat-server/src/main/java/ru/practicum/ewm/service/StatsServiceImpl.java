@@ -3,10 +3,10 @@ package ru.practicum.ewm.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.dto.StatisticDto;
+import ru.practicum.dto.StatsDto;
 import ru.practicum.ewm.exceptions.errors.ValidationException;
 import ru.practicum.ewm.mappers.StatisticMapper;
-import ru.practicum.ewm.model.EndpointHit;
-import ru.practicum.ewm.model.ViewStats;
+import ru.practicum.ewm.model.Hit;
 import ru.practicum.ewm.repository.StatsRepository;
 
 import java.time.LocalDateTime;
@@ -18,13 +18,13 @@ public class StatsServiceImpl implements StatService {
     private final StatsRepository repository;
 
     @Override
-    public EndpointHit create(StatisticDto hitDto) {
-        EndpointHit hit = StatisticMapper.toHit(hitDto);
+    public Hit create(StatisticDto hitDto) {
+        Hit hit = StatisticMapper.toHit(hitDto);
         return repository.save(hit);
     }
 
     @Override
-    public List<ViewStats> getViewStatsList(LocalDateTime start, LocalDateTime end, List<String> uris, boolean unique) {
+    public List<StatsDto> getViewStatsList(LocalDateTime start, LocalDateTime end, List<String> uris, boolean unique) {
         if (start.isAfter(end)) {
             throw new ValidationException("Неверные параметры start и end");
         }

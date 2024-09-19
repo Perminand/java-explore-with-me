@@ -13,7 +13,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import ru.practicum.GeneralConstants;
 import ru.practicum.dto.StatisticDto;
-import ru.practicum.dto.StatisticResponse;
+import ru.practicum.dto.StatsDto;
 
 import java.net.URI;
 import java.time.LocalDateTime;
@@ -49,7 +49,7 @@ public class StatClientImp implements StatClient {
     }
 
     @Override
-    public List<StatisticResponse> getStats(LocalDateTime startLocalDateTime, LocalDateTime endLocalDateTime, String uris, Boolean unique) {
+    public List<StatsDto> getStats(LocalDateTime startLocalDateTime, LocalDateTime endLocalDateTime, String uris, Boolean unique) {
         String start = startLocalDateTime.format(GeneralConstants.DATE_FORMATTER);
         String end = endLocalDateTime.format(GeneralConstants.DATE_FORMATTER);
         URI uri;
@@ -71,7 +71,7 @@ public class StatClientImp implements StatClient {
                     } else if (clientResponse.statusCode().is4xxClientError()) {
                         return Flux.error(new RuntimeException("Client Error"));
                     } else {
-                        return clientResponse.bodyToFlux(StatisticResponse.class);
+                        return clientResponse.bodyToFlux(StatsDto.class);
                     }
                 })
                 .collectList()

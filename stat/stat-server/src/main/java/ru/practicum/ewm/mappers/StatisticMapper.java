@@ -1,10 +1,10 @@
 package ru.practicum.ewm.mappers;
 
 import ru.practicum.dto.StatisticDto;
-import ru.practicum.ewm.model.EndpointHit;
+import ru.practicum.ewm.model.Hit;
 
 public class StatisticMapper {
-    public static EndpointHit toHit(StatisticDto dto) {
-        return new EndpointHit(null, dto.getApp(), dto.getUri(), dto.getIp(), dto.getTimestamp());
+    public static Hit toHit(StatisticDto dto) {
+        return new Hit(null, dto.getApp(), dto.getUri(), dto.getIp(), dto.getTimestamp());
     }
 }
