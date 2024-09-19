@@ -158,6 +158,7 @@ public class EventServiceImpl implements EventService {
 
         if (updateEventAdminRequest.getStateAction() == StateAction.PUBLISH_EVENT) {
             event.setState(State.PUBLISHED);
+            event.setPublishedOn(LocalDateTime.now().format(GeneralConstants.DATE_FORMATTER));
         } else if (updateEventAdminRequest.getStateAction() == StateAction.REJECT_EVENT) {
             event.setState(State.CANCELED);
         }
@@ -281,7 +282,7 @@ public class EventServiceImpl implements EventService {
         List<Request> requestList = requestRepository.findAllByIdInAndStatus(request.getRequestIds(), State.PENDING);
 
         if (event.getParticipantLimit() != 0 || event.getRequestModeration()) {
-            int countRequest = requestRepository.countByEventIdAndStatus(eventId, State.CONFIRMED);
+            Long countRequest = requestRepository.countByEventIdAndStatus(eventId, State.CONFIRMED);
             if (event.getParticipantLimit() <= countRequest) {
                 throw new ConflictException("нельзя подтвердить заявку, если уже достигнут лимит по заявкам на данное событие");
             }
@@ -365,7 +366,9 @@ public class EventServiceImpl implements EventService {
     public EventFullDto getEvent(Long id) {
         Event event = validate.getEventById(id);
         if (event.getState().equals(State.PUBLISHED)) {
-            return EventMappers.toEventFullDto(event);
+            EventFullDto eventFullDto = EventMappers.toEventFullDto(event);
+            eventFullDto.setConfirmedRequests(requestRepository.countByEventIdAndStatus(event.getId(), State.CONFIRMED));
+            return eventFullDto;
         } else {
             String error = "Нет события с заданным ид: " + id;
             log.error(error);

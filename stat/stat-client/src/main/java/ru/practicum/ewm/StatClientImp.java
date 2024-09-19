@@ -8,12 +8,14 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import ru.practicum.GeneralConstants;
 import ru.practicum.dto.StatisticDto;
 import ru.practicum.dto.StatisticResponse;
 
+import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -50,15 +52,19 @@ public class StatClientImp implements StatClient {
     public List<StatisticResponse> getStats(LocalDateTime startLocalDateTime, LocalDateTime endLocalDateTime, String uris, Boolean unique) {
         String start = startLocalDateTime.format(GeneralConstants.DATE_FORMATTER);
         String end = endLocalDateTime.format(GeneralConstants.DATE_FORMATTER);
-        String uri;
+        URI uri;
         if (uris != null) {
-            uri = "/stats?start={start}&end={end}&uris={urisString}&unique={unique}";
+            uri = UriComponentsBuilder
+                    .fromUriString("/stats?start={start}&end={end}&uris={urisString}&unique={unique}")
+                    .build(start, end, uris, unique);
         } else {
-            uri = "/stats?start={start}&end={end}&unique={unique}";
+            uri = UriComponentsBuilder
+                    .fromUriString("/stats?start={start}&end={end}&uris={urisString}")
+                    .build(start, end, unique);
         }
         return webClient
                 .get()
-                .uri(uri, start, end, uris, String.valueOf(unique))
+                .uri(uri.toString(), start, end, uris, String.valueOf(unique))
                 .exchangeToFlux(clientResponse -> {
                     if (clientResponse.statusCode().is5xxServerError()) {
                         return Flux.error(new RuntimeException("Server Error"));
