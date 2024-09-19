@@ -2,14 +2,17 @@ package ru.practicum.ewm.exceptions;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.springframework.http.HttpStatus;
+
+import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor
 public class ApiError {
-    private final String stack;
-    private final HttpStatus httpStatus;
-    private final String text;
-    private final String error;
+    private final String errors;
+    private final String status;
+    private final String reason;
+    private final String message;
+    private final LocalDateTime timestamp = LocalDateTime.now();
+
 }
 

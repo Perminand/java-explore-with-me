@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.dto.StatisticDto;
 import ru.practicum.dto.StatisticResponse;
 import ru.practicum.dto.ViewsStatsRequest;
+import ru.practicum.ewm.exceptions.errors.ValidationException;
 import ru.practicum.ewm.service.StatService;
 
 import java.security.InvalidParameterException;
@@ -57,7 +58,7 @@ public class StatController {
         log.info("GET запрос на получение всей статистики.");
         if (end.isBefore(start)) {
             log.info("Некорректный формат start {} и end {}", start, end);
-            throw new InvalidParameterException("Некорректный формат дат");
+            throw new ValidationException("Некорректный формат дат");
         }
         return statService.getViewStatsList(
                 ViewsStatsRequest.builder()
