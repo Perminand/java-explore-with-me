@@ -10,6 +10,7 @@ import ru.practicum.ewm.mappers.ViewStatsMapper;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Реализация интерфейса StatsRepository.
@@ -40,12 +41,12 @@ public class StatsRepositoryImpl implements StatsRepository {
      */
     @Override
     public List<StatisticResponse> getStats(ViewsStatsRequest request) {
-        String query = "SELECT app, uri, COUNT (ip) AS hits FROM stats WHERE (created >= ? AND created <= ?) ";
+        String query = "SELECT app, uri, COUNT (ip) AS hits FROM stats WHERE ";
         if (!request.getUris().isEmpty()) {
             query += createUrisQuery(request.getUris());
         }
-        query += " GROUP BY app, uri ORDER BY hits DESC";
-        return jdbcTemplate.query(query, viewStatsMapper, request.getStart(), request.getEnd());
+        query += "AND created Between :start AND :end GROUP BY app, uri ORDER BY hits DESC";
+        return jdbcTemplate.query(query, viewStatsMapper, Map.of("start", request.getStart(),"end", request.getEnd()));
     }
 
     /**
@@ -56,12 +57,12 @@ public class StatsRepositoryImpl implements StatsRepository {
      */
     @Override
     public List<StatisticResponse> getUniqueStats(ViewsStatsRequest request) {
-        String query = "SELECT app, uri, COUNT (DISTINCT ip) AS hits FROM stats WHERE (created >= ? AND created <= ?) ";
+        String query = "SELECT app, uri, COUNT (DISTINCT ip) AS hits FROM stats WHERE ";
         if (!request.getUris().isEmpty()) {
             query += createUrisQuery(request.getUris());
         }
-        query += " GROUP BY app, uri ORDER BY hits DESC";
-        return jdbcTemplate.query(query, viewStatsMapper, request.getStart(), request.getEnd());
+        query += "AND created Between :start AND :end GROUP BY app, uri ORDER BY hits DESC";
+        return jdbcTemplate.query(query, viewStatsMapper, Map.of("start", request.getStart(),"end", request.getEnd()));
     }
 
     /**
@@ -71,7 +72,7 @@ public class StatsRepositoryImpl implements StatsRepository {
      * @return строка с частью запроса для фильтрации по URI
      */
     private String createUrisQuery(List<String> uris) {
-        return "AND uri IN ('" + String.join("', '", uris) +
+        return "uri IN ('" + String.join("', '", uris) +
                 "') ";
     }
 }
