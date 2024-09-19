@@ -3,41 +3,43 @@ package ru.practicum.ewm.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.dto.StatisticDto;
-import ru.practicum.dto.StatisticResponse;
-import ru.practicum.dto.ViewsStatsRequest;
+import ru.practicum.ewm.exceptions.errors.ValidationException;
+import ru.practicum.ewm.mappers.StatisticMapper;
+import ru.practicum.ewm.model.EndpointHit;
+import ru.practicum.ewm.model.ViewStats;
 import ru.practicum.ewm.repository.StatsRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- * Реализация интерфейса StatsService.
- */
 @Service
 @RequiredArgsConstructor
 public class StatsServiceImpl implements StatService {
-    private final StatsRepository statRepository;
+    private final StatsRepository repository;
 
-    /**
-     * Сохранение информации о попадании на эндпоинт
-     *
-     * @param hit объект EndpointHit, содержащий информацию о попадании на эндпоинт
-     */
     @Override
-    public void create(StatisticDto hit) {
-        statRepository.saveHit(hit);
+    public EndpointHit create(StatisticDto hitDto) {
+        EndpointHit hit = StatisticMapper.toHit(hitDto);
+        return repository.save(hit);
     }
 
-    /**
-     * Получение статистики просмотров.
-     *
-     * @param request объект ViewsStatsRequest, содержащий информацию для запроса статистики
-     * @return список объектов ViewStats, содержащих статистику просмотров
-     */
     @Override
-    public List<StatisticResponse> getViewStatsList(ViewsStatsRequest request) {
-        if (request.isUnique()) {
-            return statRepository.getUniqueStats(request);
+    public List<ViewStats> getViewStatsList(LocalDateTime start, LocalDateTime end, List<String> uris, boolean unique) {
+        if (start.isAfter(end)) {
+            throw new ValidationException("Неверные параметры start и end");
         }
-        return statRepository.getStats(request);
+        if (unique) {
+            if (uris != null) {
+                return repository.getWithUriUnique(start, end, uris);
+            } else {
+                return repository.getWithoutUriUnique(start, end);
+            }
+        } else {
+            if (uris != null) {
+                return repository.getWithUri(start, end, uris);
+            } else {
+                return repository.getWithoutUri(start, end);
+            }
+        }
     }
 }

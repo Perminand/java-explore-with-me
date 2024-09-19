@@ -5,15 +5,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.dto.StatisticDto;
-import ru.practicum.dto.StatisticResponse;
-import ru.practicum.dto.ViewsStatsRequest;
 import ru.practicum.ewm.exceptions.errors.ValidationException;
-import ru.practicum.ewm.service.StatService;
+import ru.practicum.ewm.model.EndpointHit;
+import ru.practicum.ewm.model.ViewStats;
+import ru.practicum.ewm.service.StatsServiceImpl;
 
-import java.security.InvalidParameterException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -22,35 +22,19 @@ import java.util.List;
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class StatController {
-    private final StatService statService;
-
-    /**
-     * Обработка POST-запроса на сохранение информации о хите на эндпоинт.
-     *
-     * @param hit объект EndpointHit, содержащий информацию о хите
-     */
+    private final StatsServiceImpl statService;
 
     @PostMapping("/hit")
     @ResponseStatus(HttpStatus.CREATED)
     @Validated
-    public void createHit(@RequestBody StatisticDto hit) {
+    public EndpointHit createHit(@RequestBody StatisticDto hit) {
         log.info("POST запрос на сохранение информации.");
-        statService.create(hit);
+        return statService.create(hit);
     }
 
-    /**
-     * Обработка GET-запроса на получение статистики просмотров.
-     *
-     * @param start  начальная дата и время периода статистики
-     * @param end    конечная дата и время периода статистики
-     * @param uris   список URI для фильтрации статистики
-     * @param unique флаг, указывающий нужно ли получить уникальные просмотры
-     * @return список объектов ViewStats, содержащих статистику просмотров
-     * @throws InvalidParameterException если переданы некорректные параметры запроса
-     */
     @GetMapping("/stats")
     @ResponseStatus(HttpStatus.OK)
-    public List<StatisticResponse> get(
+    public ResponseEntity<List<ViewStats>> get(
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime start,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end,
             @RequestParam(defaultValue = "") List<String> uris,
@@ -60,12 +44,6 @@ public class StatController {
             log.info("Некорректный формат start {} и end {}", start, end);
             throw new ValidationException("Некорректный формат дат");
         }
-        return statService.getViewStatsList(
-                ViewsStatsRequest.builder()
-                        .start(start)
-                        .end(end)
-                        .uris(uris)
-                        .unique(unique)
-                        .build());
+        return ResponseEntity.ok().body(statService.getViewStatsList(start, end, uris, unique));
     }
 }
