@@ -37,8 +37,8 @@ services:
       - SPRING_DATASOURCE_USERNAME=service
       - SPRING_DATASOURCE_PASSWORD=service
 
-  ewm-db: 
-    image: postgres:16.1 
+  ewm-db:
+    image: postgres:16.1
     container_name: postgres-ewm-service-db
     ports:
       - "5433:5432"

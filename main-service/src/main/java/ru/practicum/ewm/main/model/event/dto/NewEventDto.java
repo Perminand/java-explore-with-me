@@ -9,6 +9,9 @@ import ru.practicum.ewm.main.model.locations.Location;
 
 @Getter
 public class NewEventDto {
+    private final Boolean paid = false;
+    private final Integer participantLimit = 0;
+    private final Boolean requestModeration = true;
     @NotBlank
     @Size(min = 20, max = 2000)
     private String annotation;
@@ -22,11 +25,7 @@ public class NewEventDto {
     private String eventDate;
     @NotNull
     private Location location;
-    private final Boolean paid = false;
-
-    private final Integer participantLimit = 0;
     @NotBlank
     @Size(min = 3, max = 120)
     private String title;
-    private final Boolean requestModeration = true;
 }
