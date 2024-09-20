@@ -10,6 +10,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.main.model.event.dto.EventDto;
 import ru.practicum.ewm.main.model.event.dto.EventFullDto;
+import ru.practicum.ewm.main.model.event.dto.EventShortDto;
 import ru.practicum.ewm.main.model.eventRequest.EventRequestStatusUpdateRequest;
 import ru.practicum.ewm.main.model.eventRequest.EventRequestStatusUpdateResult;
 import ru.practicum.ewm.main.model.request.dto.ParticipationRequestDto;
@@ -26,16 +27,6 @@ import java.util.List;
 public class EventPrivateController {
     private final EventService eventService;
 
-    @GetMapping("{userId}/events")
-    @ResponseStatus(HttpStatus.OK)
-    public List<EventFullDto> getEventsByUser(
-            @PathVariable @Min(0) Long userId,
-            @RequestParam(defaultValue = "0") Integer from,
-            @RequestParam(defaultValue = "10") Integer size) {
-        log.info("GET запрос на получение событий добавленных пользователем");
-        return eventService.getEventsByUser(userId, from, size);
-    }
-
     @PostMapping("{userId}/events")
     @ResponseStatus(HttpStatus.CREATED)
     public EventFullDto create(
@@ -43,6 +34,16 @@ public class EventPrivateController {
             @RequestBody @Valid EventDto eventDto) {
         log.info("POST запрос на сохранение события");
         return eventService.create(userId, eventDto);
+    }
+
+    @GetMapping("{userId}/events")
+    @ResponseStatus(HttpStatus.OK)
+    public List<EventShortDto> getEventsByUser(
+            @PathVariable @Min(0) Long userId,
+            @RequestParam(defaultValue = "0") Integer from,
+            @RequestParam(defaultValue = "10") Integer size) {
+        log.info("GET запрос на получение событий добавленных пользователем");
+        return eventService.getEventsByUser(userId, from, size);
     }
 
     @GetMapping("{userId}/events/{eventId}")
