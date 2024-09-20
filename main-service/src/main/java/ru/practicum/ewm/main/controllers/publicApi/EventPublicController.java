@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.dto.StatisticDto;
+import ru.practicum.dto.StatsDto;
 import ru.practicum.ewm.StatClientImp;
 import ru.practicum.ewm.main.common.GeneralConstants;
 import ru.practicum.ewm.main.model.event.dto.EventFullDto;
@@ -74,10 +75,11 @@ public class EventPublicController {
         log.info("EventPublicController, getEventsFilter. Запрос был отправлен на сервер статистики. Подробнее: {}",
                 statisticDto);
         EventFullDto eventFullDto = eventService.getEvent(id);
-        eventFullDto.setViews((long) statisticClient.getStats(
+        List<StatsDto> statsDtoList = statisticClient.getStats(
                 GeneralConstants.defaultStartTime,
                 GeneralConstants.defaultEndTime,
-                path, false).size());
+                path, false);
+        eventFullDto.setViews(Long.valueOf(statsDtoList.size()));
         return eventFullDto;
     }
 
