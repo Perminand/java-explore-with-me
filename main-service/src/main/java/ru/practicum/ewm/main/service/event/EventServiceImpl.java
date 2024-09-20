@@ -187,8 +187,9 @@ public class EventServiceImpl implements EventService {
         List<EventShortDto> eventsForResp =
                 Utilities.addViewsAndConfirmedRequestsShort(eventShortDtoList, confirmedRequestsByEvents, views);
 
-        return Utilities.checkTypes(eventsForResp,
+        List<EventShortDto> eventShortDtoList1 = Utilities.checkTypes(eventsForResp,
                 EventShortDto.class);
+        return eventShortDtoList1;
     }
 
     @Override

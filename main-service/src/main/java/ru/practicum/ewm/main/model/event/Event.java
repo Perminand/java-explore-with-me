@@ -74,5 +74,6 @@ public class Event {
     @NotBlank(message = "title не может быть пустым")
     @Length(min = 3, max = 120)
     private String title;
+    @Transient
     private Long views;
 }
