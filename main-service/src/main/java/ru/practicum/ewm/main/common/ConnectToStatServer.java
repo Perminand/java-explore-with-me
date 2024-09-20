@@ -3,7 +3,7 @@ package ru.practicum.ewm.main.common;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.practicum.dto.StatsDto;
-import ru.practicum.ewm.StatClientImp;
+import ru.practicum.ewm.StatsClient;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ConnectToStatServer {
     public static List<Long> getViews(LocalDateTime start, LocalDateTime end, String uris, boolean unique,
-                                      StatClientImp statisticClient) {
+                                      StatsClient statisticClient) {
         List<StatsDto> response = statisticClient.getStats(start, end, uris, unique);
         log.info(response.toString());
         return response

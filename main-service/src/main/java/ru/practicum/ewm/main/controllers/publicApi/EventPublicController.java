@@ -10,12 +10,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.dto.StatisticDto;
 import ru.practicum.dto.StatsDto;
-import ru.practicum.ewm.StatClientImp;
+import ru.practicum.ewm.StatsClient;
 import ru.practicum.ewm.main.common.GeneralConstants;
 import ru.practicum.ewm.main.model.event.dto.EventFullDto;
 import ru.practicum.ewm.main.model.event.dto.EventShortDto;
 import ru.practicum.ewm.main.service.event.EventService;
-import ru.practicum.ewm.main.validate.Validate;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,8 +26,7 @@ import java.util.List;
 @Validated
 public class EventPublicController {
     private final EventService eventService;
-    private final StatClientImp statisticClient;
-    private final Validate validate;
+    private final StatsClient statisticClient;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -79,7 +77,7 @@ public class EventPublicController {
                 GeneralConstants.defaultStartTime,
                 GeneralConstants.defaultEndTime,
                 path, false);
-        eventFullDto.setViews(Long.valueOf(statsDtoList.size()));
+        eventFullDto.setViews((long) statsDtoList.size());
         return eventFullDto;
     }
 

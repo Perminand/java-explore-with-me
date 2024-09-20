@@ -1,46 +1,41 @@
 package ru.practicum.ewm;
 
-
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import ru.practicum.GeneralConstants;
 import ru.practicum.dto.StatisticDto;
 import ru.practicum.dto.StatsDto;
 
-import java.net.URI;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Component
-@RequiredArgsConstructor
-public class StatClientImp implements StatClient {
-
+public class StatsClient {
     private final WebClient webClient;
 
-    @Autowired
-    public StatClientImp(@Value("${stat-server.url}") String statUrl) {
-        this.webClient = WebClient.create(statUrl);
+    public String url;
+
+    public StatsClient(@Value("${stats.url:http://localhost:9090}") String url) {
+        this.url = url;
+        webClient = WebClient.create(url);
     }
 
-    @Override
-    public StatisticDto createStat(StatisticDto hit) {
-        return webClient.post()
+    public StatisticDto createStat(StatisticDto hitDto) {
+        return webClient
+                .post()
                 .uri("/hit")
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(BodyInserters.fromValue(hit))
+                .body(BodyInserters.fromValue(hitDto))
                 .exchangeToMono(clientResponse -> {
                     if (clientResponse.statusCode().is5xxServerError()) {
-                        return Mono.error(new RuntimeException("Ошибка клиента"));
+                        return Mono.error(new RuntimeException("Server Error"));
                     } else if (clientResponse.statusCode().is4xxClientError()) {
-                        return Mono.error(new RuntimeException("Ошибка клиента"));
+                        return Mono.error(new RuntimeException("Client Error"));
                     } else {
                         return clientResponse.bodyToMono(StatisticDto.class);
                     }
@@ -48,23 +43,18 @@ public class StatClientImp implements StatClient {
                 .block();
     }
 
-    @Override
-    public List<StatsDto> getStats(LocalDateTime startLocalDateTime, LocalDateTime endLocalDateTime, String uris, Boolean unique) {
-        String start = startLocalDateTime.format(GeneralConstants.DATE_FORMATTER);
-        String end = endLocalDateTime.format(GeneralConstants.DATE_FORMATTER);
-        URI uri;
+    public List<StatsDto> getStats(LocalDateTime startLocalDateTime, LocalDateTime endLocalDateTime, String uris, boolean unique) {
+        String start = startLocalDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        String end = endLocalDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        String uri;
         if (uris != null) {
-            uri = UriComponentsBuilder
-                    .fromUriString("/stats?start={start}&end={end}&uris={urisString}&unique={unique}")
-                    .build(start, end, uris, unique);
+            uri = "/stats?start={start}&end={end}&uris={urisString}&unique={unique}";
         } else {
-            uri = UriComponentsBuilder
-                    .fromUriString("/stats?start={start}&end={end}&uris={urisString}")
-                    .build(start, end, unique);
+            uri = "/stats?start={start}&end={end}&unique={unique}";
         }
         return webClient
                 .get()
-                .uri(uri.toString(), start, end, uris, String.valueOf(unique))
+                .uri(uri, start, end, uris, String.valueOf(unique))
                 .exchangeToFlux(clientResponse -> {
                     if (clientResponse.statusCode().is5xxServerError()) {
                         return Flux.error(new RuntimeException("Server Error"));

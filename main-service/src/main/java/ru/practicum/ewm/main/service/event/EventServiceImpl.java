@@ -8,7 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.ewm.StatClientImp;
+import ru.practicum.ewm.StatsClient;
 import ru.practicum.ewm.main.common.ConnectToStatServer;
 import ru.practicum.ewm.main.common.GeneralConstants;
 import ru.practicum.ewm.main.common.Utilities;
@@ -50,7 +50,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-@Import({StatClientImp.class})
+@Import({StatsClient.class})
 @RequiredArgsConstructor
 @Transactional
 public class EventServiceImpl implements EventService {
@@ -59,7 +59,7 @@ public class EventServiceImpl implements EventService {
     private final CategoryRepository categoryRepository;
     private final LocationRepository locationRepository;
     private final Validate validate;
-    private final StatClientImp statClientImp;
+    private final StatsClient statClient;
 
     @Override
     @Transactional
@@ -182,7 +182,7 @@ public class EventServiceImpl implements EventService {
                 .collect(Collectors.toMap(EventIdByRequestsCount::getEvent, EventIdByRequestsCount::getCount));
 
         List<Long> views = ConnectToStatServer.getViews(GeneralConstants.defaultStartTime, GeneralConstants.defaultEndTime,
-                ConnectToStatServer.prepareUris(longList), true, statClientImp);
+                ConnectToStatServer.prepareUris(longList), true, statClient);
 
         List<EventShortDto> eventsForResp =
                 Utilities.addViewsAndConfirmedRequestsShort(eventShortDtoList, confirmedRequestsByEvents, views);
@@ -353,7 +353,7 @@ public class EventServiceImpl implements EventService {
 
         List<Long> views = ConnectToStatServer.getViews(GeneralConstants.defaultStartTime,
                 GeneralConstants.defaultEndTime, ConnectToStatServer.prepareUris(eventsIds),
-                true, statClientImp);
+                true, statClient);
 
         List<EventShortDto> eventsForResp =
                 Utilities.addViewsAndConfirmedRequestsShort(events, confirmedRequestsByEvents, views);
@@ -430,7 +430,7 @@ public class EventServiceImpl implements EventService {
         List<Long> views = ConnectToStatServer.getViews(
                 GeneralConstants.defaultStartTime,
                 GeneralConstants.defaultEndTime,
-                ConnectToStatServer.prepareUris(eventsIds), true, statClientImp);
+                ConnectToStatServer.prepareUris(eventsIds), true, statClient);
 
         List<EventFullDto> events =
                 Utilities.addViewsAndConfirmedRequestsFull(eventFullDtoList, confirmedRequestsByEvents, views);
