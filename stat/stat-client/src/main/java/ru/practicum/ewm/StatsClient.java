@@ -20,7 +20,7 @@ public class StatsClient {
 
     public String url;
 
-    public StatsClient(@Value("${stats.url:http://localhost:9090}") String url) {
+    public StatsClient(@Value("${stat-server.url}") String url) {
         this.url = url;
         webClient = WebClient.create(url);
     }
