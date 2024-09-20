@@ -27,7 +27,7 @@ import java.util.List;
 public class EventPrivateController {
     private final EventService eventService;
 
-    @PostMapping("{userId}/events")
+    @PostMapping("/{userId}/events")
     @ResponseStatus(HttpStatus.CREATED)
     public EventFullDto create(
             @PathVariable @Min(0) Long userId,
@@ -36,7 +36,7 @@ public class EventPrivateController {
         return eventService.create(userId, eventDto);
     }
 
-    @GetMapping("{userId}/events")
+    @GetMapping("/{userId}/events")
     @ResponseStatus(HttpStatus.OK)
     public List<EventShortDto> getEventsByUser(
             @PathVariable @Min(0) Long userId,
@@ -46,7 +46,7 @@ public class EventPrivateController {
         return eventService.getEventsByUser(userId, from, size);
     }
 
-    @GetMapping("{userId}/events/{eventId}")
+    @GetMapping("/{userId}/events/{eventId}")
     @ResponseStatus(HttpStatus.OK)
     public EventFullDto getEventByUserId(
             @PathVariable @Min(0) Long userId,
