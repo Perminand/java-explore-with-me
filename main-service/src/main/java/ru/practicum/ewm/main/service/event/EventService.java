@@ -13,7 +13,7 @@ import java.util.List;
 public interface EventService {
     EventFullDto update(Long eventId, UpdateEventAdminRequest updateEventAdminRequest);
 
-    List<EventShortDto> getEventsByUser(Long userId, Integer from, Integer size);
+    List<EventFullDto> getEventsByUser(Long userId, Integer from, Integer size);
 
     EventFullDto create(Long userId, EventDto eventDto);
 

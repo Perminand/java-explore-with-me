@@ -170,7 +170,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<EventShortDto> getEventsByUser(Long userId, Integer from, Integer size) {
+    public List<EventFullDto> getEventsByUser(Long userId, Integer from, Integer size) {
         validate.getUserById(userId);
         int startPage = from > 0 ? (from / size) : 0;
         Pageable pageable = PageRequest.of(startPage, size);
@@ -188,7 +188,7 @@ public class EventServiceImpl implements EventService {
                 Utilities.addViewsAndConfirmedRequestsShort(eventShortDtoList, confirmedRequestsByEvents, views);
 
         return Utilities.checkTypes(eventsForResp,
-                EventShortDto.class);
+                EventFullDto.class);
     }
 
     @Override

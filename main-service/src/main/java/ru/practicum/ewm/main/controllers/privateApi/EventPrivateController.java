@@ -10,7 +10,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.main.model.event.dto.EventDto;
 import ru.practicum.ewm.main.model.event.dto.EventFullDto;
-import ru.practicum.ewm.main.model.event.dto.EventShortDto;
 import ru.practicum.ewm.main.model.eventRequest.EventRequestStatusUpdateRequest;
 import ru.practicum.ewm.main.model.eventRequest.EventRequestStatusUpdateResult;
 import ru.practicum.ewm.main.model.request.dto.ParticipationRequestDto;
@@ -29,7 +28,7 @@ public class EventPrivateController {
 
     @GetMapping("{userId}/events")
     @ResponseStatus(HttpStatus.OK)
-    public List<EventShortDto> getEventsByUser(
+    public List<EventFullDto> getEventsByUser(
             @PathVariable @Min(0) Long userId,
             @RequestParam(defaultValue = "0") Integer from,
             @RequestParam(defaultValue = "10") Integer size) {
