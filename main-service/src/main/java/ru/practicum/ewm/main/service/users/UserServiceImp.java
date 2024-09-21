@@ -9,7 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.main.exceptions.errors.EntityNotFoundException;
-import ru.practicum.ewm.main.mappers.UserMappers;
+import ru.practicum.ewm.main.mappers.UserMapper;
 import ru.practicum.ewm.main.model.users.User;
 import ru.practicum.ewm.main.model.users.dto.UserDto;
 import ru.practicum.ewm.main.repository.UserRepository;
@@ -30,9 +30,9 @@ public class UserServiceImp implements UserService {
 
     @Override
     public UserDto create(UserDto userDto) {
-        User user = UserMappers.toUser(userDto);
+        User user = UserMapper.toEntity(userDto);
         repository.save(user);
-        return UserMappers.toUserDto(user);
+        return UserMapper.toDto(user);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class UserServiceImp implements UserService {
         }
 
         return users.getContent().stream()
-                .map(UserMappers::toUserDto)
+                .map(UserMapper::toDto)
                 .collect(Collectors.toList());
     }
 

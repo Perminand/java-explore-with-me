@@ -18,37 +18,37 @@ import java.io.StringWriter;
 public class ErrorHandler {
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ApiError handleNotFoundError(final EntityNotFoundException e) {
+    public ApiErrorDto handleNotFoundError(final EntityNotFoundException e) {
         log.error("404 {}", e.getMessage(), e);
         return setApiError(e, HttpStatus.NOT_FOUND.getReasonPhrase());
     }
 
     @ExceptionHandler(ConflictException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ApiError handleConflictError(final ConflictException e) {
+    public ApiErrorDto handleConflictError(final ConflictException e) {
         log.error("409 {}", e.getMessage(), e);
         return setApiError(e, HttpStatus.CONFLICT.getReasonPhrase());
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ApiError handleConflictError(final DataIntegrityViolationException e) {
+    public ApiErrorDto handleConflictError(final DataIntegrityViolationException e) {
         log.error("409 {}", e.getMessage(), e);
         return setApiError(e, HttpStatus.CONFLICT.getReasonPhrase());
     }
 
     @ExceptionHandler(ValidationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiError handleBadRequestError(final ValidationException e) {
+    public ApiErrorDto handleBadRequestError(final ValidationException e) {
         log.error("400 {}", e.getMessage(), e);
         return setApiError(e, HttpStatus.BAD_REQUEST.getReasonPhrase());
     }
 
-    private ApiError setApiError(Throwable e, String status) {
+    private ApiErrorDto setApiError(Throwable e, String status) {
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
         e.printStackTrace(pw);
         String stackTrace = sw.toString();
-        return new ApiError(stackTrace, status, e.toString(), e.getMessage());
+        return new ApiErrorDto(stackTrace, status, e.toString(), e.getMessage());
     }
 }

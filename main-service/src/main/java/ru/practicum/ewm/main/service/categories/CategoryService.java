@@ -1,6 +1,6 @@
 package ru.practicum.ewm.main.service.categories;
 
-import ru.practicum.ewm.main.model.category.dto.CategoryDto;
+import ru.practicum.ewm.main.dto.category.CategoryDto;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ public interface CategoryService {
 
     CategoryDto update(Long l, CategoryDto categoryDto);
 
-    void delete(Long catId);
+    void deleteById(Long catId);
 
     List<CategoryDto> getAll(Integer from, Integer size);
 

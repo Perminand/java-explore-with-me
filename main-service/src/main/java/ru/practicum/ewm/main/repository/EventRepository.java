@@ -4,7 +4,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import ru.practicum.ewm.main.model.event.Event;
-import ru.practicum.ewm.main.model.status.State;
+import ru.practicum.ewm.main.model.event.EventStatus;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -38,7 +38,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     List<Event> searchEvents(String text, List<Long> categories, Boolean paid, LocalDateTime rangeStart, LocalDateTime rangeEnd, Boolean onlyAvailable, Pageable pageable
     );
 
-    Event findByIdAndState(Long id, State state);
+    Event findByIdAndState(Long id, EventStatus state);
 
     Event findByIdAndInitiatorId(Long eventId, Long userId);
 

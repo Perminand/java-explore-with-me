@@ -8,7 +8,6 @@ import lombok.*;
 import org.hibernate.validator.constraints.Length;
 import ru.practicum.ewm.main.model.category.Category;
 import ru.practicum.ewm.main.model.locations.Location;
-import ru.practicum.ewm.main.model.status.State;
 import ru.practicum.ewm.main.model.users.User;
 
 import java.time.LocalDateTime;
@@ -69,7 +68,7 @@ public class Event {
     private Boolean requestModeration;
 
     @Enumerated(EnumType.STRING)
-    private State state;
+    private EventStatus state;
 
     @NotBlank(message = "title не может быть пустым")
     @Length(min = 3, max = 120)

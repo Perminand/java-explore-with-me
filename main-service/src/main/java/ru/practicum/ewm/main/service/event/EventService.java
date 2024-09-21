@@ -1,17 +1,19 @@
 package ru.practicum.ewm.main.service.event;
 
-import ru.practicum.ewm.main.model.event.dto.EventDto;
-import ru.practicum.ewm.main.model.event.dto.EventFullDto;
-import ru.practicum.ewm.main.model.event.dto.EventShortDto;
-import ru.practicum.ewm.main.model.eventRequest.EventRequestStatusUpdateRequest;
-import ru.practicum.ewm.main.model.eventRequest.EventRequestStatusUpdateResult;
-import ru.practicum.ewm.main.model.request.dto.ParticipationRequestDto;
-import ru.practicum.ewm.main.model.request.dto.UpdateEventAdminRequest;
+import ru.practicum.ewm.main.dto.EventParamsLongDto;
+import ru.practicum.ewm.main.dto.EventParamsShortDto;
+import ru.practicum.ewm.main.dto.event.EventDto;
+import ru.practicum.ewm.main.dto.event.EventFullDto;
+import ru.practicum.ewm.main.dto.event.EventShortDto;
+import ru.practicum.ewm.main.dto.eventRequest.EventRequestStatusUpdateRequest;
+import ru.practicum.ewm.main.dto.eventRequest.EventRequestStatusUpdateResult;
+import ru.practicum.ewm.main.dto.request.ParticipationRequestDto;
+import ru.practicum.ewm.main.dto.request.UpdateEventAdminRequestDto;
 
 import java.util.List;
 
 public interface EventService {
-    EventFullDto update(Long eventId, UpdateEventAdminRequest updateEventAdminRequest);
+    EventFullDto update(Long eventId, UpdateEventAdminRequestDto updateRequestDto);
 
     List<EventShortDto> getEventsByUser(Long userId, Integer from, Integer size);
 
@@ -21,20 +23,14 @@ public interface EventService {
 
     List<ParticipationRequestDto> requestEventByUserId(Long userId, Long eventId);
 
-    EventFullDto updateEventByUserId(Long userId, Long eventId, UpdateEventAdminRequest request);
+    EventFullDto updateEventByUserId(Long userId, Long eventId, UpdateEventAdminRequestDto request);
 
     EventRequestStatusUpdateResult updateStatusRequestEventByUser(Long userId, Long eventId, EventRequestStatusUpdateRequest result);
 
-    List<EventShortDto> getEventsFilter(String text, List<Long> categories, Boolean paid, String rangeStart, String rangeEnd, Boolean onlyAvailable, String sort, Integer from, Integer size);
+    List<EventShortDto> getEventsShort(EventParamsShortDto paramDto);
 
     EventFullDto getEvent(Long id);
 
-    List<EventFullDto> getEvents(
-            List<Long> users,
-            List<String> states,
-            List<Long> categories,
-            String rangeStart,
-            String rangeEnd,
-            Integer from,
-            Integer size);
+    List<EventFullDto> getEventsFull(
+            EventParamsLongDto paramsDto);
 }

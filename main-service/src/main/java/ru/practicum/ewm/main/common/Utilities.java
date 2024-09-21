@@ -2,15 +2,18 @@ package ru.practicum.ewm.main.common;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import ru.practicum.ewm.main.model.event.dto.EventFullDto;
-import ru.practicum.ewm.main.model.event.dto.EventShortDto;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import ru.practicum.ewm.main.dto.event.EventFullDto;
+import ru.practicum.ewm.main.dto.event.EventShortDto;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class Utilities {
+public class Utilities<T, S> {
 
     public static List<EventFullDto> addViewsAndConfirmedRequestsFull(List<EventFullDto> eventFullDtoList,
                                                                       Map<Long, Long> confirmedRequests,
@@ -52,5 +55,36 @@ public class Utilities {
                             .getOrDefault(eventShortDtoList.get(i).getId(), 0L));
         }
         return eventShortDtoList;
+    }
+
+    public static Pageable getPageableSortAscId(Integer from, Integer size) {
+        Sort sortById = Sort.by(Sort.Direction.ASC, "id");
+        int startPage = from > 0 ? from / size : 0;
+        return PageRequest.of(startPage, size, sortById);
+    }
+
+    public static Pageable getPageable(Integer from, Integer size) {
+        int startPage = from > 0 ? from / size : 0;
+        return PageRequest.of(startPage, size);
+    }
+
+    public void setDefaultValueIfNull(T params, T value) {
+        if(params  == null) {
+            params = value;
+        }
+    }
+
+    public void setDefaultValueIfNotNull(T params, T out, T value) {
+        if(params != null) {
+            out = value;
+        }
+    }
+
+    public void setDefaultValueIfNull(T params, T value, T value2) {
+        if(params  == null) {
+            params = value;
+        } else {
+            params = value2;
+        }
     }
 }

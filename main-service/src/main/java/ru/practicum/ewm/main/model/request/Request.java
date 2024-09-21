@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.practicum.ewm.main.model.event.Event;
-import ru.practicum.ewm.main.model.status.State;
 import ru.practicum.ewm.main.model.users.User;
 
 import java.time.LocalDateTime;
@@ -33,5 +32,5 @@ public class Request {
     private User requester;
 
     @Enumerated(EnumType.STRING)
-    private State status;
+    private RequestStatus status;
 }

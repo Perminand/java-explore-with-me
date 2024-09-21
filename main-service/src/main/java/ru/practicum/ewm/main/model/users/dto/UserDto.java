@@ -3,7 +3,7 @@ package ru.practicum.ewm.main.model.users.dto;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import ru.practicum.ewm.main.model.markers.Update;
+import ru.practicum.ewm.main.markers.Update;
 
 @Getter
 @AllArgsConstructor
