@@ -19,7 +19,4 @@ public class EventParamsShortDto {
     String sort;
     Integer from;
     Integer size;
-
-    public EventParamsShortDto(String text, List<Long> categories, Boolean paid, String rangeStart, String rangeEnd, Boolean onlyAvailable, String sort, Integer from, Integer size) {
-    }
 }
