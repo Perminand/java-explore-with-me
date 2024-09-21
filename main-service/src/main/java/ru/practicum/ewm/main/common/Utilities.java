@@ -69,19 +69,19 @@ public class Utilities<T, S> {
     }
 
     public void setDefaultValueIfNull(T params, T value) {
-        if(params  == null) {
+        if (params == null) {
             params = value;
         }
     }
 
     public void setDefaultValueIfNotNull(T params, T out, T value) {
-        if(params != null) {
+        if (params != null) {
             out = value;
         }
     }
 
     public void setDefaultValueIfNull(T params, T value, T value2) {
-        if(params  == null) {
+        if (params == null) {
             params = value;
         } else {
             params = value2;

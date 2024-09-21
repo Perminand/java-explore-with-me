@@ -113,17 +113,17 @@ public class EventServiceImpl implements EventService {
         }
 
         SetValuesEntity.setValueIfNotNull(
-                updateRequestDto.getAnnotation(), 
-                event.getAnnotation(), 
+                updateRequestDto.getAnnotation(),
+                event.getAnnotation(),
                 updateRequestDto.getAnnotation());
 
         SetValuesEntity.setValueIfNotNull(
-                updateRequestDto.getCategory(), 
+                updateRequestDto.getCategory(),
                 event.getCategory(),
                 categoryRepository.findById(updateRequestDto.getCategory()).get());
 
         SetValuesEntity.setValueIfNotNull(
-                updateRequestDto.getDescription(), 
+                updateRequestDto.getDescription(),
                 event.getDescription(),
                 updateRequestDto.getDescription());
 
