@@ -11,6 +11,8 @@ import ru.practicum.ewm.main.dto.event.EventShortDto;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.function.Consumer;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Utilities {
@@ -68,15 +70,21 @@ public class Utilities {
         return PageRequest.of(startPage, size);
     }
 
-    public static <T> void setValueIfNull(T params, T value) {
-        if (params == null) {
-            params = value;
+    public static <T> void setValueIfNull(T params, Consumer<T> consumer, T value) {
+        if (Objects.isNull(params)) {
+            consumer.accept(value);
         }
     }
 
-    public static <T> void setValueIfNotNull(T params, T out, T value) {
-        if (params != null) {
-            out = value;
+    public static <T> void setValueDtoIfNotNull(T params, Consumer<T> consumer) {
+        if (Objects.nonNull(params)) {
+            consumer.accept(params);
+        }
+    }
+
+    public static <T, S> void setNewValueIfNotNull(T params, Consumer<S> consumer, S value) {
+        if (Objects.nonNull(params)) {
+            consumer.accept(value);
         }
     }
 }

@@ -66,9 +66,9 @@ public class EventServiceImpl implements EventService {
             throw new ValidationException("Время события должно больше текущего времени на 2 часа");
         }
 
-        Utilities.setValueIfNull(eventDto.getRequestModeration(), true);
-        Utilities.setValueIfNull(eventDto.getPaid(), false);
-        Utilities.setValueIfNull(eventDto.getParticipantLimit(), 0);
+        Utilities.setValueIfNull(eventDto.getRequestModeration(), eventDto::setRequestModeration, true);
+        Utilities.setValueIfNull(eventDto.getPaid(), eventDto::setPaid, false);
+        Utilities.setValueIfNull(eventDto.getParticipantLimit(), eventDto::setParticipantLimit, 0);
 
         Event event = EventMapper.toEntity(eventDto);
         event.setInitiator(user);
@@ -112,50 +112,44 @@ public class EventServiceImpl implements EventService {
             }
         }
 
-        Utilities.setValueIfNotNull(
+        Utilities.setValueDtoIfNotNull(
                 updateRequestDto.getAnnotation(),
-                event.getAnnotation(),
-                updateRequestDto.getAnnotation());
+                event::setAnnotation);
 
-        Utilities.setValueIfNotNull(
+        Utilities.setNewValueIfNotNull(
                 updateRequestDto.getCategory(),
-                event.getCategory(),
+                event::setCategory,
                 categoryRepository.findById(updateRequestDto.getCategory()).get());
 
-        Utilities.setValueIfNotNull(
+        Utilities.setValueDtoIfNotNull(
                 updateRequestDto.getDescription(),
-                event.getDescription(),
-                updateRequestDto.getDescription());
+                event::setDescription);
 
-        Utilities.setValueIfNotNull(
+        Utilities.setNewValueIfNotNull(
                 updateRequestDto.getEventDate(),
-                event.getEventDate(),
+                event::setEventDate,
                 LocalDateTime.parse(updateRequestDto.getEventDate(), Constants.DATE_FORMATTER));
 
-        Utilities.setValueIfNotNull(
+        Utilities.setNewValueIfNotNull(
                 updateRequestDto.getLocation(),
-                event.getLocation(),
+                event::setLocation,
                 locationRepository.save(updateRequestDto.getLocation()));
 
-        Utilities.setValueIfNotNull(
+        Utilities.setValueDtoIfNotNull(
                 updateRequestDto.getPaid(),
-                event.getPaid(),
-                updateRequestDto.getPaid());
+                event::setPaid);
 
-        Utilities.setValueIfNotNull(
+        Utilities.setValueDtoIfNotNull(
                 updateRequestDto.getParticipantLimit(),
-                event.getParticipantLimit(),
-                updateRequestDto.getParticipantLimit());
+                event::setParticipantLimit);
 
-        Utilities.setValueIfNotNull(
+        Utilities.setValueDtoIfNotNull(
                 updateRequestDto.getRequestModeration(),
-                event.getRequestModeration(),
-                updateRequestDto.getRequestModeration());
+                event::setRequestModeration);
 
-        Utilities.setValueIfNotNull(
+        Utilities.setValueDtoIfNotNull(
                 updateRequestDto.getTitle(),
-                event.getTitle(),
-                updateRequestDto.getTitle());
+                event::setTitle);
 
         if (updateRequestDto.getStateAction() == StateAction.PUBLISH_EVENT) {
             event.setState(EventStatus.PUBLISHED);
@@ -318,42 +312,8 @@ public class EventServiceImpl implements EventService {
 
     @Transactional(readOnly = true)
     public List<EventShortDto> getEventsShort(EventParamsShortDto paramDto) {
-        LocalDateTime start = convertToLocalDataTime(decode(paramDto.getRangeStart()));
-        LocalDateTime end = convertToLocalDataTime(decode(paramDto.getRangeEnd()));
-        validateDates(start, end);
 
-        Utilities.setValueIfNull(paramDto.getText(), "");
-        Utilities.setValueIfNull(paramDto.getCategories(), List.of());
-
-        if (start == null) {
-            start = LocalDateTime.now();
-        }
-        if (end == null) {
-            end = Constants.defaultEndTime;
-        }
-
-        List<Event> eventList = eventRepository
-                .searchEvents(
-                        paramDto.getText(),
-                        paramDto.getCategories(),
-                        paramDto.getPaid(),
-                        start,
-                        end,
-                        paramDto.getOnlyAvailable(),
-                        Utilities.getPageable(paramDto.getFrom(), paramDto.getSize()));
-
-        List<EventShortDto> events = eventRepository
-                .searchEvents(
-                        paramDto.getText(),
-                        paramDto.getCategories(),
-                        paramDto.getPaid(),
-                        start,
-                        end,
-                        paramDto.getOnlyAvailable(),
-                        Utilities.getPageable(paramDto.getFrom(), paramDto.getSize()))
-                .stream()
-                .map(EventMapper::toShortDto)
-                .toList();
+        List<EventShortDto> events = collectingSearch(paramDto);
 
         List<Long> eventsIds = events.stream()
                 .map(EventShortDto::getId)
@@ -363,12 +323,9 @@ public class EventServiceImpl implements EventService {
                 .countByEventIdInAndStatusGroupByEvent(eventsIds, String.valueOf(RequestStatus.CONFIRMED))
                 .stream()
                 .collect(Collectors.toMap(EventIdByRequestsCount::getEvent, EventIdByRequestsCount::getCount));
-
         List<Long> views = getViews(eventsIds);
-
         List<EventShortDto> eventsForResp =
                 Utilities.addViewsAndConfirmedRequestsShort(events, confirmedRequestsByEvents, views);
-
         return Utilities.checkTypes(eventsForResp, EventShortDto.class);
     }
 
@@ -393,9 +350,9 @@ public class EventServiceImpl implements EventService {
             EventParamsLongDto paramsDto) {
         LocalDateTime rangeStartL;
         LocalDateTime rangeEndL;
-        Utilities.setValueIfNull(paramsDto.getInitiator(), new ArrayList<>());
-        Utilities.setValueIfNull(paramsDto.getState(), new ArrayList<>());
-        Utilities.setValueIfNull(paramsDto.getCategory(), new ArrayList<>());
+        Utilities.setValueIfNull(paramsDto.getInitiator(), paramsDto::setInitiator, new ArrayList<>());
+        Utilities.setValueIfNull(paramsDto.getState(), paramsDto::setState, new ArrayList<>());
+        Utilities.setValueIfNull(paramsDto.getCategory(), paramsDto::setCategory, new ArrayList<>());
 
         if (paramsDto.getRangeStart() != null) {
             rangeStartL = LocalDateTime.parse(paramsDto.getRangeStart(), Constants.DATE_FORMATTER);
@@ -485,5 +442,33 @@ public class EventServiceImpl implements EventService {
             log.warn("Prohibited. Start is after end. Start: {}, end: {}", start, end);
             throw new ValidationException("Event must be published");
         }
+    }
+
+    private List<EventShortDto> collectingSearch(EventParamsShortDto paramDto) {
+        LocalDateTime start = convertToLocalDataTime(decode(paramDto.getRangeStart()));
+        LocalDateTime end = convertToLocalDataTime(decode(paramDto.getRangeEnd()));
+        validateDates(start, end);
+        Utilities.setValueIfNull(paramDto.getText(), paramDto::setText, "");
+        Utilities.setValueIfNull(paramDto.getCategories(), paramDto::setCategories, List.of());
+
+        if (start == null) {
+            start = LocalDateTime.now();
+        }
+        if (end == null) {
+            end = Constants.defaultEndTime;
+        }
+
+        return eventRepository
+                .searchEvents(
+                        paramDto.getText(),
+                        paramDto.getCategories(),
+                        paramDto.getPaid(),
+                        start,
+                        end,
+                        paramDto.getOnlyAvailable(),
+                        Utilities.getPageable(paramDto.getFrom(), paramDto.getSize()))
+                .stream()
+                .map(EventMapper::toShortDto)
+                .toList();
     }
 }
