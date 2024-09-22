@@ -28,6 +28,7 @@ import ru.practicum.ewm.main.mappers.RequestMapper;
 import ru.practicum.ewm.main.model.category.Category;
 import ru.practicum.ewm.main.model.event.Event;
 import ru.practicum.ewm.main.model.event.EventStatus;
+import ru.practicum.ewm.main.model.locations.Location;
 import ru.practicum.ewm.main.model.request.Request;
 import ru.practicum.ewm.main.model.request.RequestStatus;
 import ru.practicum.ewm.main.model.status.StateAction;
@@ -94,6 +95,7 @@ public class EventServiceImpl implements EventService {
                 throw new ValidationException("Время уже наступило или осталось менее часа до мероприятия");
             }
         }
+
         if (updateRequestDto.getStateAction() != null) {
             if (updateRequestDto.getStateAction().equals(StateAction.PUBLISH_EVENT) && event.getState().equals(EventStatus.PUBLISHED)) {
                 throw new DataIntegrityViolationException("Event is already published");
@@ -116,10 +118,6 @@ public class EventServiceImpl implements EventService {
                 updateRequestDto.getAnnotation(),
                 event::setAnnotation);
 
-        Utilities.setNewValueIfNotNull(
-                updateRequestDto.getCategory(),
-                event::setCategory,
-                categoryRepository.findById(updateRequestDto.getCategory()).get());
 
         Utilities.setValueDtoIfNotNull(
                 updateRequestDto.getDescription(),
@@ -129,11 +127,6 @@ public class EventServiceImpl implements EventService {
                 updateRequestDto.getEventDate(),
                 event::setEventDate,
                 LocalDateTime.parse(updateRequestDto.getEventDate(), Constants.DATE_FORMATTER));
-
-        Utilities.setNewValueIfNotNull(
-                updateRequestDto.getLocation(),
-                event::setLocation,
-                locationRepository.save(updateRequestDto.getLocation()));
 
         Utilities.setValueDtoIfNotNull(
                 updateRequestDto.getPaid(),
@@ -150,6 +143,15 @@ public class EventServiceImpl implements EventService {
         Utilities.setValueDtoIfNotNull(
                 updateRequestDto.getTitle(),
                 event::setTitle);
+
+        if (updateRequestDto.getCategory() != null) {
+            event.setCategory(getCategoryById(updateRequestDto.getCategory()));
+        }
+
+        if (updateRequestDto.getLocation() != null) {
+            Location loc = locationRepository.save(updateRequestDto.getLocation());
+            event.setLocation(loc);
+        }
 
         if (updateRequestDto.getStateAction() == StateAction.PUBLISH_EVENT) {
             event.setState(EventStatus.PUBLISHED);
