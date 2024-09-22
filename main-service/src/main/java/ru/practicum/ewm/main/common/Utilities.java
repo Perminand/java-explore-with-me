@@ -69,13 +69,13 @@ public class Utilities {
     }
 
     public static <T> void setValueIfNull(T params, T value) {
-        if(params  == null) {
+        if (params == null) {
             params = value;
         }
     }
 
     public static <T> void setValueIfNotNull(T params, T out, T value) {
-        if(params != null) {
+        if (params != null) {
             out = value;
         }
     }
