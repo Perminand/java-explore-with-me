@@ -28,7 +28,6 @@ import ru.practicum.ewm.main.mappers.RequestMapper;
 import ru.practicum.ewm.main.model.category.Category;
 import ru.practicum.ewm.main.model.event.Event;
 import ru.practicum.ewm.main.model.event.EventStatus;
-import ru.practicum.ewm.main.model.locations.Location;
 import ru.practicum.ewm.main.model.request.Request;
 import ru.practicum.ewm.main.model.request.RequestStatus;
 import ru.practicum.ewm.main.model.status.StateAction;
@@ -67,9 +66,17 @@ public class EventServiceImpl implements EventService {
             throw new ValidationException("Время события должно больше текущего времени на 2 часа");
         }
 
-        Utilities.setValueIfNull(eventDto.getRequestModeration(), eventDto::setRequestModeration, true);
-        Utilities.setValueIfNull(eventDto.getPaid(), eventDto::setPaid, false);
-        Utilities.setValueIfNull(eventDto.getParticipantLimit(), eventDto::setParticipantLimit, 0);
+        if (eventDto.getRequestModeration() == null) {
+            eventDto.setRequestModeration(true);
+        }
+
+        if (eventDto.getPaid() == null) {
+            eventDto.setPaid(false);
+        }
+
+        if (eventDto.getParticipantLimit() == null) {
+            eventDto.setParticipantLimit(0);
+        }
 
         Event event = EventMapper.toEntity(eventDto);
         event.setInitiator(user);
@@ -114,44 +121,43 @@ public class EventServiceImpl implements EventService {
             }
         }
 
-        Utilities.setValueDtoIfNotNull(
-                updateRequestDto.getAnnotation(),
-                event::setAnnotation);
 
-
-        Utilities.setValueDtoIfNotNull(
-                updateRequestDto.getDescription(),
-                event::setDescription);
-
-        Utilities.setNewValueIfNotNull(
-                updateRequestDto.getEventDate(),
-                event::setEventDate,
-                LocalDateTime.parse(updateRequestDto.getEventDate(), Constants.DATE_FORMATTER));
-
-        Utilities.setValueDtoIfNotNull(
-                updateRequestDto.getPaid(),
-                event::setPaid);
-
-        Utilities.setValueDtoIfNotNull(
-                updateRequestDto.getParticipantLimit(),
-                event::setParticipantLimit);
-
-        Utilities.setValueDtoIfNotNull(
-                updateRequestDto.getRequestModeration(),
-                event::setRequestModeration);
-
-        Utilities.setValueDtoIfNotNull(
-                updateRequestDto.getTitle(),
-                event::setTitle);
+        if (updateRequestDto.getAnnotation() != null) {
+            event.setAnnotation(updateRequestDto.getAnnotation());
+        }
 
         if (updateRequestDto.getCategory() != null) {
-            event.setCategory(getCategoryById(updateRequestDto.getCategory()));
+            event.setCategory(categoryRepository.findById(updateRequestDto.getCategory()).get());
+        }
+
+        if (updateRequestDto.getDescription() != null) {
+            event.setDescription(updateRequestDto.getDescription());
+        }
+
+        if (updateRequestDto.getEventDate() != null) {
+            event.setEventDate(LocalDateTime.parse(updateRequestDto.getEventDate(), Constants.DATE_FORMATTER));
         }
 
         if (updateRequestDto.getLocation() != null) {
-            Location loc = locationRepository.save(updateRequestDto.getLocation());
-            event.setLocation(loc);
+            event.setLocation(locationRepository.save(updateRequestDto.getLocation()));
         }
+
+        if (updateRequestDto.getPaid() != null) {
+            event.setPaid(updateRequestDto.getPaid());
+        }
+
+        if (updateRequestDto.getParticipantLimit() != null) {
+            event.setParticipantLimit(updateRequestDto.getParticipantLimit());
+        }
+
+        if (updateRequestDto.getRequestModeration() != null) {
+            event.setRequestModeration(updateRequestDto.getRequestModeration());
+        }
+
+        if (updateRequestDto.getTitle() != null) {
+            event.setTitle(updateRequestDto.getTitle());
+        }
+
 
         if (updateRequestDto.getStateAction() == StateAction.PUBLISH_EVENT) {
             event.setState(EventStatus.PUBLISHED);
@@ -352,10 +358,15 @@ public class EventServiceImpl implements EventService {
             EventParamsLongDto paramsDto) {
         LocalDateTime rangeStartL;
         LocalDateTime rangeEndL;
-        Utilities.setValueIfNull(paramsDto.getInitiator(), paramsDto::setInitiator, new ArrayList<>());
-        Utilities.setValueIfNull(paramsDto.getState(), paramsDto::setState, new ArrayList<>());
-        Utilities.setValueIfNull(paramsDto.getCategory(), paramsDto::setCategory, new ArrayList<>());
-
+        if (paramsDto.getInitiator() == null) {
+            paramsDto.setInitiator(new ArrayList<>());
+        }
+        if (paramsDto.getState() == null) {
+            paramsDto.setState(new ArrayList<>());
+        }
+        if (paramsDto.getCategory() == null) {
+            paramsDto.setCategory(new ArrayList<>());
+        }
         if (paramsDto.getRangeStart() != null) {
             rangeStartL = LocalDateTime.parse(paramsDto.getRangeStart(), Constants.DATE_FORMATTER);
         } else {
@@ -450,9 +461,12 @@ public class EventServiceImpl implements EventService {
         LocalDateTime start = convertToLocalDataTime(decode(paramDto.getRangeStart()));
         LocalDateTime end = convertToLocalDataTime(decode(paramDto.getRangeEnd()));
         validateDates(start, end);
-        Utilities.setValueIfNull(paramDto.getText(), paramDto::setText, "");
-        Utilities.setValueIfNull(paramDto.getCategories(), paramDto::setCategories, List.of());
-
+        if (paramDto.getText() == null) {
+            paramDto.setText("");
+        }
+        if (paramDto.getCategories() == null) {
+            paramDto.setCategories(List.of());
+        }
         if (start == null) {
             start = LocalDateTime.now();
         }
