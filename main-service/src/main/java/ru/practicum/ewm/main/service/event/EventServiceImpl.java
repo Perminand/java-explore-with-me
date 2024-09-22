@@ -113,14 +113,7 @@ public class EventServiceImpl implements EventService {
             if (updateRequestDto.getStateAction().equals(StateAction.REJECT_EVENT) && event.getState().equals(EventStatus.PUBLISHED)) {
                 throw new DataIntegrityViolationException("Event is already published");
             }
-            if (updateRequestDto.getStateAction().equals(StateAction.REJECT_EVENT)) {
-                event.setState(EventStatus.CANCELED);
-            } else {
-                event.setState(EventStatus.PUBLISHED);
-                event.setPublishedOn(LocalDateTime.now().format(Constants.DATE_FORMATTER));
-            }
         }
-
 
         if (updateRequestDto.getAnnotation() != null) {
             event.setAnnotation(updateRequestDto.getAnnotation());
@@ -157,7 +150,6 @@ public class EventServiceImpl implements EventService {
         if (updateRequestDto.getTitle() != null) {
             event.setTitle(updateRequestDto.getTitle());
         }
-
 
         if (updateRequestDto.getStateAction() == StateAction.PUBLISH_EVENT) {
             event.setState(EventStatus.PUBLISHED);
@@ -373,7 +365,7 @@ public class EventServiceImpl implements EventService {
             rangeStartL = Constants.defaultStartTime;
         }
         if (paramsDto.getRangeStart() != null) {
-            rangeEndL = LocalDateTime.parse(paramsDto.getRangeStart(), Constants.DATE_FORMATTER);
+            rangeEndL = LocalDateTime.parse(paramsDto.getRangeEnd(), Constants.DATE_FORMATTER);
         } else {
             rangeEndL = Constants.defaultEndTime;
         }

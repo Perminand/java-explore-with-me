@@ -31,6 +31,5 @@ public interface EventService {
 
     EventFullDto getEvent(Long id);
 
-    List<EventFullDto> getEventsFull(
-            EventParamsLongDto paramsDto);
+    List<EventFullDto> getEventsFull(EventParamsLongDto paramsDto);
 }
