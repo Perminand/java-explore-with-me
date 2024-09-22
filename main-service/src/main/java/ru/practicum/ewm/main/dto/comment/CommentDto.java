@@ -15,6 +15,6 @@ public class CommentDto {
     @Length(min = 10, max = 280)
     private String text;
     private Long eventId;
-    private UserShortDto user;
+    private UserShortDto authorId;
     private String created;
 }
