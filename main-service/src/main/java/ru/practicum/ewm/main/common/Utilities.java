@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class Utilities<T, S> {
+public class Utilities {
 
     public static List<EventFullDto> addViewsAndConfirmedRequestsFull(List<EventFullDto> eventFullDtoList,
                                                                       Map<Long, Long> confirmedRequests,
@@ -68,23 +68,15 @@ public class Utilities<T, S> {
         return PageRequest.of(startPage, size);
     }
 
-    public void setDefaultValueIfNull(T params, T value) {
+    public static <T> void setValueIfNull(T params, T value) {
         if(params  == null) {
             params = value;
         }
     }
 
-    public void setDefaultValueIfNotNull(T params, T out, T value) {
+    public static <T> void setValueIfNotNull(T params, T out, T value) {
         if(params != null) {
             out = value;
-        }
-    }
-
-    public void setDefaultValueIfNull(T params, T value, T value2) {
-        if(params  == null) {
-            params = value;
-        } else {
-            params = value2;
         }
     }
 }

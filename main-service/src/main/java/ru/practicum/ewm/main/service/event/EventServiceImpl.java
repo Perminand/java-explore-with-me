@@ -55,7 +55,6 @@ public class EventServiceImpl implements EventService {
     private final CategoryRepository categoryRepository;
     private final LocationRepository locationRepository;
     private final StatsClient statClient;
-    private final Utilities utilities;
 
 
     @Override
@@ -66,6 +65,7 @@ public class EventServiceImpl implements EventService {
         if (eventDto.getEventDate().isBefore(LocalDateTime.now().plusHours(2))) {
             throw new ValidationException("Время события должно больше текущего времени на 2 часа");
         }
+
         Utilities.setValueIfNull(eventDto.getRequestModeration(), true);
         Utilities.setValueIfNull(eventDto.getPaid(), false);
         Utilities.setValueIfNull(eventDto.getParticipantLimit(), 0);
