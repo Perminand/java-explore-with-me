@@ -1,21 +1,20 @@
 package ru.practicum.ewm.main.common;
 
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Component;
 import ru.practicum.ewm.main.dto.event.EventFullDto;
 import ru.practicum.ewm.main.dto.event.EventShortDto;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
-@Component
-@AllArgsConstructor
-public class Utilities {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class Utilities<T, S> {
+
     public static List<EventFullDto> addViewsAndConfirmedRequestsFull(List<EventFullDto> eventFullDtoList,
                                                                       Map<Long, Long> confirmedRequests,
                                                                       List<Long> views) {
@@ -69,20 +68,20 @@ public class Utilities {
         return PageRequest.of(startPage, size);
     }
 
-    public static <T> void setValueIfNull(T params, T value) {
-        if (Objects.isNull(params)) {
+    public void setDefaultValueIfNull(T params, T value) {
+        if(params  == null) {
             params = value;
         }
     }
 
-    public static <T> void setValueIfNotNull(T params, T out, T value) {
-        if (Objects.nonNull(params)) {
+    public void setDefaultValueIfNotNull(T params, T out, T value) {
+        if(params != null) {
             out = value;
         }
     }
 
-    public static <T> void setValueIfNull(T params, T value, T value2) {
-        if (Objects.isNull(params)) {
+    public void setDefaultValueIfNull(T params, T value, T value2) {
+        if(params  == null) {
             params = value;
         } else {
             params = value2;

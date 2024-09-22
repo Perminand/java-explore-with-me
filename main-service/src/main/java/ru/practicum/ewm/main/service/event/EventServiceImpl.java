@@ -467,12 +467,12 @@ public class EventServiceImpl implements EventService {
     }
 
     private List<Long> getViews(List<Long> eventsIds) {
-        String StringIds = eventsIds
+        String stringIds = eventsIds
                 .stream()
                 .map((id) -> "event/" + id).collect(Collectors.joining());
 
         return statClient.getStats(Constants.defaultStartTime, Constants.defaultEndTime,
-                        StringIds, true).stream()
+                        stringIds, true).stream()
                 .map(StatsDto::getHits)
                 .collect(Collectors.toList());
     }
