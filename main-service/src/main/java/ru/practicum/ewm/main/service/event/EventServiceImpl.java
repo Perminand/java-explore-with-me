@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.dto.StatsDto;
 import ru.practicum.ewm.StatsClient;
 import ru.practicum.ewm.main.common.Constants;
-import ru.practicum.ewm.main.common.SetValuesEntity;
 import ru.practicum.ewm.main.common.Utilities;
 import ru.practicum.ewm.main.dto.EventParamsLongDto;
 import ru.practicum.ewm.main.dto.EventParamsShortDto;
@@ -56,6 +55,7 @@ public class EventServiceImpl implements EventService {
     private final CategoryRepository categoryRepository;
     private final LocationRepository locationRepository;
     private final StatsClient statClient;
+    private final Utilities utilities;
 
 
     @Override
@@ -66,9 +66,9 @@ public class EventServiceImpl implements EventService {
         if (eventDto.getEventDate().isBefore(LocalDateTime.now().plusHours(2))) {
             throw new ValidationException("Время события должно больше текущего времени на 2 часа");
         }
-        SetValuesEntity.setValueIfNull(eventDto.getRequestModeration(), true);
-        SetValuesEntity.setValueIfNull(eventDto.getPaid(), false);
-        SetValuesEntity.setValueIfNull(eventDto.getParticipantLimit(), 0);
+        Utilities.setValueIfNull(eventDto.getRequestModeration(), true);
+        Utilities.setValueIfNull(eventDto.getPaid(), false);
+        Utilities.setValueIfNull(eventDto.getParticipantLimit(), 0);
 
         Event event = EventMapper.toEntity(eventDto);
         event.setInitiator(user);
@@ -112,47 +112,47 @@ public class EventServiceImpl implements EventService {
             }
         }
 
-        SetValuesEntity.setValueIfNotNull(
+        Utilities.setValueIfNotNull(
                 updateRequestDto.getAnnotation(), 
                 event.getAnnotation(), 
                 updateRequestDto.getAnnotation());
 
-        SetValuesEntity.setValueIfNotNull(
+        Utilities.setValueIfNotNull(
                 updateRequestDto.getCategory(), 
                 event.getCategory(),
                 categoryRepository.findById(updateRequestDto.getCategory()).get());
 
-        SetValuesEntity.setValueIfNotNull(
+        Utilities.setValueIfNotNull(
                 updateRequestDto.getDescription(), 
                 event.getDescription(),
                 updateRequestDto.getDescription());
 
-        SetValuesEntity.setValueIfNotNull(
+        Utilities.setValueIfNotNull(
                 updateRequestDto.getEventDate(),
                 event.getEventDate(),
                 LocalDateTime.parse(updateRequestDto.getEventDate(), Constants.DATE_FORMATTER));
 
-        SetValuesEntity.setValueIfNotNull(
+        Utilities.setValueIfNotNull(
                 updateRequestDto.getLocation(),
                 event.getLocation(),
                 locationRepository.save(updateRequestDto.getLocation()));
 
-        SetValuesEntity.setValueIfNotNull(
+        Utilities.setValueIfNotNull(
                 updateRequestDto.getPaid(),
                 event.getPaid(),
                 updateRequestDto.getPaid());
 
-        SetValuesEntity.setValueIfNotNull(
+        Utilities.setValueIfNotNull(
                 updateRequestDto.getParticipantLimit(),
                 event.getParticipantLimit(),
                 updateRequestDto.getParticipantLimit());
 
-        SetValuesEntity.setValueIfNotNull(
+        Utilities.setValueIfNotNull(
                 updateRequestDto.getRequestModeration(),
                 event.getRequestModeration(),
                 updateRequestDto.getRequestModeration());
 
-        SetValuesEntity.setValueIfNotNull(
+        Utilities.setValueIfNotNull(
                 updateRequestDto.getTitle(),
                 event.getTitle(),
                 updateRequestDto.getTitle());
@@ -322,8 +322,8 @@ public class EventServiceImpl implements EventService {
         LocalDateTime end = convertToLocalDataTime(decode(paramDto.getRangeEnd()));
         validateDates(start, end);
 
-        SetValuesEntity.setValueIfNull(paramDto.getText(), "");
-        SetValuesEntity.setValueIfNull(paramDto.getCategories(), List.of());
+        Utilities.setValueIfNull(paramDto.getText(), "");
+        Utilities.setValueIfNull(paramDto.getCategories(), List.of());
 
         if (start == null) {
             start = LocalDateTime.now();
@@ -393,9 +393,9 @@ public class EventServiceImpl implements EventService {
             EventParamsLongDto paramsDto) {
         LocalDateTime rangeStartL;
         LocalDateTime rangeEndL;
-        SetValuesEntity.setValueIfNull(paramsDto.getInitiator(), new ArrayList<>());
-        SetValuesEntity.setValueIfNull(paramsDto.getState(), new ArrayList<>());
-        SetValuesEntity.setValueIfNull(paramsDto.getCategory(), new ArrayList<>());
+        Utilities.setValueIfNull(paramsDto.getInitiator(), new ArrayList<>());
+        Utilities.setValueIfNull(paramsDto.getState(), new ArrayList<>());
+        Utilities.setValueIfNull(paramsDto.getCategory(), new ArrayList<>());
 
         if (paramsDto.getRangeStart() != null) {
             rangeStartL = LocalDateTime.parse(paramsDto.getRangeStart(), Constants.DATE_FORMATTER);
