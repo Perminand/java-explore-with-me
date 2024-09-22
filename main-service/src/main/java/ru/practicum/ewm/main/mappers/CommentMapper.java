@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class CommentMapper {
 
     public static CommentDto toDto(Comment comment) {
-        return new CommentDto(
+        return new CommentDto(comment.getId(),
                 comment.getText(),
                 comment.getEvent().getId(),
                 UserMapper.toShortDto(comment.getUser()), comment.getCreated().format(Constants.DATE_FORMATTER));
