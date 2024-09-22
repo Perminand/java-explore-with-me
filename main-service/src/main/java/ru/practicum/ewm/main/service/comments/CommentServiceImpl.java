@@ -54,7 +54,8 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public CommentDto getCommentByUser(Long userId, Long commentId) {
         getUserById(userId);
-        return CommentMapper.toDto(commentRepository.findByIdAndUserId(commentId, userId));
+        Comment comment = commentRepository.findByIdAndUserId(commentId, userId);
+        return CommentMapper.toDto(comment);
     }
 
     @Override

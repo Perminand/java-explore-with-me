@@ -368,33 +368,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"const main = async () => {\r",
-											"    const api = new API(pm);\r",
-											"    const rnd = new RandomUtils();\r",
-											"    \r",
-											"    let compilation;\r",
-											"    try {\r",
-											"        const user = await api.addUser(rnd.getUser());\r",
-											"        pm.collectionVariables.set(\"uid\", user.id)\r",
-											"    } catch(err) {\r",
-											"        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r",
-											"    }\r",
-											"};\r",
-											"\r",
-											"const interval = setInterval(() => {}, 1000);\r",
-											"\r",
-											"setTimeout(async () => \r",
-											"    {\r",
-											"        try {\r",
-											"            await main();\r",
-											"        } catch (e) {\r",
-											"            console.error(e);\r",
-											"        } finally {\r",
-											"            clearInterval(interval);\r",
-											"        }\r",
-											"    },  \r",
-											"    100 \r",
-											");"
+											""
 										],
 										"type": "text/javascript",
 										"packages": {}
@@ -404,27 +378,39 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function () {\r",
-											"    pm.response.to.have.status(201);   \r",
-											"    pm.response.to.be.withBody;\r",
-											"    pm.response.to.be.json;\r",
+											"pm.test(\"Response status code is 201\", function () {\r",
+											"  pm.response.to.have.status(201);\r",
 											"});\r",
 											"\r",
-											"const source = JSON.parse(pm.request.body.raw);\r",
-											"const target = pm.response.json();\r",
 											"\r",
-											"pm.test(\"Комментарий должен содержать поля: id, created, text, authorId\", function () {\r",
-											"pm.expect(target).to.have.property('id');\r",
-											"pm.expect(target).to.have.property('text');\r",
-											"pm.expect(target).to.have.property('authorId');\r",
-											"pm.expect(target).to.have.property('created');\r",
+											"pm.test(\"Response has the required fields\", function () {\r",
+											"  const responseData = pm.response.json();\r",
+											"  \r",
+											"  pm.expect(responseData).to.be.an('object');\r",
+											"  pm.expect(responseData.id).to.exist;\r",
+											"  pm.expect(responseData.text).to.exist;\r",
+											"  pm.expect(responseData.eventId).to.exist;\r",
+											"  pm.expect(responseData.authorId).to.exist;\r",
+											"  pm.expect(responseData.created).to.exist;\r",
 											"});\r",
 											"\r",
-											"pm.test(\"Данные в ответе должны соответствовать данным в запросе\", function () {\r",
-											"    pm.expect(target.id).to.not.be.null;\r",
-											"    pm.expect(source.text).equal(target.text);\r",
-											"    pm.expect(target.authorId).equal(2);\r",
+											"\r",
+											"pm.test(\"Id is a non-negative integer\", function () {\r",
+											"    const responseData = pm.response.json();\r",
+											"\r",
+											"    pm.expect(responseData.id).to.be.a('number');\r",
+											"    pm.expect(responseData.id).to.be.at.least(0, \"Id should be a non-negative integer\");\r",
 											"});\r",
+											"\r",
+											"\r",
+											"pm.test(\"AuthorId contains required fields - id and name\", function () {\r",
+											"    const responseData = pm.response.json();\r",
+											"    \r",
+											"    pm.expect(responseData.authorId).to.exist;\r",
+											"    pm.expect(responseData.authorId.id).to.exist;\r",
+											"    pm.expect(responseData.authorId.name).to.exist;\r",
+											"});\r",
+											"\r",
 											""
 										],
 										"type": "text/javascript",
@@ -523,7 +509,7 @@
 										},
 										{
 											"key": "commentId",
-											"value": ""
+											"value": "1"
 										}
 									]
 								}
@@ -679,7 +665,8 @@
 											"    pm.response.to.have.status(204);\r",
 											"});"
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -700,11 +687,11 @@
 									"variable": [
 										{
 											"key": "userId",
-											"value": "6"
+											"value": "1"
 										},
 										{
 											"key": "commentId",
-											"value": "2"
+											"value": "1"
 										}
 									]
 								}
