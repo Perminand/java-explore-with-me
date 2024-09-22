@@ -1,18 +1,42 @@
 package ru.practicum.ewm.repository;
 
-import ru.practicum.ewm.EndpointHitDto;
-import ru.practicum.ewm.ViewStatsDto;
-import ru.practicum.ewm.ViewsStatsRequest;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import ru.practicum.dto.StatsDto;
+import ru.practicum.ewm.model.Hit;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- * Интерфейс для работы с репозиторием статистики.
- */
-public interface StatsRepository {
-    void saveHit(EndpointHitDto hit);
+public interface StatsRepository extends JpaRepository<Hit, Long> {
 
-    List<ViewStatsDto> getStats(ViewsStatsRequest request);
+    @Query(value = "select new ru.practicum.dto.StatsDto" +
+            "(s.app, s.uri, count(s.uri)) from Hit as s " +
+            "where s.timestamp between ?1 and ?2 " +
+            "and s.uri in ?3 " +
+            "group by s.app, s.uri " +
+            "order by count(s.uri) desc ")
+    List<StatsDto> getWithUri(LocalDateTime start, LocalDateTime end, List<String> uris);
 
-    List<ViewStatsDto> getUniqueStats(ViewsStatsRequest request);
+    @Query(value = "select new ru.practicum.dto.StatsDto" +
+            "(s.app, s.uri, count(distinct s.ip)) from Hit as s " +
+            "where s.timestamp between ?1 and ?2 " +
+            "and s.uri in ?3 " +
+            "group by s.app, s.uri " +
+            "order by count(distinct s.ip) desc")
+    List<StatsDto> getWithUriUnique(LocalDateTime start, LocalDateTime end, List<String> uris);
+
+    @Query(value = "select new ru.practicum.dto.StatsDto" +
+            "(s.app, s.uri, count(s.uri)) from Hit as s " +
+            "where s.timestamp between ?1 and ?2 " +
+            "group by s.app, s.uri " +
+            "order by count(s.uri) desc ")
+    List<StatsDto> getWithoutUri(LocalDateTime start, LocalDateTime end);
+
+    @Query(value = "select new ru.practicum.dto.StatsDto" +
+            "(s.app, s.uri, count(distinct s.ip)) from Hit as s " +
+            "where s.timestamp between ?1 and ?2 " +
+            "group by s.app, s.uri " +
+            "order by count(distinct s.ip) desc")
+    List<StatsDto> getWithoutUriUnique(LocalDateTime start, LocalDateTime end);
 }

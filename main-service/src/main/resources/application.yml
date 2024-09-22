@@ -1,10 +1,21 @@
 server:
   port: 8080
 client:
-  url: http://62.109.21.174:9090
+  url: http://localhost:9090
 spring:
+  output:
+    ansi:
+      enabled: ALWAYS
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: false
   datasource:
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:6543/stats
-    username: stat
-    password: stat
+    url: jdbc:postgresql://localhost:5433/service
+    username: service
+    password: service

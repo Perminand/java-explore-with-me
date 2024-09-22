@@ -26,19 +26,19 @@ services:
 
   ewm-service:
     build: main-service
-    container_name: ewm-service-server
+    container_name: ewm-service
     ports:
       - "8080:8080"
     depends_on:
       - ewm-db
     environment:
-      - STATS_SERVER_URL=http://stats-server:9090
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5433/service
+      - STAT-SERVER_URL=http://stats-server:9090
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/service
       - SPRING_DATASOURCE_USERNAME=service
       - SPRING_DATASOURCE_PASSWORD=service
 
-  ewm-db: 
-    image: postgres:16.1 
+  ewm-db:
+    image: postgres:16.1
     container_name: postgres-ewm-service-db
     ports:
       - "5433:5432"
