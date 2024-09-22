@@ -7,10 +7,6 @@ import java.util.List;
 public interface CommentService {
     List<CommentDto> getCommentsByUser(Long userId);
 
-    CommentDto patchComment(Long commentId, CommentDto commentDto);
-
-    void deleteComment(Long commentId);
-
     CommentDto addComment(Long userId, Long eventId, CommentDto commentDto);
 
     CommentDto patchComment(Long userId, Long commentId, CommentDto commentDto);
@@ -19,4 +15,5 @@ public interface CommentService {
 
     List<CommentDto> getCommentsByEvent(Long eventId);
 
+    CommentDto getCommentByUser(Long userId, Long commentId);
 }

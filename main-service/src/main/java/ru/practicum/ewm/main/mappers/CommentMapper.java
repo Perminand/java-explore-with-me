@@ -20,6 +20,15 @@ public class CommentMapper {
     }
 
     public static Comment toEntity(CommentDto dto, Event event, User user) {
-        return new Comment(null, event, user, dto.getText(), LocalDateTime.parse(dto.getCreated(), Constants.DATE_FORMATTER));
+        Comment comment = new Comment();
+        comment.setUser(user);
+        comment.setEvent(event);
+        comment.setText(dto.getText());
+        if (dto.getCreated() == null) {
+            comment.setCreated(LocalDateTime.now());
+        } else {
+            comment.setCreated(LocalDateTime.parse(dto.getCreated(), Constants.DATE_FORMATTER));
+        }
+        return comment;
     }
 }

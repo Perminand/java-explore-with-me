@@ -17,7 +17,7 @@ import ru.practicum.ewm.main.dto.compilation.UpdateCompilationRequestDto;
 import ru.practicum.ewm.main.dto.event.EventFullDto;
 import ru.practicum.ewm.main.dto.event.EventParamsLongDto;
 import ru.practicum.ewm.main.dto.request.UpdateEventAdminRequestDto;
-import ru.practicum.ewm.main.model.users.dto.UserDto;
+import ru.practicum.ewm.main.dto.user.UserDto;
 import ru.practicum.ewm.main.service.categories.CategoryService;
 import ru.practicum.ewm.main.service.comments.CommentService;
 import ru.practicum.ewm.main.service.compilations.CompilationService;
@@ -138,13 +138,15 @@ public class AdminController {
     @ResponseStatus(HttpStatus.OK)
     public CommentDto patchComment(@PathVariable Long commentId,
                                    @RequestBody @Valid CommentDto commentDto) {
-        return commentService.patchComment(commentId, commentDto);
+        log.info("Patch запрос на на изменение коммента");
+        return commentService.patchComment(null, commentId, commentDto);
     }
 
-    @DeleteMapping("/{commentId}")
+    @DeleteMapping("/comments/{commentId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteComment(@PathVariable Long commentId) {
-        commentService.deleteComment(commentId);
+        log.info("Delete запрос на на удаление коммента");
+        commentService.deleteComment(null, commentId);
     }
 }
 

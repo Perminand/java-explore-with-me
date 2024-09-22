@@ -34,18 +34,6 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentDto patchComment(Long commentId, CommentDto commentDto) {
-        Comment comment = getCommentById(commentId);
-        comment.setText(commentDto.getText());
-        return CommentMapper.toDto(commentRepository.save(comment));
-    }
-
-    @Override
-    public void deleteComment(Long commentId) {
-        commentRepository.deleteById(commentId);
-    }
-
-    @Override
     public CommentDto addComment(Long userId, Long eventId, CommentDto commentDto) {
         User user = getUserById(userId);
         Event event = getEventById(eventId);
@@ -57,22 +45,37 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    public List<CommentDto> getCommentsByEvent(Long eventId) {
+        return commentRepository.getCommentsByEvent(getEventById(eventId)).stream()
+                .map(CommentMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public CommentDto getCommentByUser(Long userId, Long commentId) {
+        getUserById(userId);
+        return CommentMapper.toDto(commentRepository.findByIdAndUserId(commentId, userId));
+    }
+
+    @Override
     public CommentDto patchComment(Long userId, Long commentId, CommentDto commentDto) {
-        Comment comment = getCommentByIdAndUserId(commentId, getUserById(userId).getId());
+        Comment comment;
+        if (userId == null) {
+            comment = getCommentById(commentId);
+        } else {
+            comment = getCommentByIdAndUserId(commentId, getUserById(userId).getId());
+        }
         comment.setText(commentDto.getText());
         return CommentMapper.toDto(commentRepository.save(comment));
     }
 
     @Override
     public void deleteComment(Long userId, Long commentId) {
-        commentRepository.deleteById(getCommentByIdAndUserId(commentId, getUserById(userId).getId()).getId());
-    }
-
-    @Override
-    public List<CommentDto> getCommentsByEvent(Long eventId) {
-        return commentRepository.getCommentsByEvent(getEventById(eventId)).stream()
-                .map(CommentMapper::toDto)
-                .collect(Collectors.toList());
+        if (userId == null) {
+            commentRepository.deleteById(commentId);
+        } else {
+            commentRepository.deleteById(getCommentByIdAndUserId(commentId, getUserById(userId).getId()).getId());
+        }
     }
 
     private Comment getCommentByIdAndUserId(Long commentId, Long userId) {
