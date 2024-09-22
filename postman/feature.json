@@ -582,7 +582,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{baseUrl}}/comments/users/:userId/:commentId",
+									"raw": "{{baseUrl}}/comments/users/:userId/commentId/:commentId",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -590,6 +590,7 @@
 										"comments",
 										"users",
 										":userId",
+										"commentId",
 										":commentId"
 									],
 									"variable": [

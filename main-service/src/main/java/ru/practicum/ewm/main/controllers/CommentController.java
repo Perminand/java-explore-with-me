@@ -44,11 +44,11 @@ public class CommentController {
         return commentService.addComment(userId, eventId, commentDto);
     }
 
-    @PatchMapping("/users/{userId}/{commentId}")
+    @PatchMapping("/users/{userId}/commentId/{commentId}")
     @ResponseStatus(HttpStatus.OK)
-    public CommentDto patchComment(@Valid @RequestBody CommentDto commentDto,
-                                   @PathVariable("userId") Long userId,
-                                   @PathVariable("commentId") Long commentId) {
+    public CommentDto patchComment(@Min(0) @PathVariable("userId") Long userId,
+                                   @Min(0) @PathVariable("commentId") Long commentId,
+                                   @Valid @RequestBody CommentDto commentDto) {
         log.info("Patch запрос на на изменение коммента");
         return commentService.patchComment(userId, commentId, commentDto);
     }
