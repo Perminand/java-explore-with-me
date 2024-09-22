@@ -15,6 +15,7 @@ import ru.practicum.ewm.main.dto.eventRequest.EventRequestStatusUpdateRequest;
 import ru.practicum.ewm.main.dto.eventRequest.EventRequestStatusUpdateResult;
 import ru.practicum.ewm.main.dto.request.ParticipationRequestDto;
 import ru.practicum.ewm.main.dto.request.UpdateEventAdminRequestDto;
+import ru.practicum.ewm.main.service.comments.CommentService;
 import ru.practicum.ewm.main.service.event.EventService;
 import ru.practicum.ewm.main.service.requests.RequestService;
 
@@ -28,6 +29,7 @@ import java.util.List;
 public class UserController {
     private final EventService eventService;
     private final RequestService requestService;
+    private final CommentService commentService;
 
 
     @PostMapping("/{userId}/events")
@@ -112,8 +114,6 @@ public class UserController {
         log.info("Patch запрос на отмену участия в событии");
         return requestService.cancelRequest(userId, requestsId);
     }
-
-
 }
 
 
