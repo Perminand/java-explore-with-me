@@ -12,8 +12,8 @@ import ru.practicum.dto.StatisticDto;
 import ru.practicum.dto.StatsDto;
 import ru.practicum.ewm.StatsClient;
 import ru.practicum.ewm.main.common.Constants;
-import ru.practicum.ewm.main.dto.EventParamsShortDto;
 import ru.practicum.ewm.main.dto.event.EventFullDto;
+import ru.practicum.ewm.main.dto.event.EventParamsShortDto;
 import ru.practicum.ewm.main.dto.event.EventShortDto;
 import ru.practicum.ewm.main.service.event.EventService;
 
