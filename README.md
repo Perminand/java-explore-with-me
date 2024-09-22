@@ -11,7 +11,7 @@ Backend часть приложения для формирования афиш
 3. Отдельный модуль для хранения шаблонных DTO (Data transfer object)
 4. Http клиент
 
-Для взаимодействия модулей по REST API реализован HTTP-client с помощью RestTemplate.
+Для взаимодействия модулей по REST API реализован HTTP-client с помощью WebClient.
 
 ## Технологии и инструменты
 
@@ -21,7 +21,6 @@ Backend часть приложения для формирования афиш
 * Docker - развертывание и контейнеризация
 * СУБД - postgresSQL
 * Lombok
-* RestTemplate
 * WebClient
 
 ## Цель
