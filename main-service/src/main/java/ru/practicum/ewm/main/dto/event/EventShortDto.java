@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import ru.practicum.ewm.main.dto.category.CategoryDto;
-import ru.practicum.ewm.main.model.users.dto.UserShortDto;
+import ru.practicum.ewm.main.dto.user.UserShortDto;
 
 @Getter
 @Setter

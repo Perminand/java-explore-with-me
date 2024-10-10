@@ -1,4 +1,4 @@
-package ru.practicum.ewm.main.model.users.dto;
+package ru.practicum.ewm.main.dto.user;
 
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;

@@ -1,8 +1,8 @@
 package ru.practicum.ewm.main.mappers;
 
+import ru.practicum.ewm.main.dto.user.UserDto;
+import ru.practicum.ewm.main.dto.user.UserShortDto;
 import ru.practicum.ewm.main.model.users.User;
-import ru.practicum.ewm.main.model.users.dto.UserDto;
-import ru.practicum.ewm.main.model.users.dto.UserShortDto;
 
 public class UserMapper {
     public static User toEntity(UserDto userDto) {

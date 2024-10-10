@@ -8,10 +8,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.ewm.main.dto.user.UserDto;
 import ru.practicum.ewm.main.exceptions.errors.EntityNotFoundException;
 import ru.practicum.ewm.main.mappers.UserMapper;
 import ru.practicum.ewm.main.model.users.User;
-import ru.practicum.ewm.main.model.users.dto.UserDto;
 import ru.practicum.ewm.main.repository.UserRepository;
 
 import java.util.Collections;

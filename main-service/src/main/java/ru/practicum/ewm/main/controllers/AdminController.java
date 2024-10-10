@@ -9,15 +9,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.main.dto.EventParamsLongDto;
 import ru.practicum.ewm.main.dto.category.CategoryDto;
+import ru.practicum.ewm.main.dto.comment.CommentDto;
 import ru.practicum.ewm.main.dto.compilation.CompilationDto;
 import ru.practicum.ewm.main.dto.compilation.NewCompilationDto;
 import ru.practicum.ewm.main.dto.compilation.UpdateCompilationRequestDto;
 import ru.practicum.ewm.main.dto.event.EventFullDto;
+import ru.practicum.ewm.main.dto.event.EventParamsLongDto;
 import ru.practicum.ewm.main.dto.request.UpdateEventAdminRequestDto;
-import ru.practicum.ewm.main.model.users.dto.UserDto;
+import ru.practicum.ewm.main.dto.user.UserDto;
 import ru.practicum.ewm.main.service.categories.CategoryService;
+import ru.practicum.ewm.main.service.comments.CommentService;
 import ru.practicum.ewm.main.service.compilations.CompilationService;
 import ru.practicum.ewm.main.service.event.EventService;
 import ru.practicum.ewm.main.service.users.UserService;
@@ -36,6 +38,7 @@ public class AdminController {
     private final CompilationService compilationService;
     private final EventService eventService;
     private final UserService userService;
+    private final CommentService commentService;
 
     @PostMapping("/categories")
     @ResponseStatus(HttpStatus.CREATED)
@@ -120,7 +123,30 @@ public class AdminController {
     @DeleteMapping("/users/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable @NotNull @Min(0) Long userId) {
-        log.info("Delete запрос на удаление пользователя");
+        log.info("DELETE запрос на удаление пользователя");
         userService.delete(userId);
     }
+
+    @GetMapping("/comments/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<CommentDto> getCommentsByUser(@PathVariable Long userId) {
+        log.info("GET запрос на на получение коммента");
+        return commentService.getCommentsByUser(userId);
+    }
+
+    @PatchMapping("/comments/{commentId}")
+    @ResponseStatus(HttpStatus.OK)
+    public CommentDto patchComment(@PathVariable Long commentId,
+                                   @RequestBody @Valid CommentDto commentDto) {
+        log.info("Patch запрос на на изменение коммента");
+        return commentService.patchComment(null, commentId, commentDto);
+    }
+
+    @DeleteMapping("/comments/{commentId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteComment(@PathVariable Long commentId) {
+        log.info("Delete запрос на на удаление коммента");
+        commentService.deleteComment(null, commentId);
+    }
 }
+

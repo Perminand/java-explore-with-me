@@ -1,4 +1,4 @@
-package ru.practicum.ewm.main.dto;
+package ru.practicum.ewm.main.dto.event;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,14 +9,13 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-public class EventParamsShortDto {
-    String text;
-    List<Long> categories;
-    Boolean paid;
+public class EventParamsLongDto {
+    List<Long> initiator;
+    List<String> state;
+    List<Long> category;
     String rangeStart;
     String rangeEnd;
-    Boolean onlyAvailable;
-    String sort;
     Integer from;
     Integer size;
+
 }
