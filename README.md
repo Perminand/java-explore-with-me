@@ -19,7 +19,7 @@ Backend часть приложения для формирования афиш
 * SpringBoot + SpringJpa + Hibernate
 * Maven - управление зависимостями, многомодульность
 * Docker - развертывание и контейнеризация
-* СУБД - postgresSQL
+* СУБД - postgreSQL
 * Lombok
 * WebClient
 
